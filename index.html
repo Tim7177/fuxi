@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="复习主页">
+<meta name="theme-color" content="#f6f7f9">
+<title>复习主页</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --text:#1f2328; --muted:#6b7280; --line:#e5e7eb; --primary:#2563eb; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.6 -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: calc(14px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom)); }
+  .hidden { display: none !important; }
+
+  header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 6px 2px 14px; }
+  h1 { font-size: 26px; margin: 0; letter-spacing: .5px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .sec { font-size: 15px; font-weight: 600; color: var(--muted); margin: 22px 2px 8px; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .subj { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 8px 12px;
+    text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .subj:active { transform: scale(.97); }
+  .subj.empty { opacity: .45; }
+  .ico { width: 44px; height: 44px; border-radius: 12px; color: #fff; font-size: 21px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; }
+  .subj b { font-size: 15px; }
+  .subj .muted { font-size: 12px; line-height: 1.3; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; }
+  .q-title { font-weight: 600; font-size: 16px; line-height: 1.45; }
+  .q-meta { margin-top: 2px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+  .badge { font-size: 12px; padding: 1px 8px; border-radius: 99px; background: #f1f5f9; color: var(--muted); white-space: nowrap; }
+  .badge.done { background: #ecfdf3; color: #15803d; }
+  .badge.doing { background: #fefce8; color: #a16207; }
+  .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .btn { display: inline-block; padding: 8px 14px; border-radius: 10px; font-size: 14px; border: 1px solid var(--line); background: #fff; }
+  .btn.main { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+  .btn:active { opacity: .7; }
+
+  .row { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; }
+  .row:active { background: #f8fafc; }
+  .row .name { flex: 1; min-width: 0; line-height: 1.4; word-break: break-all; }
+  .kind { font-size: 11px; font-weight: 600; padding: 2px 6px; border-radius: 6px; background: #eef2ff; color: #4338ca; white-space: nowrap; }
+  .chev { color: #cbd5e1; font-size: 18px; }
+  .empty-tip { color: var(--muted); font-size: 14px; padding: 14px 16px; background: var(--card); border: 1px dashed var(--line); border-radius: 12px; }
+
+  .topbar { display: flex; align-items: center; gap: 10px; margin: 4px 0 10px; }
+  .back { font-size: 15px; color: var(--primary); padding: 6px 2px; }
+  .subj-head { display: flex; align-items: center; gap: 12px; margin: 6px 2px 4px; }
+  .subj-head h1 { font-size: 24px; }
+  .tabs { display: flex; gap: 6px; background: #e9ecf1; padding: 4px; border-radius: 12px; margin: 14px 0 12px; }
+  .tab { flex: 1; text-align: center; padding: 7px 0; border-radius: 9px; font-size: 15px; color: var(--muted); }
+  .tab.on { background: #fff; color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+  footer { margin-top: 30px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- 首页 -->
+  <section id="home">
+    <header><h1>复习主页</h1><span class="muted" id="updated"></span></header>
+    <div class="sec">选择科目</div>
+    <div class="grid" id="grid"></div>
+    <div id="recent-box">
+      <div class="sec">继续 / 最近的测试题</div>
+      <div id="recent"></div>
+    </div>
+    <footer class="muted">答题进度保存在当前设备的浏览器里，换设备不会同步</footer>
+  </section>
+
+  <!-- 科目页 -->
+  <section id="subject" class="hidden">
+    <div class="topbar"><a class="back" href="#">‹ 全部科目</a></div>
+    <div class="subj-head"><div class="ico" id="s-ico"></div><h1 id="s-name"></h1></div>
+    <div class="tabs">
+      <a class="tab" id="tab-q" href="#">测试题</a>
+      <a class="tab" id="tab-o" href="#">复习提纲</a>
+    </div>
+    <div id="s-list"></div>
+  </section>
+</div>
+
+<script>
+var DATA = {"title": "复习主页", "updated": "2026-11-07 10:20", "subjects": [{"name": "语文", "icon": "文", "color": "#c2410c", "quizzes": [{"name": "九年级_语文_期中第一至三单元", "title": "九年级语文 · 期中复习（第一至三单元）自测", "grade": "九年级", "created": "2026-11-06", "count": 26, "store": "quiz:九年级语文 · 期中复习（第一至三单元）自测:2026-11-06", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%AF%AD%E6%96%87/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%AF%AD%E6%96%87_%E6%9C%9F%E4%B8%AD%E7%AC%AC%E4%B8%80%E8%87%B3%E4%B8%89%E5%8D%95%E5%85%83/%E6%B5%8B%E8%AF%95%E9%A2%98.html", "links": [{"label": "知识点", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%AF%AD%E6%96%87/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%AF%AD%E6%96%87_%E6%9C%9F%E4%B8%AD%E7%AC%AC%E4%B8%80%E8%87%B3%E4%B8%89%E5%8D%95%E5%85%83/%E7%9F%A5%E8%AF%86%E7%82%B9.html"}, {"label": "1小时冲刺重点", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%AF%AD%E6%96%87/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%AF%AD%E6%96%87_%E6%9C%9F%E4%B8%AD%E7%AC%AC%E4%B8%80%E8%87%B3%E4%B8%89%E5%8D%95%E5%85%83/1%E5%B0%8F%E6%97%B6%E5%86%B2%E5%88%BA%E9%87%8D%E7%82%B9.html"}]}], "outlines": [{"name": "【语文】期中复习提纲", "kind": "PDF", "url": "%E6%8F%90%E7%BA%B2/%E8%AF%AD%E6%96%87/%E3%80%90%E8%AF%AD%E6%96%87%E3%80%91%E6%9C%9F%E4%B8%AD%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2.pdf", "mtime": "2026-11-06"}]}, {"name": "数学", "icon": "数", "color": "#2563eb", "quizzes": [], "outlines": []}, {"name": "英语", "icon": "英", "color": "#7c3aed", "quizzes": [{"name": "九年级_英语_期中Units1-3", "title": "九年级英语 · 期中复习 Units 1–3 自测", "grade": "九年级", "created": "2026-11-06", "count": 42, "store": "quiz:九年级英语 · 期中复习 Units 1–3 自测:2026-11-06", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%8B%B1%E8%AF%AD/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%8B%B1%E8%AF%AD_%E6%9C%9F%E4%B8%ADUnits1-3/%E6%B5%8B%E8%AF%95%E9%A2%98.html", "links": [{"label": "知识点", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%8B%B1%E8%AF%AD/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%8B%B1%E8%AF%AD_%E6%9C%9F%E4%B8%ADUnits1-3/%E7%9F%A5%E8%AF%86%E7%82%B9.html"}]}], "outlines": [{"name": "【英语】期中复习提纲（背诵版）", "kind": "PDF", "url": "%E6%8F%90%E7%BA%B2/%E8%8B%B1%E8%AF%AD/%E3%80%90%E8%8B%B1%E8%AF%AD%E3%80%91%E6%9C%9F%E4%B8%AD%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2%EF%BC%88%E8%83%8C%E8%AF%B5%E7%89%88%EF%BC%89.pdf", "mtime": "2026-11-06"}, {"name": "【英语】期中复习提纲（默写版）", "kind": "PDF", "url": "%E6%8F%90%E7%BA%B2/%E8%8B%B1%E8%AF%AD/%E3%80%90%E8%8B%B1%E8%AF%AD%E3%80%91%E6%9C%9F%E4%B8%AD%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2%EF%BC%88%E9%BB%98%E5%86%99%E7%89%88%EF%BC%89.pdf", "mtime": "2026-11-06"}]}, {"name": "物理", "icon": "物", "color": "#0891b2", "quizzes": [], "outlines": []}, {"name": "化学", "icon": "化", "color": "#16a34a", "quizzes": [], "outlines": []}, {"name": "生物", "icon": "生", "color": "#65a30d", "quizzes": [], "outlines": []}, {"name": "历史", "icon": "史", "color": "#b45309", "quizzes": [], "outlines": []}, {"name": "地理", "icon": "地", "color": "#0d9488", "quizzes": [], "outlines": []}, {"name": "道德与法治", "icon": "道", "color": "#be123c", "quizzes": [], "outlines": []}]};
+
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+
+function status(q) {
+  var st = null;
+  try { st = JSON.parse(localStorage.getItem(q.store)); } catch (e) {}
+  if (!st) return { cls: "", text: "未开始", btn: "开始答题", rank: 0 };
+  if (st.submitted) {
+    var d = st.submittedAt ? new Date(st.submittedAt) : null;
+    var when = d ? (d.getMonth() + 1) + "/" + d.getDate() : "";
+    return { cls: "done", text: "已交卷" + (when ? " · " + when : ""), btn: "查看结果", rank: 1, t: st.submittedAt || "" };
+  }
+  var n = Object.keys(st.answers || {}).length;
+  if (!n) return { cls: "", text: "未开始", btn: "开始答题", rank: 0 };
+  return { cls: "doing", text: "答到 " + n + "/" + q.count, btn: "继续答题", rank: 2, t: "" };
+}
+
+function quizCard(q, showSubject) {
+  var s = status(q);
+  var meta = [];
+  if (showSubject) meta.push('<span class="badge">' + esc(q.subject) + '</span>');
+  if (q.grade) meta.push('<span class="muted">' + esc(q.grade) + '</span>');
+  meta.push('<span class="muted">' + q.count + ' 题</span>');
+  if (q.created) meta.push('<span class="muted">' + esc(q.created) + '</span>');
+  meta.push('<span class="badge ' + s.cls + '">' + esc(s.text) + '</span>');
+  var acts = '<a class="btn main" href="' + q.url + '">' + s.btn + '</a>';
+  (q.links || []).forEach(function (l) { acts += '<a class="btn" href="' + l.url + '">' + esc(l.label) + '</a>'; });
+  return '<div class="card"><div class="q-title">' + esc(q.title) + '</div><div class="q-meta">' + meta.join("") +
+    '</div><div class="acts">' + acts + '</div></div>';
+}
+
+function outlineRow(o) {
+  return '<a class="row" href="' + o.url + '"><span class="kind">' + esc(o.kind) + '</span><span class="name">' +
+    esc(o.name) + '</span><span class="chev">›</span></a>';
+}
+
+function renderHome() {
+  document.getElementById("updated").textContent = "更新于 " + DATA.updated;
+  var grid = "", all = [];
+  DATA.subjects.forEach(function (s) {
+    var nq = s.quizzes.length, no = s.outlines.length;
+    s.quizzes.forEach(function (q) { q.subject = s.name; all.push(q); });
+    var info = (nq || no) ? (nq ? nq + " 套题" : "") + (nq && no ? "<br>" : "") + (no ? no + " 份提纲" : "") : "暂无内容";
+    grid += '<a class="subj' + (nq || no ? "" : " empty") + '" href="#' + encodeURIComponent(s.name) + '">' +
+      '<span class="ico" style="background:' + s.color + '">' + esc(s.icon) + '</span><b>' + esc(s.name) +
+      '</b><span class="muted">' + info + '</span></a>';
+  });
+  document.getElementById("grid").innerHTML = grid;
+
+  // 最近：进行中的排前面，其次按出题日期，最多 3 套
+  all.sort(function (a, b) {
+    var sa = status(a), sb = status(b);
+    if ((sa.rank === 2) !== (sb.rank === 2)) return sa.rank === 2 ? -1 : 1;
+    return (b.created || "").localeCompare(a.created || "");
+  });
+  var recent = all.slice(0, 3);
+  document.getElementById("recent-box").classList.toggle("hidden", !recent.length);
+  document.getElementById("recent").innerHTML = recent.map(function (q) { return quizCard(q, true); }).join("");
+}
+
+function renderSubject(name, tab) {
+  var s = DATA.subjects.filter(function (x) { return x.name === name; })[0];
+  if (!s) { location.hash = ""; return; }
+  if (!tab) tab = s.quizzes.length || !s.outlines.length ? "q" : "o";
+  document.title = s.name + " · 复习主页";
+  var ico = document.getElementById("s-ico");
+  ico.textContent = s.icon; ico.style.background = s.color;
+  document.getElementById("s-name").textContent = s.name;
+  var base = "#" + encodeURIComponent(s.name);
+  var tq = document.getElementById("tab-q"), to = document.getElementById("tab-o");
+  tq.href = base + "/q"; to.href = base + "/o";
+  tq.textContent = "测试题 " + s.quizzes.length; to.textContent = "复习提纲 " + s.outlines.length;
+  tq.classList.toggle("on", tab === "q"); to.classList.toggle("on", tab === "o");
+  var html;
+  if (tab === "q") {
+    html = s.quizzes.length ? s.quizzes.map(function (q) { return quizCard(q, false); }).join("")
+      : '<div class="empty-tip">这一科还没有测试题。把提纲放进「01_复习提纲/' + esc(s.name) + '」，再让 Claude 出题。</div>';
+  } else {
+    html = s.outlines.length ? s.outlines.map(outlineRow).join("")
+      : '<div class="empty-tip">这一科还没有上传复习提纲。</div>';
+  }
+  document.getElementById("s-list").innerHTML = html;
+}
+
+function route() {
+  var h = decodeURIComponent(location.hash.replace(/^#/, ""));
+  var home = !h;
+  document.getElementById("home").classList.toggle("hidden", !home);
+  document.getElementById("subject").classList.toggle("hidden", home);
+  if (home) { document.title = "复习主页"; renderHome(); }
+  else { var p = h.split("/"); renderSubject(p[0], p[1]); }
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", route);
+window.addEventListener("pageshow", function (e) { if (e.persisted) route(); });
+route();
+</script>
+</body>
+</html>
