@@ -38,6 +38,12 @@
   .badge { font-size: 12px; padding: 1px 8px; border-radius: 99px; background: #f1f5f9; color: var(--muted); white-space: nowrap; }
   .badge.done { background: #ecfdf3; color: #15803d; }
   .badge.doing { background: #fefce8; color: #a16207; }
+  .lvls { display: grid; gap: 6px; margin-top: 10px; }
+  .lvl { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; color: inherit; text-decoration: none; }
+  .lvl-n { font-size: 12px; color: var(--muted); min-width: 34px; }
+  .lvl-name { flex: 1; display: flex; flex-direction: column; line-height: 1.35; }
+  .lvl-name .muted { font-size: 12px; }
+  .lvl .chev { color: var(--muted); }
   .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
   .btn { display: inline-block; padding: 8px 14px; border-radius: 10px; font-size: 14px; border: 1px solid var(--line); background: #fff; }
   .btn.main { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
@@ -80,6 +86,7 @@
     <div class="topbar"><a class="back" href="#">‹ 全部科目</a></div>
     <div class="subj-head"><div class="ico" id="s-ico"></div><h1 id="s-name"></h1></div>
     <div class="tabs">
+      <a class="tab" id="tab-r" href="#">复习</a>
       <a class="tab" id="tab-q" href="#">测试题</a>
       <a class="tab" id="tab-o" href="#">复习提纲</a>
     </div>
@@ -88,35 +95,65 @@
 </div>
 
 <script>
-var DATA = {"title": "复习主页", "updated": "2026-11-07 10:20", "subjects": [{"name": "语文", "icon": "文", "color": "#c2410c", "quizzes": [{"name": "九年级_语文_期中第一至三单元", "title": "九年级语文 · 期中复习（第一至三单元）自测", "grade": "九年级", "created": "2026-11-06", "count": 26, "store": "quiz:九年级语文 · 期中复习（第一至三单元）自测:2026-11-06", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%AF%AD%E6%96%87/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%AF%AD%E6%96%87_%E6%9C%9F%E4%B8%AD%E7%AC%AC%E4%B8%80%E8%87%B3%E4%B8%89%E5%8D%95%E5%85%83/%E6%B5%8B%E8%AF%95%E9%A2%98.html", "links": [{"label": "知识点", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%AF%AD%E6%96%87/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%AF%AD%E6%96%87_%E6%9C%9F%E4%B8%AD%E7%AC%AC%E4%B8%80%E8%87%B3%E4%B8%89%E5%8D%95%E5%85%83/%E7%9F%A5%E8%AF%86%E7%82%B9.html"}, {"label": "1小时冲刺重点", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%AF%AD%E6%96%87/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%AF%AD%E6%96%87_%E6%9C%9F%E4%B8%AD%E7%AC%AC%E4%B8%80%E8%87%B3%E4%B8%89%E5%8D%95%E5%85%83/1%E5%B0%8F%E6%97%B6%E5%86%B2%E5%88%BA%E9%87%8D%E7%82%B9.html"}]}], "outlines": [{"name": "【语文】期中复习提纲", "kind": "PDF", "url": "%E6%8F%90%E7%BA%B2/%E8%AF%AD%E6%96%87/%E3%80%90%E8%AF%AD%E6%96%87%E3%80%91%E6%9C%9F%E4%B8%AD%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2.pdf", "mtime": "2026-11-06"}]}, {"name": "数学", "icon": "数", "color": "#2563eb", "quizzes": [], "outlines": []}, {"name": "英语", "icon": "英", "color": "#7c3aed", "quizzes": [{"name": "九年级_英语_期中Units1-3", "title": "九年级英语 · 期中复习 Units 1–3 自测", "grade": "九年级", "created": "2026-11-06", "count": 42, "store": "quiz:九年级英语 · 期中复习 Units 1–3 自测:2026-11-06", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%8B%B1%E8%AF%AD/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%8B%B1%E8%AF%AD_%E6%9C%9F%E4%B8%ADUnits1-3/%E6%B5%8B%E8%AF%95%E9%A2%98.html", "links": [{"label": "知识点", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%8B%B1%E8%AF%AD/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%8B%B1%E8%AF%AD_%E6%9C%9F%E4%B8%ADUnits1-3/%E7%9F%A5%E8%AF%86%E7%82%B9.html"}]}], "outlines": [{"name": "【英语】期中复习提纲（背诵版）", "kind": "PDF", "url": "%E6%8F%90%E7%BA%B2/%E8%8B%B1%E8%AF%AD/%E3%80%90%E8%8B%B1%E8%AF%AD%E3%80%91%E6%9C%9F%E4%B8%AD%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2%EF%BC%88%E8%83%8C%E8%AF%B5%E7%89%88%EF%BC%89.pdf", "mtime": "2026-11-06"}, {"name": "【英语】期中复习提纲（默写版）", "kind": "PDF", "url": "%E6%8F%90%E7%BA%B2/%E8%8B%B1%E8%AF%AD/%E3%80%90%E8%8B%B1%E8%AF%AD%E3%80%91%E6%9C%9F%E4%B8%AD%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2%EF%BC%88%E9%BB%98%E5%86%99%E7%89%88%EF%BC%89.pdf", "mtime": "2026-11-06"}]}, {"name": "物理", "icon": "物", "color": "#0891b2", "quizzes": [], "outlines": []}, {"name": "化学", "icon": "化", "color": "#16a34a", "quizzes": [], "outlines": []}, {"name": "生物", "icon": "生", "color": "#65a30d", "quizzes": [], "outlines": []}, {"name": "历史", "icon": "史", "color": "#b45309", "quizzes": [], "outlines": []}, {"name": "地理", "icon": "地", "color": "#0d9488", "quizzes": [], "outlines": []}, {"name": "道德与法治", "icon": "道", "color": "#be123c", "quizzes": [], "outlines": []}]};
+var DATA = {"title": "复习主页", "updated": "2026-11-07 11:06", "subjects": [{"name": "语文", "icon": "文", "color": "#c2410c", "quizzes": [{"name": "九年级_语文_期中第一至三单元", "title": "九年级语文 · 期中复习（第一至三单元）", "grade": "九年级", "created": "2026-11-06", "levels": [{"level": 2, "label": "标准模拟", "pass": 80, "title": "九年级语文 · 期中复习（第一至三单元）自测", "count": 26, "created": "2026-11-06", "store": "quiz:九年级语文 · 期中复习（第一至三单元）自测:2026-11-06", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%AF%AD%E6%96%87/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%AF%AD%E6%96%87_%E6%9C%9F%E4%B8%AD%E7%AC%AC%E4%B8%80%E8%87%B3%E4%B8%89%E5%8D%95%E5%85%83/2_%E6%A0%87%E5%87%86%E6%A8%A1%E6%8B%9F/%E6%B5%8B%E8%AF%95%E9%A2%98.html"}], "links": [{"label": "知识点", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%AF%AD%E6%96%87/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%AF%AD%E6%96%87_%E6%9C%9F%E4%B8%AD%E7%AC%AC%E4%B8%80%E8%87%B3%E4%B8%89%E5%8D%95%E5%85%83/%E7%9F%A5%E8%AF%86%E7%82%B9.html"}, {"label": "1小时冲刺重点", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%AF%AD%E6%96%87/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%AF%AD%E6%96%87_%E6%9C%9F%E4%B8%AD%E7%AC%AC%E4%B8%80%E8%87%B3%E4%B8%89%E5%8D%95%E5%85%83/1%E5%B0%8F%E6%97%B6%E5%86%B2%E5%88%BA%E9%87%8D%E7%82%B9.html"}]}], "outlines": [{"name": "【语文】期中复习提纲", "kind": "PDF", "url": "%E6%8F%90%E7%BA%B2/%E8%AF%AD%E6%96%87/%E3%80%90%E8%AF%AD%E6%96%87%E3%80%91%E6%9C%9F%E4%B8%AD%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2.pdf", "mtime": "2026-11-06"}], "reviews": []}, {"name": "数学", "icon": "数", "color": "#2563eb", "quizzes": [], "outlines": [], "reviews": []}, {"name": "英语", "icon": "英", "color": "#7c3aed", "quizzes": [{"name": "九年级_英语_期中Units1-3", "title": "九年级英语 · 期中复习 Units 1–3", "grade": "九年级", "created": "2026-11-06", "levels": [{"level": 2, "label": "标准模拟", "pass": 80, "title": "九年级英语 · 期中复习 Units 1–3 自测", "count": 42, "created": "2026-11-06", "store": "quiz:九年级英语 · 期中复习 Units 1–3 自测:2026-11-06", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%8B%B1%E8%AF%AD/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%8B%B1%E8%AF%AD_%E6%9C%9F%E4%B8%ADUnits1-3/2_%E6%A0%87%E5%87%86%E6%A8%A1%E6%8B%9F/%E6%B5%8B%E8%AF%95%E9%A2%98.html"}], "links": [{"label": "知识点", "url": "%E6%B5%8B%E8%AF%95%E9%A2%98/%E8%8B%B1%E8%AF%AD/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E8%8B%B1%E8%AF%AD_%E6%9C%9F%E4%B8%ADUnits1-3/%E7%9F%A5%E8%AF%86%E7%82%B9.html"}]}], "outlines": [{"name": "【英语】期中复习提纲（背诵版）", "kind": "PDF", "url": "%E6%8F%90%E7%BA%B2/%E8%8B%B1%E8%AF%AD/%E3%80%90%E8%8B%B1%E8%AF%AD%E3%80%91%E6%9C%9F%E4%B8%AD%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2%EF%BC%88%E8%83%8C%E8%AF%B5%E7%89%88%EF%BC%89.pdf", "mtime": "2026-11-06"}, {"name": "【英语】期中复习提纲（默写版）", "kind": "PDF", "url": "%E6%8F%90%E7%BA%B2/%E8%8B%B1%E8%AF%AD/%E3%80%90%E8%8B%B1%E8%AF%AD%E3%80%91%E6%9C%9F%E4%B8%AD%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2%EF%BC%88%E9%BB%98%E5%86%99%E7%89%88%EF%BC%89.pdf", "mtime": "2026-11-06"}], "reviews": []}, {"name": "物理", "icon": "物", "color": "#0891b2", "quizzes": [], "outlines": [], "reviews": []}, {"name": "化学", "icon": "化", "color": "#16a34a", "quizzes": [], "outlines": [], "reviews": []}, {"name": "生物", "icon": "生", "color": "#65a30d", "quizzes": [], "outlines": [], "reviews": []}, {"name": "历史", "icon": "史", "color": "#b45309", "quizzes": [], "outlines": [{"name": "【历史】期中复习提纲", "kind": "PDF", "url": "%E6%8F%90%E7%BA%B2/%E5%8E%86%E5%8F%B2/%E3%80%90%E5%8E%86%E5%8F%B2%E3%80%91%E6%9C%9F%E4%B8%AD%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2.pdf", "mtime": "2026-11-06"}], "reviews": []}, {"name": "地理", "icon": "地", "color": "#0d9488", "quizzes": [], "outlines": [], "reviews": []}, {"name": "道德与法治", "icon": "道", "color": "#be123c", "quizzes": [], "outlines": [{"name": "【道法】第四单元 期中复习提纲（解析版）", "kind": "PDF", "url": "%E6%8F%90%E7%BA%B2/%E9%81%93%E5%BE%B7%E4%B8%8E%E6%B3%95%E6%B2%BB/%E3%80%90%E9%81%93%E6%B3%95%E3%80%91%E7%AC%AC%E5%9B%9B%E5%8D%95%E5%85%83%20%E6%9C%9F%E4%B8%AD%E5%A4%8D%E4%B9%A0%E6%8F%90%E7%BA%B2%EF%BC%88%E8%A7%A3%E6%9E%90%E7%89%88%EF%BC%89.pdf", "mtime": "2026-11-06"}], "reviews": [{"name": "九年级_道德与法治_第四单元共圆中国梦", "title": "九年级道德与法治 · 第四单元 共圆中国梦 复习", "grade": "九年级", "created": "2026-11-07", "modes": [{"label": "1 小时", "url": "%E5%A4%8D%E4%B9%A0/%E9%81%93%E5%BE%B7%E4%B8%8E%E6%B3%95%E6%B2%BB/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E9%81%93%E5%BE%B7%E4%B8%8E%E6%B3%95%E6%B2%BB_%E7%AC%AC%E5%9B%9B%E5%8D%95%E5%85%83%E5%85%B1%E5%9C%86%E4%B8%AD%E5%9B%BD%E6%A2%A6/1%E5%B0%8F%E6%97%B6.html"}, {"label": "半天", "url": "%E5%A4%8D%E4%B9%A0/%E9%81%93%E5%BE%B7%E4%B8%8E%E6%B3%95%E6%B2%BB/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E9%81%93%E5%BE%B7%E4%B8%8E%E6%B3%95%E6%B2%BB_%E7%AC%AC%E5%9B%9B%E5%8D%95%E5%85%83%E5%85%B1%E5%9C%86%E4%B8%AD%E5%9B%BD%E6%A2%A6/%E5%8D%8A%E5%A4%A9.html"}, {"label": "完整复习", "url": "%E5%A4%8D%E4%B9%A0/%E9%81%93%E5%BE%B7%E4%B8%8E%E6%B3%95%E6%B2%BB/%E4%B9%9D%E5%B9%B4%E7%BA%A7_%E9%81%93%E5%BE%B7%E4%B8%8E%E6%B3%95%E6%B2%BB_%E7%AC%AC%E5%9B%9B%E5%8D%95%E5%85%83%E5%85%B1%E5%9C%86%E4%B8%AD%E5%9B%BD%E6%A2%A6/%E5%AE%8C%E6%95%B4%E5%A4%8D%E4%B9%A0.html"}]}]}]};
 
 function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
 
 function status(q) {
   var st = null;
   try { st = JSON.parse(localStorage.getItem(q.store)); } catch (e) {}
-  if (!st) return { cls: "", text: "未开始", btn: "开始答题", rank: 0 };
+  if (!st) return { cls: "", text: "未开始", btn: "开始", rank: 0 };
   if (st.submitted) {
-    var d = st.submittedAt ? new Date(st.submittedAt) : null;
-    var when = d ? (d.getMonth() + 1) + "/" + d.getDate() : "";
-    return { cls: "done", text: "已交卷" + (when ? " · " + when : ""), btn: "查看结果", rank: 1, t: st.submittedAt || "" };
+    var pct = st.percent, passed = pct != null && q.pass && pct >= q.pass && !st.pending;
+    var text = pct != null ? "得分 " + pct + "%" + (passed ? " ✅" : "") : "已交卷";
+    return { cls: passed ? "done" : "doing", text: text, btn: "看结果", rank: 1, passed: passed, t: st.submittedAt || "" };
   }
   var n = Object.keys(st.answers || {}).length;
-  if (!n) return { cls: "", text: "未开始", btn: "开始答题", rank: 0 };
-  return { cls: "doing", text: "答到 " + n + "/" + q.count, btn: "继续答题", rank: 2, t: "" };
+  if (!n) return { cls: "", text: "未开始", btn: "开始", rank: 0 };
+  return { cls: "doing", text: "答到 " + n + "/" + q.count, btn: "继续", rank: 2, t: "" };
 }
 
+// 通过到第几级：从第 1 级起连续达标的最高级
+function passedLevel(u) {
+  var best = 0;
+  u.levels.filter(function (l) { return l.level; }).sort(function (a, b) { return a.level - b.level; })
+    .some(function (l) { if (status(l).passed) { best = l.level; return false; } return true; });
+  return best;
+}
+
+function unitCard(u) {
+  var pl = passedLevel(u), graded = u.levels.some(function (l) { return l.level; });
+  var meta = [];
+  if (u.grade) meta.push('<span class="muted">' + esc(u.grade) + '</span>');
+  if (graded) meta.push('<span class="badge ' + (pl ? "done" : "") + '">' + (pl ? "已通过第 " + pl + " 级" : "还没有达标的级别") + '</span>');
+  var rows = u.levels.map(function (l) {
+    var s = status(l);
+    return '<a class="lvl" href="' + l.url + '"><span class="lvl-n">' + (l.level ? "第 " + l.level + " 级" : "") + '</span>' +
+      '<span class="lvl-name"><b>' + esc(l.label) + '</b><span class="muted">' + l.count + ' 题' + (l.pass ? ' · 达标 ' + l.pass + '%' : '') + '</span></span>' +
+      '<span class="badge ' + s.cls + '">' + esc(s.text) + '</span><span class="chev">›</span></a>';
+  }).join("");
+  var acts = (u.links || []).map(function (l) { return '<a class="btn" href="' + l.url + '">' + esc(l.label) + '</a>'; }).join("");
+  return '<div class="card"><div class="q-title">' + esc(u.title) + '</div><div class="q-meta">' + meta.join("") + '</div>' +
+    '<div class="lvls">' + rows + '</div>' + (acts ? '<div class="acts">' + acts + '</div>' : "") + '</div>';
+}
+
+// 「最近」列表里的单级卡片
 function quizCard(q, showSubject) {
   var s = status(q);
   var meta = [];
   if (showSubject) meta.push('<span class="badge">' + esc(q.subject) + '</span>');
-  if (q.grade) meta.push('<span class="muted">' + esc(q.grade) + '</span>');
   meta.push('<span class="muted">' + q.count + ' 题</span>');
-  if (q.created) meta.push('<span class="muted">' + esc(q.created) + '</span>');
   meta.push('<span class="badge ' + s.cls + '">' + esc(s.text) + '</span>');
-  var acts = '<a class="btn main" href="' + q.url + '">' + s.btn + '</a>';
-  (q.links || []).forEach(function (l) { acts += '<a class="btn" href="' + l.url + '">' + esc(l.label) + '</a>'; });
   return '<div class="card"><div class="q-title">' + esc(q.title) + '</div><div class="q-meta">' + meta.join("") +
+    '</div><div class="acts"><a class="btn main" href="' + q.url + '">' + s.btn + '</a></div></div>';
+}
+
+function reviewCard(r) {
+  var acts = r.modes.map(function (m, i) {
+    return '<a class="btn' + (i === 0 ? " main" : "") + '" href="' + m.url + '">' + esc(m.label) + '</a>';
+  }).join("");
+  var meta = (r.grade ? '<span class="muted">' + esc(r.grade) + '</span>' : "") + '<span class="muted">选一个时间档，跟着计时器复习</span>';
+  return '<div class="card"><div class="q-title">' + esc(r.title) + '</div><div class="q-meta">' + meta +
     '</div><div class="acts">' + acts + '</div></div>';
 }
 
@@ -129,10 +166,17 @@ function renderHome() {
   document.getElementById("updated").textContent = "更新于 " + DATA.updated;
   var grid = "", all = [];
   DATA.subjects.forEach(function (s) {
-    var nq = s.quizzes.length, no = s.outlines.length;
-    s.quizzes.forEach(function (q) { q.subject = s.name; all.push(q); });
-    var info = (nq || no) ? (nq ? nq + " 套题" : "") + (nq && no ? "<br>" : "") + (no ? no + " 份提纲" : "") : "暂无内容";
-    grid += '<a class="subj' + (nq || no ? "" : " empty") + '" href="#' + encodeURIComponent(s.name) + '">' +
+    var nq = s.quizzes.length, no = s.outlines.length, nr = (s.reviews || []).length;
+    s.quizzes.forEach(function (u) { u.levels.forEach(function (l) {
+      all.push({ subject: s.name, title: u.title + (l.level ? " · " + l.label : ""), count: l.count, created: l.created,
+                 store: l.store, url: l.url, pass: l.pass });
+    }); });
+    var parts = [];
+    if (nr) parts.push(nr + " 份复习");
+    if (nq) parts.push(nq + " 份测试");
+    if (no) parts.push(no + " 份提纲");
+    var info = parts.length ? parts.join("<br>") : "暂无内容";
+    grid += '<a class="subj' + (parts.length ? "" : " empty") + '" href="#' + encodeURIComponent(s.name) + '">' +
       '<span class="ico" style="background:' + s.color + '">' + esc(s.icon) + '</span><b>' + esc(s.name) +
       '</b><span class="muted">' + info + '</span></a>';
   });
@@ -152,19 +196,24 @@ function renderHome() {
 function renderSubject(name, tab) {
   var s = DATA.subjects.filter(function (x) { return x.name === name; })[0];
   if (!s) { location.hash = ""; return; }
-  if (!tab) tab = s.quizzes.length || !s.outlines.length ? "q" : "o";
+  var reviews = s.reviews || [];
+  if (!tab) tab = reviews.length ? "r" : (s.quizzes.length || !s.outlines.length ? "q" : "o");
   document.title = s.name + " · 复习主页";
   var ico = document.getElementById("s-ico");
   ico.textContent = s.icon; ico.style.background = s.color;
   document.getElementById("s-name").textContent = s.name;
   var base = "#" + encodeURIComponent(s.name);
-  var tq = document.getElementById("tab-q"), to = document.getElementById("tab-o");
-  tq.href = base + "/q"; to.href = base + "/o";
+  var tq = document.getElementById("tab-q"), to = document.getElementById("tab-o"), tr = document.getElementById("tab-r");
+  tq.href = base + "/q"; to.href = base + "/o"; tr.href = base + "/r";
+  tr.textContent = "复习 " + reviews.length; tr.classList.toggle("on", tab === "r");
   tq.textContent = "测试题 " + s.quizzes.length; to.textContent = "复习提纲 " + s.outlines.length;
   tq.classList.toggle("on", tab === "q"); to.classList.toggle("on", tab === "o");
   var html;
-  if (tab === "q") {
-    html = s.quizzes.length ? s.quizzes.map(function (q) { return quizCard(q, false); }).join("")
+  if (tab === "r") {
+    html = reviews.length ? reviews.map(reviewCard).join("")
+      : '<div class="empty-tip">这一科还没有复习计划。跟 Claude 说「我只有一小时复习' + esc(s.name) + '」就会生成。</div>';
+  } else if (tab === "q") {
+    html = s.quizzes.length ? s.quizzes.map(unitCard).join("")
       : '<div class="empty-tip">这一科还没有测试题。把提纲放进「01_复习提纲/' + esc(s.name) + '」，再让 Claude 出题。</div>';
   } else {
     html = s.outlines.length ? s.outlines.map(outlineRow).join("")

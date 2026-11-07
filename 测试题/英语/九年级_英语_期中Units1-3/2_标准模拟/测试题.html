@@ -73,11 +73,15 @@
   .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #111827; color: #fff;
     padding: 8px 16px; border-radius: 8px; font-size: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; }
   .toast.show { opacity: .92; }
+  .level-box { margin: 4px 0 14px; padding: 10px 12px; border-radius: 8px; font-size: 15px; }
+  .level-box.pass { background: var(--ok-soft); }
+  .level-box.fail { background: var(--half-soft); }
+  .next-btn { display: inline-block; margin-top: 6px; padding: 4px 12px; border-radius: 8px; background: var(--ok); color: #fff; text-decoration: none; }
   @media print { .bar, .actions { display: none; } }
 </style>
 </head>
 <body>
-<div style="background:#111827;font:14px/1 -apple-system,'PingFang SC',sans-serif;padding:10px 14px"><a href="../../../index.html" style="color:#fff;text-decoration:none">← 返回复习主页</a></div>
+<div style="background:#111827;font:14px/1 -apple-system,'PingFang SC',sans-serif;padding:10px 14px"><a href="../../../../index.html" style="color:#fff;text-decoration:none">← 返回复习主页</a></div>
 <div class="wrap">
   <header>
     <h1 id="title"></h1>
@@ -103,389 +107,645 @@
 <div class="toast" id="toast"></div>
 
 <script id="quiz-data" type="application/json">{
- "title": "九年级语文 · 期中复习（第一至三单元）自测",
- "subject": "语文",
+ "title": "九年级英语 · 期中复习 Units 1–3 自测",
+ "subject": "英语",
  "grade": "九年级",
- "source": "01_复习提纲/语文/【语文】期中复习提纲.pdf",
+ "source": [
+  "01_复习提纲/英语/【英语】期中复习提纲（背诵版）.pdf",
+  "01_复习提纲/英语/【英语】期中复习提纲（默写版）.pdf"
+ ],
  "created": "2026-11-06",
  "questions": [
   {
    "id": 1,
    "type": "single",
-   "knowledge": "字音",
+   "knowledge": "核心单词词形变化",
    "difficulty": "基础",
-   "stem": "下列词语中，括号内注音全部正确的一项是",
+   "stem": "With the ____ of the environment, people now lead a better life than before.",
    "options": [
-    "妖娆（ráo）　篝火（gōu）　积淀（dìng）　伛偻（yǔ lǚ）",
-    "折腰（zhé）　宿营（xiǔ）　干涸（hé）　霪雨（yín）",
-    "嗟来之食（jiē）　省悟（shěng）　皓月（hào）　觥筹（gōng chóu）",
-    "谪守（zhé）　汀兰（tīng）　拏（ná）　强饮（qiǎng）"
+    "improve",
+    "improved",
+    "improvement",
+    "improving"
    ],
-   "answer": "D",
-   "explanation": "提纲字音表：积淀 diàn（A 错）；宿营 sù（B 错）；省悟 xǐng，“省”在这里是“醒悟、反省”的意思（C 错）。D 项四个全对，其中“强饮”的“强”读 qiǎng，意思是“尽力”，容易误读成 qiáng。"
+   "answer": "C",
+   "explanation": "the 和 of 之间要填名词，所以用 improvement（改善）。提纲 U1 必背句型 23：With the improvement of the environment, people now lead a better life than before. improve 是动词，improved / improving 是形容词。"
   },
   {
    "id": 2,
-   "type": "single",
-   "knowledge": "默写高频错字",
-   "difficulty": "基础",
-   "stem": "下列默写句子中，没有错别字的一项是",
-   "options": [
-    "但愿人长久，千里共蝉娟。",
-    "金樽清酒斗十千，玉盘珍馐直万钱。",
-    "鸡声茅店月，人迹板桥霜。",
-    "登斯楼也，则有心旷神怡，宠辱皆忘。"
+   "type": "fill",
+   "knowledge": "核心单词词形变化",
+   "difficulty": "中等",
+   "stem": "用所给词的适当形式填空。① The film is so ____ (amuse) that we all laughed. ② Jane felt ____ (excite) when she heard the news. ③ Shi Guangyin ____ (found) a sand-control company and led people to plant trees.",
+   "answer": [
+    [
+     "amusing"
+    ],
+    [
+     "excited"
+    ],
+    [
+     "founded"
+    ]
    ],
-   "answer": "C",
-   "explanation": "提纲“默写高频错字”专门列出了婵娟、珍羞、宠辱偕忘。A 应为“婵娟”（女字旁）；B 课文原文是“珍羞”，虽然“羞”同“馐”，默写时必须照原文写“羞”；D 应为“宠辱偕忘”，“偕”是“一起、一并”。C《商山早行》书写正确。"
+   "explanation": "① 修饰物、表示「令人发笑的」用 amusing（提纲 P1：amusing 有趣的，引人发笑的）。② 修饰人的感受用 -ed，felt excited 感到兴奋。③ found（创建）是规则动词，过去式是 founded（提纲 P13：found 创建，创办；U2 句型 24：He founded a sand-control company）。别和 find 的过去式 found 搞混。"
   },
   {
    "id": 3,
-   "type": "judge",
-   "knowledge": "文学常识（现代诗歌）",
+   "type": "single",
+   "knowledge": "used to / be used to / be used for",
    "difficulty": "基础",
-   "stem": "《我爱这土地》的作者艾青，原名查良铮，是“九叶诗派”的代表诗人之一。",
-   "answer": false,
-   "explanation": "提纲：艾青原名蒋海澄，浙江金华人。原名查良铮、属于“九叶诗派”的是《我看》的作者穆旦。两位诗人的诗都写于 1938 年，容易记混。"
+   "stem": "My grandpa ____ go to work by bike, but now he takes the underground.",
+   "options": [
+    "is used to",
+    "uses to",
+    "is used for",
+    "used to"
+   ],
+   "answer": "D",
+   "explanation": "过去常常骑车、现在坐地铁，是今昔对比，用 used to do（过去常常做某事，现在不做了），to 后接动词原形。is used to 后要接 doing（习惯于），is used for 是「被用来」，uses to 没有这种写法。"
   },
   {
    "id": 4,
-   "type": "single",
-   "knowledge": "文学常识（古诗文）",
+   "type": "fill",
+   "knowledge": "used to / be used to / be used for",
    "difficulty": "中等",
-   "stem": "下列文学常识表述有误的一项是",
-   "options": [
-    "范仲淹，字希文，谥文忠，北宋政治家、文学家，《岳阳楼记》写于庆历六年。",
-    "穆旦，原名查良铮，“九叶诗派”代表诗人之一，《我看》写于 1938 年。",
-    "《乡愁》的作者是余光中，这首诗写于 1972 年。",
-    "张岱，字宗子，号陶庵，明末清初文学家，《湖心亭看雪》选自《陶庵梦忆》。"
+   "stem": "用所给词的适当形式填空。① I am used to ____ (get) up early. ② Wood can be used to ____ (make) paper. ③ The knife is used for ____ (cut) apples.",
+   "answer": [
+    [
+     "getting"
+    ],
+    [
+     "make"
+    ],
+    [
+     "cutting"
+    ]
    ],
-   "answer": "A",
-   "explanation": "提纲：范仲淹“谥文正”。“谥文忠”的是欧阳修。巧记：范仲淹“先天下之忧而忧”——正；欧阳修号醉翁、六一居士——忠。B、C、D 都与提纲一致。"
+   "explanation": "① be used to doing「习惯于做」，to 是介词，接 -ing：getting。② 物 + be used to do「被用来做」，to 是不定式符号，接原形：make。③ be used for 后接名词或 -ing：cutting。提纲 P20、P34：The knife is used to cut apples. = The knife is used for cutting apples."
   },
   {
    "id": 5,
    "type": "single",
-   "knowledge": "《沁园春·雪》",
+   "knowledge": "accept / receive",
    "difficulty": "基础",
-   "stem": "《沁园春·雪》的上阕和下阕分别由哪个字统领？",
+   "stem": "I ____ an invitation from Tom yesterday, but I didn't ____ it because I was busy.",
    "options": [
-    "看；惜",
-    "望；惜",
-    "望；数",
-    "惜；望"
+    "received; accept",
+    "accepted; receive",
+    "received; receive",
+    "accepted; accept"
    ],
-   "answer": "B",
-   "explanation": "提纲：上阕以“望”字统领，写北国雪景；下阕以“惜”字统领，评点秦皇汉武、唐宗宋祖、成吉思汗。“须晴日，看红装素裹”的“看”是上阕中转入虚写的字，“数风流人物”的“数”在主旨句里，都不是统领字。"
+   "answer": "A",
+   "explanation": "receive 是客观上「收到」，accept 是主观上「接受」。提纲 P7：receive 指客观上收到，但主观上不一定接受。收到了邀请（received），但因为忙没有接受（didn't accept）。"
   },
   {
    "id": 6,
-   "type": "multiple",
-   "knowledge": "《我爱这土地》《乡愁》意象",
-   "difficulty": "中等",
-   "stem": "下列对诗歌意象的理解，正确的有",
-   "options": [
-    "《我爱这土地》中的“土地”象征苦难深重的祖国。",
-    "《我爱这土地》中的“黎明”象征人民的悲愤与抗争。",
-    "《乡愁》中的“船票”寄托了夫妻分离之愁。",
-    "《乡愁》中的“坟墓”寄托了家国之隔的愁思。"
-   ],
-   "answer": [
-    "A",
-    "C"
-   ],
-   "explanation": "提纲：土地象征苦难深重的祖国，河流、风象征人民的悲愤与抗争，黎明象征胜利与新生的希望——B 把“河流、风”的含义安到了“黎明”上。《乡愁》四个意象：邮票（母子分离）、船票（夫妻分离）、坟墓（生死隔绝）、海峡（家国之隔）——D 把“海峡”的含义安到了“坟墓”上。"
+   "type": "judge",
+   "knowledge": "choose 用法",
+   "difficulty": "基础",
+   "stem": "表示「别无选择，只好……」时，can't choose but do sth. 和 have no choice but to do sth. 意思相同。",
+   "answer": true,
+   "explanation": "提纲 P7：can't choose but do sth. = have no choice but to do sth. = can do nothing but do sth.，都是「别无选择，只好……」。注意 can't choose but 后接动词原形，have no choice but 后接 to do。"
   },
   {
    "id": 7,
    "type": "single",
-   "knowledge": "诗歌朗诵基调",
-   "difficulty": "中等",
-   "stem": "下列关于诗歌朗诵处理的说法，正确的一项是",
+   "knowledge": "get / stay / keep / lose touch",
+   "difficulty": "基础",
+   "stem": "I ____ touch with my primary classmates years ago, so I don't know where they live now.",
    "options": [
-    "《乡愁》宜用明亮温柔、语气上扬的读法。",
-    "《你是人间的四月天》宜用低回深沉的基调。",
-    "《周总理，你在哪里》中的呼唤句宜读得轻、慢、含深情。",
-    "《周总理，你在哪里》中的回音应答句宜压低声音、放慢语速。"
+    "got in",
+    "kept in",
+    "put in",
+    "lost"
    ],
-   "answer": "C",
-   "explanation": "提纲：《周总理，你在哪里》呼唤句宜轻、慢、含深情；回音应答句宜稍扬稍亮（D 说反了）。《乡愁》宜用低回深沉的基调，《你是人间的四月天》宜用明亮温柔、语气上扬的读法——A、B 两项正好互换了。"
+   "answer": "D",
+   "explanation": "不知道他们住哪儿，说明「失去联系」：lose touch with sb（过去式 lost）。提纲 P8：I lost touch with my primary classmates. get in touch 是主动联系，keep in touch 是保持联系，put sb in touch with sb 是帮人牵线。"
   },
   {
    "id": 8,
-   "type": "single",
-   "knowledge": "《中国人失掉自信力了吗》",
+   "type": "multiple",
+   "knowledge": "动词搭配（how about / enjoy / encourage）",
    "difficulty": "中等",
-   "stem": "在《中国人失掉自信力了吗》中，鲁迅指出，信“地”、信“物”、信“国联”，其实是",
+   "stem": "下列句子中，正确的有",
    "options": [
-    "自信力",
-    "自欺力",
-    "民族自尊心",
-    "他信力"
+    "He enjoys to read foreign novels.",
+    "How about going swimming together this weekend?",
+    "My parents encourage me taking part in ball games.",
+    "We enjoyed ourselves in the park last Sunday."
    ],
-   "answer": "D",
-   "explanation": "提纲：信“地”信“物”信“国联”是“他信力”，求神拜佛是“自欺力”。鲁迅借此揭出对方论据与论点之间没有逻辑联系——这些人失掉的是“他信力”，不能证明中国人失掉了自信力。"
+   "answer": [
+    "B",
+    "D"
+   ],
+   "explanation": "B 对：How about + doing（提纲 P8）。D 对：enjoy oneself 玩得开心（P8）。A 错：enjoy 后接动词只能用 -ing，应为 enjoys reading（P8 易错点）。C 错：encourage sb. to do sth.，应为 encourage me to take part in（P36）。"
   },
   {
    "id": 9,
-   "type": "single",
-   "knowledge": "第二单元议论文思路",
-   "difficulty": "提高",
-   "stem": "下列对第二单元议论性文章的分析，不正确的一项是",
-   "options": [
-    "《培养德智体美劳全面发展的社会主义建设者和接班人》是立论性政论文，开篇即点明“培养什么人，是教育的首要问题”。",
-    "《谈骨气》的三个事例是并列关系，顺序可以随意调换，不影响论证。",
-    "《中国人失掉自信力了吗》是驳论文，先摆出对方论据，再驳其论证，然后立论，最后得出结论。",
-    "《创造宣言》先树靶子，列出五种“不能创造”的借口，再逐条反驳。"
-   ],
-   "answer": "B",
-   "explanation": "提纲：《谈骨气》中“三个事例的顺序不能调换，与孟子三句的先后一一照应”——文天祥对“富贵不能淫”，穷人不食嗟来之食对“贫贱不能移”，闻一多对“威武不能屈”。A、C、D 都是提纲原话的概括。"
+   "type": "judge",
+   "knowledge": "take place / happen",
+   "difficulty": "中等",
+   "stem": "句子 Great changes have been taken place in China. 是正确的。",
+   "answer": false,
+   "explanation": "take place 是不及物动词短语，没有被动语态（提纲 P8），应写成 Great changes have taken place in China. happen 也一样没有被动。"
   },
   {
    "id": 10,
    "type": "single",
-   "knowledge": "《谈骨气》事例与论点",
-   "difficulty": "基础",
-   "stem": "《谈骨气》用孟子的三句话统领三个事例。下列对应正确的一项是",
+   "knowledge": "have been to / have gone to / have been in",
+   "difficulty": "中等",
+   "stem": "—Have you seen Xiao Ya recently?\n—No, she ____ Guangzhou with her parents. She isn't here now.",
    "options": [
-    "闻一多怒斥特务——威武不能屈",
-    "文天祥拒绝元朝诱降——贫贱不能移",
-    "穷人不食“嗟来之食”——富贵不能淫",
-    "闻一多怒斥特务——富贵不能淫"
+    "has been to",
+    "has gone to",
+    "has been in",
+    "have gone to"
    ],
-   "answer": "A",
-   "explanation": "提纲：文天祥拒绝元朝诱降对应“富贵不能淫”；穷人不食“嗟来之食”对应“贫贱不能移”；闻一多怒斥特务对应“威武不能屈”。另外，引用孟子的话作论据属于道理论证（引用论证）。"
+   "answer": "B",
+   "explanation": "她现在不在这儿，说明「去了还没回来」，用 has gone to（提纲 P9）。has been to 是去过已回来；has been in 是待在某地，常和一段时间连用；主语 she 是三单，不能用 have。提纲 U1 句型 27 原句：No, she has gone to Guangzhou with her parents."
   },
   {
    "id": 11,
-   "type": "fill",
-   "knowledge": "《创造宣言》核心主张",
-   "difficulty": "基础",
-   "stem": "陶行知《创造宣言》的核心主张：“处处是创造之地，____，人人是创造之人。”",
-   "answer": [
-    [
-     "天天是创造之时"
-    ]
+   "type": "single",
+   "knowledge": "have been to / have gone to / have been in",
+   "difficulty": "提高",
+   "stem": "My uncle ____ Beijing for ten years, so he knows the city very well.",
+   "options": [
+    "has been to",
+    "has gone to",
+    "went to",
+    "has been in"
    ],
-   "explanation": "提纲原句：“处处是创造之地，天天是创造之时，人人是创造之人。”地点、时间、人三个方面构成排比，分别回应“环境太平凡”“年纪太小”“太无能”等借口。"
+   "answer": "D",
+   "explanation": "句中有一段时间 for ten years。提纲 P9 注意：与一段时间连用时，只能用 have been in，不能用 have been/gone to。went to 是短暂动作，也不能和 for ten years 连用。"
   },
   {
    "id": 12,
-   "type": "judge",
-   "knowledge": "议论文知识底座",
+   "type": "single",
+   "knowledge": "experience 用法",
    "difficulty": "基础",
-   "stem": "论点必须是完整的判断句，所以单说“骨气”不能算《谈骨气》的中心论点，“我们中国人是有骨气的”才是。",
-   "answer": true,
-   "explanation": "提纲：“论点须是完整的判断句”；《谈骨气》“中心论点在开头提出：‘我们中国人是有骨气的。’”“骨气”只是一个词，是话题，不是判断，不能作论点。"
+   "stem": "She has much ____ in teaching, and she is an ____ teacher.",
+   "options": [
+    "experiences; experienced",
+    "experience; experiencing",
+    "experience; experienced",
+    "experiences; experience"
+   ],
+   "answer": "C",
+   "explanation": "much 修饰不可数名词，experience 表「经验」时不可数（表「经历」才可数）；修饰人「有经验的」用 experienced。提纲 P9 表格：She has much experience. / an experienced teacher."
   },
   {
    "id": 13,
-   "type": "single",
-   "knowledge": "专题：君子自强不息",
-   "difficulty": "基础",
-   "stem": "“士不可以不弘毅，任重而道远”出自",
-   "options": [
-    "《周易》",
-    "屈原",
-    "郑燮",
-    "《论语》"
+   "type": "fill",
+   "knowledge": "since 与现在完成时",
+   "difficulty": "中等",
+   "stem": "① I ____ (know) her since I was five years old. ② She has been ill ____ last weekend.",
+   "answer": [
+    [
+     "have known",
+     "'ve known"
+    ],
+    [
+     "since"
+    ]
    ],
-   "answer": "D",
-   "explanation": "提纲专题：“天行健，君子以自强不息”出自《周易》；“路漫漫其修远兮，吾将上下而求索”是屈原的句子；“千磨万击还坚劲，任尔东西南北风”是郑燮的句子；“士不可以不弘毅，任重而道远”和“三军可夺帅也，匹夫不可夺志也”都出自《论语》。"
+   "explanation": "① since 引导时间状语从句，从句用一般过去时，主句用现在完成时：have known。② since 也可作介词，后接过去的时间点（last weekend）或「一段时间 + ago」。两句都是提纲 P10 原句。"
   },
   {
    "id": 14,
-   "type": "single",
-   "knowledge": "通假字",
+   "type": "fill",
+   "knowledge": "介词搭配（make use of / protect…from / donate…to）",
    "difficulty": "基础",
-   "stem": "下列对通假字的解说，正确的一项是",
-   "options": [
-    "百废具兴——“具”同“惧”，害怕",
-    "属予作文以记之——“属”同“嘱”，嘱托",
-    "玉盘珍羞直万钱——“羞”同“秀”，秀美",
-    "玉盘珍羞直万钱——“直”同“置”，放置"
+   "stem": "填入合适的介词。① We should make full use ____ every chance. ② He led people to set up blocks to protect the trees ____ sandstorms. ③ They donate books ____ rural schools every year.",
+   "answer": [
+    [
+     "of"
+    ],
+    [
+     "from",
+     "against"
+    ],
+    [
+     "to"
+    ]
    ],
-   "answer": "B",
-   "explanation": "提纲通假字专项：《岳阳楼记》“具”同“俱”，全、都；“属”同“嘱”，嘱托。《行路难》“羞”同“馐”，美味的食物；“直”同“值”，价值。A、C、D 的本字都写错了。"
+   "explanation": "① make (full/good) use of 充分利用（提纲 P20）。② protect sb./sth. from/against sth. 保护……免受……（P22，U2 句型 24 原句用 from）。③ donate sth. to sb./sth. 把某物捐给……（P20）。"
   },
   {
    "id": 15,
-   "type": "multiple",
-   "knowledge": "《岳阳楼记》重点实词",
-   "difficulty": "中等",
-   "stem": "下列《岳阳楼记》中引号内词语的解释，正确的有",
+   "type": "single",
+   "knowledge": "fight against / for / with",
+   "difficulty": "基础",
+   "stem": "We should fight ____ air pollution and fight ____ clean air.",
    "options": [
-    "“越”明年——越：超过、越过",
-    "“谪守”巴陵郡——谪守：贬官做州郡长官",
-    "“微”斯人，吾谁与归——微：微小",
-    "“把酒临风”——端酒迎风"
+    "against; for",
+    "for; against",
+    "with; for",
+    "against; with"
    ],
-   "answer": [
-    "B",
-    "D"
-   ],
-   "explanation": "提纲重点词句：越明年＝到第二年（“越”是“到、及”，不是“超过”），A 错；微＝如果没有，“微斯人”就是“如果没有这样的人”，C 错。谪守、把酒临风的解释与提纲一致。"
+   "answer": "A",
+   "explanation": "提纲 P19：fight against sth. 对抗、治理坏事（污染、疾病），如 fight against air pollution；fight for sth. 为……而奋斗、争取，如 fight for clean air。fight with sb. 是和某人打架或并肩作战。"
   },
   {
    "id": 16,
    "type": "single",
-   "knowledge": "《湖心亭看雪》重点实词",
-   "difficulty": "中等",
-   "stem": "下列《湖心亭看雪》中引号内词语的解释，有误的一项是",
+   "knowledge": "并列连词与就近原则",
+   "difficulty": "提高",
+   "stem": "Either my parents or I ____ going to plant trees on National Tree-planting Day.",
    "options": [
-    "是日“更定”矣——更定：初更以后",
-    "余“拏”一小舟——拏：撑船",
-    "余强饮三大“白”而别——白：白色的酒",
-    "湖中“焉得”更有此人——焉得：哪能"
+    "is",
+    "am",
+    "are",
+    "be"
    ],
-   "answer": "C",
-   "explanation": "提纲：白＝古人罚酒用的酒杯，这里代指酒，不是“白色的酒”。其余三项与提纲一致：更定（初更以后）、拏（撑船，读 ná）、焉得（哪能）。"
+   "answer": "B",
+   "explanation": "either…or… 连接两个主语时，谓语动词遵循「就近一致」（提纲 P19）。离 be 动词最近的主语是 I，所以用 am。"
   },
   {
    "id": 17,
    "type": "judge",
-   "knowledge": "《岳阳楼记》互文与翻译",
-   "difficulty": "基础",
-   "stem": "“不以物喜，不以己悲”运用了互文的手法，应译为“不因外物的好坏和自己的得失而或喜或悲”。",
-   "answer": true,
-   "explanation": "提纲原话：“‘不以物喜，不以己悲’是互文，译作‘不因外物的好坏和自己的得失而或喜或悲’。”互文要前后合起来理解，不能译成“不因外物而高兴，不因自己而悲伤”。"
+   "knowledge": "并列连词与就近原则",
+   "difficulty": "提高",
+   "stem": "句子 Neither Tom nor his parents is at home. 是正确的。",
+   "answer": false,
+   "explanation": "neither…nor… 也是就近一致（提纲 P19）。离谓语最近的是 his parents（复数），应该用 are：Neither Tom nor his parents are at home."
   },
   {
    "id": 18,
    "type": "single",
-   "knowledge": "《醉翁亭记》内容理解",
-   "difficulty": "中等",
-   "stem": "下列关于《醉翁亭记》的说法，不正确的一项是",
+   "knowledge": "please / pleased / pleasure / pleasant",
+   "difficulty": "基础",
+   "stem": "—Thank you for helping me with my English.\n—____",
    "options": [
-    "全文连用二十一个“也”字，形成急促激昂的语气。",
-    "全文以“乐”为线索：山水之乐→宴酣之乐→禽鸟之乐→太守之乐其乐。",
-    "写景由远及近、由面及点，从“环滁皆山也”写到醉翁亭。",
-    "写滁人游、众宾欢，侧面写出滁州治理有方、百姓安乐，为“与民同乐”作铺垫。"
+    "With pleasure.",
+    "I'm pleased.",
+    "Please.",
+    "My pleasure."
    ],
-   "answer": "A",
-   "explanation": "提纲：二十一个“也”字形成的是“舒缓咏叹”的语气，不是“急促激昂”。B、C、D 分别对应提纲中的“乐为线索”“写景顺序”和简答题答案。"
+   "answer": "D",
+   "explanation": "对方是在帮忙之后道谢，回答「不客气」用 It's a pleasure. / My pleasure.。With pleasure. 是帮忙之前表示「很乐意」（提纲 P20）。"
   },
   {
    "id": 19,
-   "type": "fill",
-   "knowledge": "《湖心亭看雪》“痴”字作骨",
-   "difficulty": "基础",
-   "stem": "《湖心亭看雪》全文以一个字作骨，贯穿作者的行动、所见之景和情怀，这个字是“____”。",
-   "answer": [
-    [
-     "痴"
-    ]
+   "type": "single",
+   "knowledge": "the number of / a number of",
+   "difficulty": "中等",
+   "stem": "The number of students in our class ____ 45, and a number of them ____ interested in inventions.",
+   "options": [
+    "are; is",
+    "is; are",
+    "is; is",
+    "are; are"
    ],
-   "explanation": "提纲：以“痴”字作骨——痴行、痴景、痴情。结尾舟子说“莫说相公痴，更有痴似相公者”，点明此字。"
+   "answer": "B",
+   "explanation": "提纲 P22–23：the number of「……的数量」，作主语时谓语用单数（is）；a number of「许多」，作主语时谓语用复数（are）。"
   },
   {
    "id": 20,
-   "type": "single",
-   "knowledge": "《行路难》手法",
-   "difficulty": "中等",
-   "stem": "李白《行路难》中“闲来垂钓碧溪上，忽复乘舟梦日边”主要运用的手法是",
-   "options": [
-    "以乐景衬苦闷",
-    "象征",
-    "化静为动",
-    "用典"
-   ],
-   "answer": "D",
-   "explanation": "提纲：这两句用典——吕尚垂钓遇文王，伊尹梦见乘舟过日边受汤聘。“以乐景衬苦闷”指“金樽清酒……停杯投箸不能食”；“象征”指“欲渡黄河冰塞川，将登太行雪满山”；“化静为动”是《沁园春·雪》“山舞银蛇，原驰蜡象”。"
+   "type": "judge",
+   "knowledge": "the number of / a number of",
+   "difficulty": "基础",
+   "stem": "句子 A number of problems need solving. 中谓语动词用复数形式 need 是正确的。",
+   "answer": true,
+   "explanation": "a number of 意为「许多」，作主语时谓语用复数，所以用 need 是对的。这是提纲 P23 的原句。"
   },
   {
    "id": 21,
-   "type": "multiple",
-   "knowledge": "《酬乐天扬州初逢席上见赠》",
-   "difficulty": "提高",
-   "stem": "下列对刘禹锡《酬乐天扬州初逢席上见赠》的理解，正确的有",
+   "type": "single",
+   "knowledge": "first of all / at first",
+   "difficulty": "中等",
+   "stem": "____, I wasn't sure if I could do it, but later I made it.",
    "options": [
-    "颔联“闻笛赋”指向秀经过故友嵇康旧居，闻笛而作《思旧赋》。",
-    "“烂柯人”用王质入山观棋、斧柄已烂、归家已过百年的典故。",
-    "颈联诗人以“千帆”“万木”自喻，表现自己仕途得意。",
-    "颈联“沉舟侧畔千帆过，病树前头万木春”说明新事物必将取代旧事物。"
+    "At first",
+    "First of all",
+    "After all",
+    "In a word"
    ],
-   "answer": [
-    "A",
-    "B",
-    "D"
-   ],
-   "explanation": "提纲：颔联连用“闻笛赋”“烂柯人”两典（A、B 正确）；颈联“以沉舟、病树自喻，说明新事物必将取代旧事物”（D 正确）。诗人自比的是“沉舟”“病树”，不是“千帆”“万木”，C 错。"
+   "answer": "A",
+   "explanation": "句子是「起初……但后来……」的对比，用 at first（提纲 P23：at first 与 at the beginning 同义，与后来发生的事相对照）。first of all 是说明顺序的「首先」，after all 是「毕竟」，in a word 是「总而言之」。"
   },
   {
    "id": 22,
-   "type": "fill",
-   "knowledge": "默写（现代诗、《岳阳楼记》）",
+   "type": "single",
+   "knowledge": "by 的用法",
    "difficulty": "基础",
-   "stem": "补写名句：①为什么我的眼里常含泪水？____（艾青《我爱这土地》） ②先天下之忧而忧，____。（范仲淹《岳阳楼记》）",
-   "answer": [
-    [
-     "因为我对这土地爱得深沉",
-     "因为我对这土地爱得深沉……"
-    ],
-    [
-     "后天下之乐而乐"
-    ]
+   "stem": "He makes a living ____ teaching.",
+   "options": [
+    "with",
+    "in",
+    "for",
+    "by"
    ],
-   "explanation": "①“因为我对这土地爱得深沉……”是全诗情感顶点，提纲标注“必背”。②“先天下之忧而忧，后天下之乐而乐”是《岳阳楼记》必背句，体现以天下为己任的抱负。写完回头核对字形。"
+   "answer": "D",
+   "explanation": "by + doing 表示「通过……方式」。提纲 P23 原句：He makes a living by teaching. 他通过教书谋生。"
   },
   {
    "id": 23,
-   "type": "fill",
-   "knowledge": "默写（《水调歌头》、课外古诗、《醉翁亭记》）",
-   "difficulty": "基础",
-   "stem": "补写名句：①人有悲欢离合，月有阴晴圆缺，此事古难全。但愿人长久，____。（苏轼《水调歌头》） ②露从今夜白，____。（杜甫《月夜忆舍弟》） ③醉翁之意不在酒，____。（欧阳修《醉翁亭记》）",
-   "answer": [
-    [
-     "千里共婵娟"
-    ],
-    [
-     "月是故乡明"
-    ],
-    [
-     "在乎山水之间也"
-    ]
+   "type": "single",
+   "knowledge": "turn 短语与代词位置",
+   "difficulty": "中等",
+   "stem": "The music is too loud. Please ____.",
+   "options": [
+    "turn down it",
+    "turn up it",
+    "turn it down",
+    "turn it up"
    ],
-   "explanation": "①“婵娟”是女字旁，是提纲列出的高频错字。②出自课外古诗词《月夜忆舍弟》。③“醉翁之意不在酒，在乎山水之间也”交代了亭名由来，注意句末的“也”不能丢。"
+   "answer": "C",
+   "explanation": "音乐太吵，要「调小」：turn down。提纲 P24：宾语是代词时，代词必须放在 turn 和介词中间，所以是 turn it down。turn up 是调大。"
   },
   {
    "id": 24,
-   "type": "judge",
-   "knowledge": "文言翻译六字诀",
+   "type": "single",
+   "knowledge": "形容词修饰不定代词",
    "difficulty": "基础",
-   "stem": "翻译文言文要“字字落实”，所以“嗟夫”“也”这类无实义的语气助词也都要逐字译出来。",
-   "answer": false,
-   "explanation": "提纲文言翻译六字诀中的“删”：无实义语气助词删去。“字字落实”指有实义的词要逐个落实（“换”古词为今词），不是连语气助词也硬译。六字诀：留、删、换、调、补、贯。"
+   "stem": "Is there ____ in today's newspaper?",
+   "options": [
+    "new anything",
+    "anything new",
+    "new something",
+    "news anything"
+   ],
+   "answer": "B",
+   "explanation": "形容词修饰 something、anything 等不定代词时要放在后面（提纲 P24），疑问句用 anything。原句：Is there anything new in today's newspaper?"
   },
   {
    "id": 25,
-   "type": "short",
-   "knowledge": "“中国的脊梁”含义",
-   "difficulty": "中等",
-   "stem": "《中国人失掉自信力了吗》中说“我们有并不失掉自信力的中国人在”，他们是“中国的脊梁”。“中国的脊梁”指什么样的人？用“脊梁”作比喻有什么作用？",
-   "answer": "“中国的脊梁”指脚踏实地为民族进步而奋斗的人。用“脊梁”作比喻，说明他们是支撑民族生存发展的中坚力量。",
-   "points": [
-    "说出所指：脚踏实地为民族进步而奋斗的人",
-    "点明手法：用“脊梁”作比喻",
-    "说出作用：说明他们是支撑民族生存发展的中坚力量"
+   "type": "single",
+   "knowledge": "discover / invent / create",
+   "difficulty": "基础",
+   "stem": "Who ____ the telephone?",
+   "options": [
+    "discovered",
+    "created",
+    "invented",
+    "found"
    ],
-   "explanation": "这是提纲标注的“常考简答”。答题时分点作答：先说“指什么人”，再说“比喻的作用”。脊梁是支撑身体的骨骼，所以比作民族的中坚力量。"
+   "answer": "C",
+   "explanation": "电话是通过研究和实验做出来的、有全新功能的东西，用 invent（发明）。提纲 P33：discover 是发现本来就存在的东西，create 是创作艺术、理论等。原句：Who invented the telephone?"
   },
   {
    "id": 26,
-   "type": "short",
-   "knowledge": "《岳阳楼记》写景的作用",
-   "difficulty": "提高",
-   "stem": "《岳阳楼记》是一篇“记”，作者却用了大量篇幅描写洞庭湖的景色（“若夫……”“至若……”两段）。这样写有什么作用？",
-   "answer": "写景为后文抒情议论作铺垫：阴、晴两种景色引出“悲”“喜”两种览物之情；再用这两种常人之情与“古仁人之心”对照，中心——超越个人得失、以天下为己任——就自然而出。",
-   "points": [
-    "写景为抒情、议论作铺垫",
-    "阴、晴两种景色引出“悲”“喜”两种览物之情",
-    "与“古仁人之心”对照，自然引出中心（超越个人得失、以天下为己任）"
+   "type": "multiple",
+   "knowledge": "be made of / from / into / by / up of",
+   "difficulty": "中等",
+   "stem": "下列句子中，正确的有",
+   "options": [
+    "Books are made of paper.",
+    "This kind of wine is made of grapes.",
+    "The wood will be made into a chair.",
+    "These gifts are all made by my grandma."
    ],
-   "explanation": "提纲简答原题：“写景为抒情议论作铺垫；两种景色引出两种览物之情，再与‘古仁人之心’对照，中心自然而出。”结合行文思路记忆：作记缘由→洞庭大观→阴（悲）、晴（喜）→嗟夫：古仁人之心→微斯人，吾谁与归。"
+   "answer": [
+    "A",
+    "C",
+    "D"
+   ],
+   "explanation": "提纲 P33：be made of 能看出原材料（书 → 纸，A 对）；be made from 看不出原材料，葡萄酿成酒看不出葡萄，B 应为 made from；be made into 被制成……（C 对）；be made by 由某人制作（D 对）。"
+  },
+  {
+   "id": 27,
+   "type": "fill",
+   "knowledge": "be made of / from / into / by / up of",
+   "difficulty": "基础",
+   "stem": "A football team is made ____ ____ eleven players.",
+   "answer": [
+    [
+     "up"
+    ],
+    [
+     "of"
+    ]
+   ],
+   "explanation": "「由……组成」用 be made up of（提纲 P33）。足球队由 11 名队员组成，强调组成部分，不是原材料。"
+  },
+  {
+   "id": 28,
+   "type": "single",
+   "knowledge": "It's + adj. + of/for sb + to do",
+   "difficulty": "中等",
+   "stem": "It's very nice ____ you ____ me help.",
+   "options": [
+    "for; to offer",
+    "of; to offer",
+    "of; offering",
+    "for; offering"
+   ],
+   "answer": "B",
+   "explanation": "nice 是描述人的品质的形容词，用 It's + adj. + of sb. + to do sth.（提纲 P35）。原句：It's very nice of you to offer me help. 描述事情本身（如 necessary）才用 for sb."
+  },
+  {
+   "id": 29,
+   "type": "multiple",
+   "knowledge": "动词用法（buy / sell / explain / make）",
+   "difficulty": "中等",
+   "stem": "下列句子中，正确的有",
+   "options": [
+    "The teacher explained me the problem.",
+    "I bought a gift for my mom.",
+    "Our teacher makes us to feel more confident.",
+    "We sell a lot of these to people like you.",
+    "Tickets are on sale this week."
+   ],
+   "answer": [
+    "B",
+    "D",
+    "E"
+   ],
+   "explanation": "B 对：buy sth. for sb.（P36）。D 对：sell sth. to sb.（P36 原句）。E 对：on sale 出售、廉价出售（P36 原句）。A 错：要用 explain sth. to sb.，应为 explained the problem to me（P37）。C 错：make sb. do sth. 后接动词原形，去掉 to（P34 原句：Our teacher makes us feel more confident.）。"
+  },
+  {
+   "id": 30,
+   "type": "single",
+   "knowledge": "must / can't 表推测",
+   "difficulty": "中等",
+   "stem": "—Is this your book?\n—It ____ be mine. Mine is a bit newer.",
+   "options": [
+    "must",
+    "mustn't",
+    "need",
+    "can't"
+   ],
+   "answer": "D",
+   "explanation": "有把握的否定推测「不可能」用 can't（提纲 P35）。mustn't 表示「禁止」，不表示否定推测。原句：It can't be my book. Mine is a bit newer."
+  },
+  {
+   "id": 31,
+   "type": "single",
+   "knowledge": "反意疑问句",
+   "difficulty": "中等",
+   "stem": "You hardly understand me, ____?",
+   "options": [
+    "do you",
+    "don't you",
+    "aren't you",
+    "can you"
+   ],
+   "answer": "A",
+   "explanation": "陈述部分含有 hardly、never、nothing 等否定意义的词时，附加问句用肯定形式（提纲 P36）。understand 是实义动词、一般现在时，所以用 do you。"
+  },
+  {
+   "id": 32,
+   "type": "single",
+   "knowledge": "反意疑问句",
+   "difficulty": "提高",
+   "stem": "—You don't like classical music, do you?\n—____. I love it very much.",
+   "options": [
+    "No, I don't",
+    "Yes, I do",
+    "Yes, I don't",
+    "No, I do"
+   ],
+   "answer": "B",
+   "explanation": "回答要和事实一致：喜欢，就答 Yes, I do.（翻译成「不，我喜欢」）。提纲 P36：陈述部分是否定句时，Yes 译为「不」，No 译为「是」；Yes 后接肯定，No 后接否定，C、D 前后矛盾。"
+  },
+  {
+   "id": 33,
+   "type": "single",
+   "knowledge": "borrow / lend / keep",
+   "difficulty": "基础",
+   "stem": "—How long can I ____ the book?\n—Two weeks.",
+   "options": [
+    "borrow",
+    "lend",
+    "buy",
+    "keep"
+   ],
+   "answer": "D",
+   "explanation": "how long 问的是一段时间，要用延续性动词 keep（提纲 P39：keep 表示借用的时间长度，与 for + 一段时间及 how long 连用）。borrow、lend 是短暂动作，不能和一段时间连用。"
+  },
+  {
+   "id": 34,
+   "type": "single",
+   "knowledge": "too…to / so…that / such…that / so that",
+   "difficulty": "基础",
+   "stem": "The bag is too small to hold all these books.\n= The bag is ____ small ____ it can't hold all these books.",
+   "options": [
+    "so; that",
+    "such; that",
+    "too; to",
+    "very; that"
+   ],
+   "answer": "A",
+   "explanation": "too…to… 可以和 so…that…（从句用否定）互换（提纲 P37）：The bag is so small that it can't hold all these books. so 修饰形容词 small；such 后面要接名词。"
+  },
+  {
+   "id": 35,
+   "type": "single",
+   "knowledge": "too…to / so…that / such…that / so that",
+   "difficulty": "中等",
+   "stem": "She is ____ lovely girl that everyone likes her.",
+   "options": [
+    "so a",
+    "such",
+    "such a",
+    "so"
+   ],
+   "answer": "C",
+   "explanation": "such + a/an + 形容词 + 单数可数名词 + that 从句（提纲 P38）。原句：She is such a lovely girl that everyone likes her. 用 so 的话要写成 so lovely a girl，没有 so a 这种语序。"
+  },
+  {
+   "id": 36,
+   "type": "judge",
+   "knowledge": "too…to / so…that / such…that / so that",
+   "difficulty": "提高",
+   "stem": "句子 I got up early, so that I caught the first bus. 中的 so that 引导的是目的状语从句。",
+   "answer": false,
+   "explanation": "提纲 P38：so that 前有逗号、从句里没有 can/may 等情态动词时，引导的是结果状语从句，意思是「因此，所以」，不能和 in order that 互换。引导目的状语从句时，从句里常用 can/could 等。"
+  },
+  {
+   "id": 37,
+   "type": "judge",
+   "knowledge": "one of + 复数名词",
+   "difficulty": "基础",
+   "stem": "句子 One of the girls are my sister. 是正确的。",
+   "answer": false,
+   "explanation": "「one of the + 复数名词」作主语时，真正的主语是 one，谓语用单数（提纲 P38–39）：One of the girls is my sister."
+  },
+  {
+   "id": 38,
+   "type": "fill",
+   "knowledge": "It's time for / to do",
+   "difficulty": "基础",
+   "stem": "① It's 12 o'clock now. It's time ____ lunch. ② The new year is coming, and it's time for us ____ (make) New Year's resolutions.",
+   "answer": [
+    [
+     "for"
+    ],
+    [
+     "to make"
+    ]
+   ],
+   "explanation": "提纲 P39–40：It's time for sth. 该做某事了（后接名词），It's time (for sb.) to do sth. 到（某人）该做某事的时间了（后接不定式）。"
+  },
+  {
+   "id": 39,
+   "type": "multiple",
+   "knowledge": "课文内容（垃圾分类、石光银、四大发明）",
+   "difficulty": "中等",
+   "stem": "根据提纲中的课文句子，下列说法正确的有",
+   "options": [
+    "The blue bin is used for recycling paper and plastics.",
+    "The red bin is used for kitchen waste.",
+    "During the Northern Song Dynasty, Bi Sheng developed movable type printing.",
+    "At first, Chinese people used movable type printing to produce books.",
+    "In 2021, Shi Guangyin received the July 1 Medal for his efforts to control the desert growth."
+   ],
+   "answer": [
+    "A",
+    "C",
+    "E"
+   ],
+   "explanation": "U2 句型 17（P16）：蓝色桶回收纸张和塑料（A 对），绿色桶装厨余垃圾，红色桶装有害垃圾，所以 B 错。U3 句型 20–21（P31）：起初中国人用雕版印刷（block printing）印书，北宋毕昇发明了活字印刷，所以 C 对、D 错。U2 句型 26（P17）：2021 年石光银获得「七一勋章」（E 对）。"
+  },
+  {
+   "id": 40,
+   "type": "judge",
+   "knowledge": "写作：今昔对比的时态",
+   "difficulty": "基础",
+   "stem": "写「家乡的变化」这类作文时，强调从过去持续到现在的变化，应该用现在完成时，例如 People's living conditions have improved a lot.",
+   "answer": true,
+   "explanation": "提纲 P10 写作提示：过去用一般过去时 / used to；强调从过去持续到现在的变化，用现在完成时。写作核心逻辑是「过去（used to）→ 现在（现在完成时）→ 个人感受 + 展望」。"
+  },
+  {
+   "id": 41,
+   "type": "short",
+   "knowledge": "三个 R 原则",
+   "difficulty": "中等",
+   "stem": "提纲中的「三个 R 原则」是什么？请写出这三个英文单词，并各用一句英文举例说明怎么做。",
+   "answer": "The three Rs are reduce, reuse and recycle.\n① Reduce（减量化）：尽量少产生垃圾。例：We can reduce trash by using fewer plastic bags.\n② Reuse（再利用）：再次或用另一种方式使用某物。例：We can use the water from our showers to clean the toilet. / We can donate old clothes to charity.\n③ Recycle（回收再利用）：把废旧材料变成新产品。例：We can recycle paper boxes and glass bottles.",
+   "points": [
+    "写对三个词：reduce、reuse、recycle",
+    "reduce 的含义 + 一个例子（如少用塑料袋 using fewer plastic bags）",
+    "reuse 的含义 + 一个例子（如用洗澡水冲厕所、把旧衣服捐给慈善机构、把塑料袋当垃圾袋用）",
+    "recycle 的含义 + 一个例子（如回收纸盒、玻璃瓶，把废旧材料变成新产品）"
+   ],
+   "explanation": "出自提纲 U2 必背句型 8–12（P16）：The three Rs—reduce, reuse and recycle. To reduce means trying to produce less trash. Reusing means making use of something again or in another way. When we recycle, we turn used materials into new products."
+  },
+  {
+   "id": 42,
+   "type": "short",
+   "knowledge": "写作：今昔对比的时态",
+   "difficulty": "提高",
+   "stem": "把下面两句话翻译成英语。\n① 自改革开放以来，中国发生了巨大的变化。\n② 随着环境的改善，人们现在过着比以前更好的生活。",
+   "answer": "① Great changes have taken place in China since its opening-up.\n② With the improvement of the environment, people now lead a better life than before.",
+   "points": [
+    "句①：用 Great changes have taken place（现在完成时，不用被动）",
+    "句①：用 since its opening-up 表示「自改革开放以来」",
+    "句②：用 With the improvement of the environment 表示「随着环境的改善」",
+    "句②：用 lead a better life than before（比较级 + than before）"
+   ],
+   "explanation": "句①综合了提纲 U1 句型 14「Great changes have taken place in China.」和短语 38「since its opening-up」；since 引出的时间状语要配现在完成时。句②是 U1 必背句型 23 原句。"
   }
- ]
+ ],
+ "level": 2,
+ "_nav": {
+  "level": 2,
+  "label": "标准模拟",
+  "pass": 80,
+  "next": null
+ }
 }</script>
 <script>
 (function () {
@@ -506,7 +766,15 @@
   var filterWrong = false;
 
   function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) { return null; } }
-  function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
+  var NAV = QUIZ._nav || null; // 分级信息：{level, label, pass, next:{label, href}}
+  function save() {
+    if (state.submitted) { // 记下得分率，复习主页用来显示「达标 / 通过到第几级」
+      var d = summaryData();
+      state.percent = d.total ? Math.round(d.got / d.total * 100) : 0;
+      state.pending = d.counts.pending;
+    }
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
 
   // ---------- 工具 ----------
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
@@ -617,7 +885,8 @@
     document.title = QUIZ.title;
     document.getElementById("title").textContent = QUIZ.title;
     var total = qs.reduce(function (s, q) { return s + maxScore(q); }, 0);
-    document.getElementById("meta").textContent = [QUIZ.grade, QUIZ.subject, "共 " + qs.length + " 题", "满分 " + total + " 分"]
+    document.getElementById("meta").textContent = [NAV ? "第 " + NAV.level + " 级 · " + NAV.label : "", QUIZ.grade, QUIZ.subject,
+      "共 " + qs.length + " 题", "满分 " + total + " 分", NAV ? "达标线 " + NAV.pass + "%" : ""]
       .filter(Boolean).join(" · ");
 
     var box = document.getElementById("questions");
@@ -804,6 +1073,16 @@
       "</b></span><span>❌ 错误 <b>" + d.counts.wrong + "</b></span>" +
       (d.counts.pending ? "<span>📝 待自评 <b>" + d.counts.pending + "</b>（简答题请往下翻对照要点勾选）</span>" : "") +
       (state.attempt > 1 ? "<span>第 <b>" + state.attempt + "</b> 次作答</span>" : "") + "</div>";
+    if (NAV) {
+      var passed = pct >= NAV.pass;
+      h += '<div class="level-box ' + (passed ? "pass" : "fail") + '">' +
+        (d.counts.pending ? "简答题自评完再看是否达标。" :
+          passed ? "✅ <b>" + esc(NAV.label) + "达标</b>（" + pct + "% ≥ " + NAV.pass + "%）" +
+            (NAV.next ? "，可以挑战下一级：" : "，三级全部完成！") :
+          "⏳ <b>还没达标</b>（" + pct + "% / 达标线 " + NAV.pass + "%）。先看错题解析，导出答题记录让 Claude 分析，再点「重做错题」。") +
+        (passed && NAV.next && !d.counts.pending ? ' <a class="next-btn" href="' + esc(NAV.next.href) + '">第 ' + NAV.next.level + " 级 · " + esc(NAV.next.label) + " →</a>" : "") +
+        "</div>";
+    }
     h += "<table><tr><th>知识点</th><th>题数</th><th>得分率</th><th></th></tr>";
     var rows = d.order.map(function (k) { var v = d.byK[k]; return [k, v, v.full ? v.got / v.full : 0]; })
       .sort(function (x, y) { return x[2] - y[2]; });
@@ -891,7 +1170,7 @@
   function buildRecord() {
     var d = summaryData();
     return {
-      quiz_title: QUIZ.title, subject: QUIZ.subject, grade: QUIZ.grade, source: QUIZ.source, quiz_created: QUIZ.created,
+      quiz_title: QUIZ.title, subject: QUIZ.subject, level: NAV ? NAV.level : null, level_name: NAV ? NAV.label : null, grade: QUIZ.grade, source: QUIZ.source, quiz_created: QUIZ.created,
       submitted_at: state.submittedAt || new Date().toISOString(), attempt: state.attempt || 1,
       score: d.got, total: d.total, percent: d.total ? Math.round(d.got / d.total * 100) : 0,
       counts: d.counts,

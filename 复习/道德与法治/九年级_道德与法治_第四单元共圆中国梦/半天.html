@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>复习</title>
+<style>
+  :root {
+    --bg: #f6f4ef; --card: #fff; --ink: #222; --sub: #6b6b6b; --line: #e6e1d6;
+    --red: #c0392b; --red-bg: #fdecea; --blue: #2b6cb0; --blue-bg: #e8f1fb;
+    --green: #2f855a; --green-bg: #e6f4ea; --gold: #b7791f; --gold-bg: #fdf5e3;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.7 -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 14px 80px; }
+  .bar { position: sticky; top: 0; z-index: 10; background: rgba(246,244,239,.96);
+    backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+  .bar-in { max-width: 720px; margin: 0 auto; padding: 8px 14px; display: flex; align-items: center; gap: 10px; }
+  .clock { font: 600 22px/1 ui-monospace, Menlo, monospace; min-width: 74px; }
+  .now { flex: 1; font-size: 13px; color: var(--sub); line-height: 1.35; }
+  .now b { color: var(--ink); }
+  .btn { border: 0; border-radius: 8px; padding: 8px 12px; font-size: 14px; cursor: pointer;
+    background: var(--ink); color: #fff; text-decoration: none; display: inline-block; }
+  .btn.ghost { background: transparent; color: var(--sub); border: 1px solid var(--line); }
+  .prog { height: 4px; background: var(--line); }
+  .prog i { display: block; height: 100%; width: 0; background: var(--green); transition: width .3s; }
+  header.hero { padding: 18px 0 4px; }
+  h1 { font-size: 23px; margin: 0 0 6px; line-height: 1.35; }
+  .lead { color: var(--sub); margin: 0; font-size: 14px; }
+  .modes { display: flex; gap: 6px; margin: 12px 0 4px; flex-wrap: wrap; }
+  .modes a { text-decoration: none; color: var(--sub); border: 1px solid var(--line); background: var(--card);
+    border-radius: 99px; padding: 4px 14px; font-size: 14px; }
+  .modes a.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .plan { display: grid; gap: 6px; margin: 14px 0 6px; }
+  .plan a { display: flex; gap: 10px; align-items: center; text-decoration: none; color: inherit;
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+  .plan a.cur { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+  .plan a.done { opacity: .5; }
+  .plan a.brk { background: transparent; border-style: dashed; }
+  .plan .t { font: 600 13px ui-monospace, Menlo, monospace; color: var(--sub); min-width: 92px; }
+  .plan .n { flex: 1; font-size: 15px; }
+  .m { font-size: 12px; padding: 1px 8px; border-radius: 99px; background: var(--red-bg); color: var(--red); white-space: nowrap; }
+  .m.b { background: var(--blue-bg); color: var(--blue); }
+  .m.g { background: var(--green-bg); color: var(--green); }
+  details.why-box { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin: 10px 0; font-size: 14px; }
+  details.why-box summary { cursor: pointer; color: var(--sub); }
+  section.sec { background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 16px 10px; margin: 18px 0; scroll-margin-top: 70px; }
+  section.sec.cur { border-color: var(--ink); }
+  section.sec.brk { background: transparent; border-style: dashed; text-align: center; color: var(--sub); }
+  .sec-h { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .sec-h h2 { font-size: 19px; margin: 0; flex: 1; }
+  .tag { font-size: 12px; padding: 2px 8px; border-radius: 99px; background: var(--gold-bg); color: var(--gold); }
+  .why { font-size: 13px; color: var(--sub); margin: 4px 0 10px; }
+  h3 { font-size: 16px; margin: 18px 0 8px; padding-left: 8px; border-left: 4px solid var(--ink); }
+  p { margin: 6px 0; }
+  ul, ol { margin: 6px 0; padding-left: 22px; }
+  li { margin: 3px 0; }
+  .tools { display: flex; gap: 8px; margin: 8px 0; flex-wrap: wrap; }
+  .tools .btn { font-size: 13px; padding: 6px 10px; }
+  .c { background: #d9d4c7; color: transparent; border-radius: 4px; padding: 0 2px; cursor: pointer;
+    transition: background .15s, color .15s; -webkit-tap-highlight-color: transparent; }
+  .c * { color: transparent !important; background: transparent !important; }
+  .c.on { background: var(--green-bg); color: var(--green); }
+  .c.on * { color: inherit !important; }
+  .line { padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  .line:last-child { border-bottom: 0; }
+  .src { display: block; font-size: 12px; color: var(--sub); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .fc { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 14px; line-height: 1.5; }
+  .fc b { display: block; font-size: 15px; }
+  .fc .c { display: inline-block; margin-top: 2px; }
+  .key { background: var(--red-bg); color: var(--red); padding: 0 3px; border-radius: 3px; font-weight: 600; }
+  .note { background: var(--blue-bg); border-radius: 10px; padding: 10px 12px; font-size: 14px; margin: 10px 0; }
+  .warn { background: var(--red-bg); border-radius: 10px; padding: 10px 12px; font-size: 14px; margin: 10px 0; }
+  .warn > b, .note > b { display: block; margin-bottom: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0; }
+  th, td { border: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #faf8f3; font-weight: 600; white-space: nowrap; }
+  .typo { display: flex; flex-wrap: wrap; gap: 6px; }
+  .typo span.chip { border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; font-size: 15px; background: #fffdf8; }
+  .typo .key { background: none; padding: 0; font-weight: 700; }
+  .mq { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin: 8px 0; font-size: 15px; }
+  .mq .meta { font-size: 12px; color: var(--sub); }
+  .mq .opts { color: var(--sub); font-size: 14px; }
+  .mq .ans { margin-top: 6px; }
+  .golink { display: block; text-align: center; margin: 10px 0; }
+  .done-row { display: flex; justify-content: flex-end; margin-top: 12px; }
+  .done-btn { border: 1px solid var(--green); color: var(--green); background: #fff; border-radius: 8px;
+    padding: 7px 14px; font-size: 14px; cursor: pointer; }
+  .done-btn.ok { background: var(--green); color: #fff; }
+  .levels { display: grid; gap: 8px; margin-bottom: 8px; }
+  .lv { display: flex; justify-content: space-between; align-items: center; gap: 8px; text-decoration: none; color: inherit;
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .lv span { font-size: 13px; color: var(--sub); }
+  .lv.rec { border-color: var(--green); background: var(--green-bg); }
+  .lv.rec span { color: var(--green); }
+  footer { text-align: center; color: var(--sub); font-size: 13px; margin-top: 24px; }
+</style>
+</head>
+<body>
+<div style="background:#111827;font:14px/1 -apple-system,'PingFang SC',sans-serif;padding:10px 14px"><a href="../../../index.html" style="color:#fff;text-decoration:none">← 返回复习主页</a></div>
+<div class="bar">
+  <div class="bar-in">
+    <div class="clock" id="clock">00:00</div>
+    <div class="now" id="now">按「开始」计时，每段到点会提醒你换下一段</div>
+    <button class="btn" id="startBtn">开始</button>
+    <button class="btn ghost" id="resetBtn">重置</button>
+  </div>
+  <div class="prog"><i id="progBar"></i></div>
+</div>
+<div class="wrap">
+  <header class="hero">
+    <h1 id="title"></h1>
+    <p class="lead" id="lead"></p>
+    <nav class="modes" id="modes"></nav>
+  </header>
+  <div class="plan" id="plan"></div>
+  <div id="whybox"></div>
+  <div id="secs"></div>
+  <div id="after"></div>
+  <footer id="foot"></footer>
+</div>
+
+<script id="review-data" type="application/json">{"title": "九年级道德与法治 · 第四单元 共圆中国梦 复习 · 半天", "mode": "half", "created": "2026-11-07", "lead": "约 3 个半小时：三大问答全文过一遍，加上港澳、民族关系和答题模板，中后段做一次标准模拟，再回头补错题。", "principle": "道法考的是「关键词」：选择题看你能不能分清相近说法，问答题按关键词给分。1 小时只抓三件事：选择题最爱设坑的易错点、问答题出现频率最高的「中国梦」「铸牢共同体意识」「祖国统一」三大问答的关键词骨架。长段原文、背景性的句子放到半天和完整档。", "modes": [{"label": "1 小时", "href": "1小时.html", "on": false}, {"label": "半天", "href": "半天.html", "on": true}, {"label": "完整复习", "href": "完整复习.html", "on": false}], "segments": [{"title": "易错辨析 · 选择题的坑", "tag": "易错", "minutes": 20, "why": "这一单元的选择题几乎都在考「相近说法换位置」。每张卡先自己说答案再点开，10 分钟能稳住好几道选择题。", "blocks": [{"type": "cards", "items": [{"q": "铸牢中华民族共同体意识是新时代党的民族工作的____；推进中华民族共同体建设是全党全国各族人民的____", "a": "[[主线]]（也是民族地区各项工作的主线）；[[共同任务]]"}, {"q": "「一国」和「两制」谁是前提？", "a": "「一国」是实行「两制」的[[前提和基础]]；「两制」从属和派生于「一国」并统一于「一国」之内"}, {"q": "解决台湾问题的基本方针 vs 两岸关系的政治基础", "a": "基本方针：[[和平统一、一国两制]]（也是最佳方式）；政治基础：[[一个中国原则]]（坚持「九二共识」）"}, {"q": "「决不承诺放弃使用武力」针对谁？", "a": "针对[[外部势力干涉]]和[[极少数「台独」分裂分子]]及其分裂活动，[[绝非]]针对广大台湾同胞"}, {"q": "中国精神 = ？", "a": "以[[爱国主义]]为核心的民族精神 + 以[[改革创新]]为核心的时代精神（别把两个核心对调）"}, {"q": "中国道路 = ？ 中国力量 = ？", "a": "中国道路 = [[中国特色社会主义道路]]；中国力量 = [[全国各族人民大团结]]的力量"}, {"q": "实现中国梦的四个必须，各管什么？", "a": "党的领导→[[方向]]；中国道路→[[路径]]；中国精神→[[动力]]；中国力量→[[根基]]"}, {"q": "中国梦只是中国人自己的梦吗？", "a": "不是。中国梦同世界各国人民的美好梦想[[息息相通]]，为世界注入更多活力、带来更多机遇"}, {"q": "铸牢共同体意识要反对哪两种思想？", "a": "[[大汉族主义]]和[[地方民族主义]]（两个都反对）"}, {"q": "维护国家主权、统一和领土完整是谁的义务？", "a": "包括[[港澳同胞和台湾同胞]]在内的全体中国人民的[[共同义务]]"}, {"q": "「一国两制」中谁保持资本主义制度？", "a": "香港、澳门、台湾保持原有的资本主义制度[[长期不变]]；国家主体坚持社会主义制度"}]}, {"type": "warn", "title": "最容易被偷换的词", "text": "「主线」≠「共同任务」；「基本方针」≠「政治基础」；「最伟大的梦想」是**实现中华民族伟大复兴**；中国梦是中华民族团结奋斗的**最大公约数**。"}, {"type": "cards", "min": "half", "items": [{"q": "实现祖国完全统一与民族复兴是什么关系？", "a": "实现祖国完全统一是[[民族复兴的题中之义]]，是实现中华民族伟大复兴的[[必然要求]]"}, {"q": "我国的重要优势是什么？", "a": "[[多民族的大一统]]，各民族[[多元一体]]"}, {"q": "「一国两制」的地位", "a": "党领导人民实现祖国[[和平统一]]的一项重要制度，是中国特色社会主义的一个[[伟大创举]]"}]}]}, {"title": "中国梦：是什么 · 怎么实现", "tag": "必考", "minutes": 30, "why": "第十课最核心的两问，选择题和问答题都考，而且关键词短、好背。", "blocks": [{"type": "h", "text": "是什么（内涵）"}, {"type": "recall", "lines": [{"text": "实现{{中华民族伟大复兴}}是近代以来中华民族最伟大的梦想", "src": "第十课第一框★1"}, {"text": "实现中国梦，就是要实现{{国家富强、民族振兴、人民幸福}}", "src": "第十课第一框★1"}]}, {"type": "h", "text": "怎么实现（四个必须）"}, {"type": "recall", "lines": [{"text": "必须坚持{{中国共产党的领导}}（方向）——在党的统一领导下，以{{中国式现代化}}全面推进中华民族伟大复兴", "src": "第十课第二框★1①"}, {"text": "必须走{{中国道路}}（路径）——即{{中国特色社会主义道路}}，是实现民族复兴的{{必由之路}}", "src": "第十课第二框★1②"}, {"text": "必须弘扬{{中国精神}}（动力）——以{{爱国主义}}为核心的民族精神和以{{改革创新}}为核心的时代精神", "src": "第十课第二框★1③"}, {"text": "必须凝聚{{中国力量}}（根基）——{{全国各族人民大团结}}的力量；人民是历史的创造者，是梦想的实现者", "src": "第十课第二框★1④"}]}, {"type": "note", "title": "记忆口诀", "text": "「党·路·魂·人」：党领导定方向，走中国道路，靠中国精神，聚中国力量。"}, {"type": "h", "text": "为什么要实现中国梦", "min": "half"}, {"type": "recall", "min": "half", "lines": [{"text": "中国梦反映了近代以来一代又一代中国人的{{美好夙愿}}，揭示了中华民族的{{历史命运}}和当代中国的{{发展走向}}，指明了全国各族人民共同的{{奋斗目标}}", "src": "第十课第一框★2(1)"}, {"text": "中国梦把{{国家的追求、民族的向往、人民的期盼}}融为一体，是国家的梦、民族的梦，也是{{每个中国人的梦}}", "src": "★2(2)"}, {"text": "中国梦是中国人民追求幸福的梦，也同{{世界各国人民}}的美好梦想息息相通", "src": "★2(3)"}, {"text": "实现中华民族伟大复兴的中国梦是中华民族团结奋斗的{{最大公约数}}", "src": "★2(4)"}]}]}, {"title": "铸牢中华民族共同体意识：为什么 · 怎么做", "tag": "必考", "minutes": 35, "why": "第九课第一框的两道必考问答题。按「内涵—地位—意义」「思想—发展—社会—法治」两个骨架记，答题时不漏点。", "blocks": [{"type": "h", "text": "为什么（内涵—地位—意义）"}, {"type": "recall", "lines": [{"text": "内涵：牢固树立{{休戚与共、荣辱与共、生死与共、命运与共}}的共同体理念", "src": "第九课第一框★2(1)"}, {"text": "地位：是新时代党的{{民族工作的主线}}，也是民族地区各项工作的主线；是全党全国各族人民的{{共同任务}}", "src": "★2(2)"}, {"text": "意义：为巩固和发展{{平等团结互助和谐}}的社会主义民族关系夯实{{思想基础}}；团结一致、凝聚力量，有效应对各种{{风险挑战}}", "src": "★2(3)①"}, {"text": "是维护各民族{{根本利益}}、实现{{中华民族伟大复兴}}、巩固和发展平等团结互助和谐社会主义民族关系的{{必然要求}}", "src": "★2(3)②"}]}, {"type": "h", "text": "怎么做（四个层面）"}, {"type": "table", "head": ["层面", "关键词"], "rows": [["思想", "增进对伟大祖国、中华民族、中华文化、中国共产党、中国特色社会主义的{{认同（五个认同）}}，构筑中华民族共有{{精神家园}}"], ["发展", "完善{{区域一体化发展}}机制和{{差别化区域支持}}政策，推动各民族共同迈向社会主义现代化"], ["社会", "促进各民族{{交往交流交融}}，实现空间、文化、经济、社会、心理等方面的{{全方位互嵌}}"], ["法治", "依法保护各族群众{{合法权益}}，反对{{大汉族主义和地方民族主义}}，打击破坏民族团结的违法犯罪，{{用法律保障民族团结}}"]]}, {"type": "note", "title": "口诀", "text": "「想·发·社·法」——五个认同、区域政策、三交互嵌、依法保障。"}, {"type": "h", "text": "中华民族与各民族的关系", "min": "half"}, {"type": "recall", "min": "half", "lines": [{"text": "中华民族和各民族是{{一个大家庭和家庭成员}}的关系；各民族是一个大家庭里{{不同成员}}的关系", "src": "第九课第一框★3①"}, {"text": "始终把{{中华民族利益}}放在首位，本民族意识要{{服从和服务于}}中华民族共同体意识，同时在实现好共同体整体利益进程中实现好各民族{{具体利益}}", "src": "★3②"}, {"text": "全面建成社会主义现代化强国，{{一个民族也不能少}}；要促进各民族{{共同团结奋斗}}、实现各民族{{共同发展}}", "src": "★4"}]}]}, {"kind": "break", "title": "休息", "minutes": 10, "why": "起来走走、喝水、远眺，别刷手机。"}, {"title": "实现祖国完全统一：一国两制 · 台湾问题", "tag": "必考", "minutes": 40, "why": "「一国」「两制」的关系和台湾问题的「方针/基础/态度」是选择题高频；台湾问题「怎么做」是问答大题。1 小时只记六条的开头关键词。", "blocks": [{"type": "h", "text": "一国两制"}, {"type": "recall", "lines": [{"text": "内容：在{{一个中国}}的前提下，国家主体坚持{{社会主义制度}}，港澳台保持原有的{{资本主义制度}}长期不变", "src": "第九课第二框★1(1)"}, {"text": "关系：「一国」是实行「两制」的{{前提和基础}}，「两制」{{从属和派生于}}「一国」并统一于「一国」之内", "src": "★1(2)"}, {"text": "地位：实现祖国和平统一的一项{{重要制度}}，中国特色社会主义的一个{{伟大创举}}", "src": "★1(3)"}]}, {"type": "h", "text": "为什么要解决台湾问题"}, {"type": "recall", "lines": [{"text": "是我们党矢志不渝的{{历史任务}}，是全体中华儿女的{{共同愿望}}，是实现民族复兴的{{必然要求}}", "src": "第九课第二框★4(1)"}, {"text": "台湾是中华人民共和国{{神圣领土}}的一部分；世界上只有一个中国，大陆和台湾{{同属一个中国}}", "src": "★4(2)"}]}, {"type": "h", "text": "怎么做（六条，记开头关键词）"}, {"type": "list", "ordered": true, "items": ["方针与基础：{{和平统一、一国两制}}是基本方针；{{一个中国原则}}是政治基础；坚持「九二共识」，{{反「独」促统}}", "态度：台湾问题是{{中国人自己的事}}；争取和平统一，但{{决不承诺放弃使用武力}}（针对外部势力和「台独」）", "文化：两岸同胞{{同根同源、同文同种}}，共同弘扬{{中华文化}}，实现心灵契合", "经济：深化两岸{{融合发展}}，推进经济合作制度化，打造{{两岸共同市场}}", "交往：{{多走动、多交流、多沟通}}，增进理解、信任", "义务：维护国家主权、统一和领土完整是全体中国人民的{{共同义务}}"]}, {"type": "note", "title": "口诀", "text": "「方·态·文·经·交·义」六个字对应六条，问答题按这六个方向展开就不漏点。"}, {"type": "h", "text": "保持港澳长期繁荣稳定（举措）", "min": "half"}, {"type": "list", "ordered": true, "min": "half", "items": ["全面准确、坚定不移贯彻「一国两制」「{{港人治港}}」「{{澳人治澳}}」、{{高度自治}}的方针，坚持依法治港治澳，维护宪法和基本法确定的{{宪制秩序}}", "落实{{中央全面管治权}}，落实「{{爱国者治港}}」「爱国者治澳」原则，落实维护{{国家安全}}的法律制度和执行机制", "发展壮大{{爱国爱港爱澳}}力量，增强港澳同胞的爱国精神，形成支持「一国两制」的{{统一战线}}"]}, {"type": "recall", "min": "half", "lines": [{"text": "「一国两制」成功实践：港澳走上同祖国内地{{优势互补、共同发展}}的宽广道路；更好{{融入国家发展大局}}，共担民族复兴的历史责任、共享祖国繁荣富强的伟大荣光", "src": "第九课第二框★3"}]}]}, {"title": "问答题答题模板", "tag": "方法", "minutes": 20, "why": "道法大题按点给分。会套「是什么—为什么—怎么做」的骨架，再把关键词填进去，就能少丢分。", "blocks": [{"type": "table", "head": ["题目问法", "调用哪一条"], "rows": [["材料体现了什么 / 说明了什么", "{{内涵、地位类的金句}}（如：铸牢共同体意识是民族工作的主线）"], ["为什么要… / 意义", "{{内涵 + 地位 + 意义}}三层，或中国梦「为什么」四条"], ["怎么做 / 提建议", "国家层面用{{四个层面 / 六条}}；个人层面落到「我们中学生」"], ["青少年应该怎么做", "增强{{五个认同}}、促进民族交往交流交融、坚定反「独」促统、{{彰显自信品格，挺膺担当}}"]]}, {"type": "note", "title": "得分习惯", "text": "分点作答、每点一句、开头用课本关键词。材料题先在材料里圈出关键词，再对应到知识点。"}]}, {"kind": "break", "title": "休息", "minutes": 10, "why": "起来走走、喝水、远眺，别刷手机。"}, {"title": "限时自测", "tag": "自测", "minutes": 30, "why": "", "blocks": [{"type": "note", "title": "还没有测试题", "text": "让 Claude 先给这份材料出题。"}]}, {"title": "错题库回顾", "tag": "错题", "minutes": 20, "why": "做错过的题最容易再错：先自己说答案，再点开核对。", "blocks": [{"type": "note", "title": "错题库里暂时没有未掌握的道德与法治错题", "text": "这段时间把前面各段里遮住的内容再快速过一遍，说不出来的停下来看。"}]}], "ranking": [{"knowledge": "易错辨析（主线/共同任务、基本方针/政治基础、两个核心等）", "value": "★★★", "loss": "高", "minutes": "10′", "efficiency": "A", "modes": ["1h", "half", "full"], "included": true}, {"knowledge": "中国梦：内涵 + 如何实现（四个必须）", "value": "★★★", "loss": "中", "minutes": "12′", "efficiency": "A", "modes": ["1h", "half", "full"], "included": true}, {"knowledge": "为什么铸牢中华民族共同体意识（内涵/地位/意义）", "value": "★★★", "loss": "高", "minutes": "7′", "efficiency": "A", "modes": ["1h", "half", "full"], "included": true}, {"knowledge": "如何铸牢中华民族共同体意识（四个层面）", "value": "★★★", "loss": "中", "minutes": "6′", "efficiency": "A", "modes": ["1h", "half", "full"], "included": true}, {"knowledge": "一国两制：内容、「一国」与「两制」的关系、地位", "value": "★★★", "loss": "高", "minutes": "5′", "efficiency": "A", "modes": ["1h", "half", "full"], "included": true}, {"knowledge": "台湾问题：为什么统一 + 怎么做（六条）", "value": "★★★", "loss": "中", "minutes": "10′", "efficiency": "A", "modes": ["1h", "half", "full"], "included": true}, {"knowledge": "为什么要实现中国梦（四条）", "value": "★★", "loss": "中", "minutes": "10′", "efficiency": "B", "modes": ["half", "full"], "included": true}, {"knowledge": "保持港澳长期繁荣稳定的举措 + 一国两制实践意义", "value": "★★", "loss": "中", "minutes": "12′", "efficiency": "B", "modes": ["half", "full"], "included": true}, {"knowledge": "中华民族与各民族的关系；现代化强国「一个民族也不能少」", "value": "★★", "loss": "中", "minutes": "8′", "efficiency": "B", "modes": ["half", "full"], "included": true}, {"knowledge": "问答题答题模板（是什么/为什么/怎么做）", "value": "★★★", "loss": "中", "minutes": "20′", "efficiency": "B", "modes": ["half", "full"], "included": true}, {"knowledge": "中华民族命运共同体的形成", "value": "★", "loss": "低", "minutes": "5′", "efficiency": "C", "modes": ["full"], "included": false}, {"knowledge": "新时代是奋斗者的时代；我们应当怎样做", "value": "★", "loss": "低", "minutes": "5′", "efficiency": "C", "modes": ["full"], "included": false}], "footer": "", "after": []}</script>
+<script>
+(function () {
+  "use strict";
+  var D = JSON.parse(document.getElementById("review-data").textContent);
+  var SEGS = D.segments;
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  // 行内标记：{{遮住}}  [[红色重点]]  **加粗**  换行 \n
+  function inl(s) {
+    return esc(s).replace(/\{\{([\s\S]+?)\}\}/g, '<span class="c">$1</span>')
+      .replace(/\[\[([\s\S]+?)\]\]/g, '<span class="key">$1</span>')
+      .replace(/\*\*([\s\S]+?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
+  }
+  function fmtClock(s) {
+    s = Math.max(0, Math.round(s));
+    var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
+    var p = function (n) { return (n < 10 ? "0" : "") + n; };
+    return (h ? h + ":" + p(m) : p(m)) + ":" + p(x);
+  }
+  function fmtAt(min) { var h = Math.floor(min / 60), m = min % 60; return h + ":" + (m < 10 ? "0" : "") + m; }
+
+  // ---------- 渲染内容块 ----------
+  function block(b) {
+    switch (b.type) {
+      case "h": return "<h3>" + inl(b.text) + "</h3>";
+      case "text": return "<p>" + inl(b.text) + "</p>";
+      case "recall": return b.lines.map(function (l) {
+        return '<div class="line">' + inl(l.text) + (l.src ? '<span class="src">' + inl(l.src) + "</span>" : "") + "</div>";
+      }).join("");
+      case "cards": return '<div class="cards">' + b.items.map(function (c) {
+        return '<div class="fc"><b>' + inl(c.q) + '</b><span class="c">' + inl(c.a) + "</span></div>";
+      }).join("") + "</div>";
+      case "list": var tg = b.ordered ? "ol" : "ul";
+        return "<" + tg + ">" + b.items.map(function (x) { return "<li>" + inl(x) + "</li>"; }).join("") + "</" + tg + ">";
+      case "table": return "<table><tr>" + b.head.map(function (x) { return "<th>" + inl(x) + "</th>"; }).join("") + "</tr>" +
+        b.rows.map(function (r) { return "<tr>" + r.map(function (x) { return "<td>" + inl(x) + "</td>"; }).join("") + "</tr>"; }).join("") + "</table>";
+      case "note": case "warn":
+        return '<div class="' + b.type + '">' + (b.title ? "<b>" + inl(b.title) + "</b>" : "") + inl(b.text) + "</div>";
+      case "chips": return '<div class="typo">' + b.items.map(function (x) { return '<span class="chip">' + inl(x) + "</span>"; }).join("") + "</div>";
+      case "link": return '<a class="btn golink" href="' + esc(b.href) + '">' + inl(b.text) + "</a>";
+      case "mistakes": return b.items.map(function (q) {
+        return '<div class="mq"><div class="meta">' + esc(q.knowledge) + " · 错过 " + q.wrong_count + " 次</div>" + inl(q.stem) +
+          (q.options ? '<div class="opts">' + q.options.map(esc).join("　") + "</div>" : "") +
+          '<div class="ans">答案：<span class="c">' + esc(q.answer) + (q.tip ? "　｜　" + esc(q.tip) : "") + "</span></div></div>";
+      }).join("");
+      default: return "";
+    }
+  }
+
+  function render() {
+    document.title = D.title;
+    document.getElementById("title").textContent = D.title;
+    document.getElementById("lead").innerHTML = inl(D.lead || "");
+    document.getElementById("modes").innerHTML = D.modes.map(function (m) {
+      return '<a href="' + esc(m.href) + '"' + (m.on ? ' class="on"' : "") + ">" + esc(m.label) + "</a>";
+    }).join("");
+    var at = 0, plan = "", secs = "";
+    SEGS.forEach(function (s, i) {
+      var brk = s.kind === "break";
+      plan += '<a href="#s' + i + '"' + (brk ? ' class="brk"' : "") + '><span class="t">' + fmtAt(at) + "–" + fmtAt(at + s.minutes) +
+        '</span><span class="n">' + esc(s.title) + "</span>" +
+        (s.tag ? '<span class="m' + (s.tag === "错题" ? " b" : s.tag === "自测" ? " g" : "") + '">' + esc(s.tag) + "</span>" : "") + "</a>";
+      at += s.minutes;
+      if (brk) {
+        secs += '<section class="sec brk" id="s' + i + '">☕ ' + esc(s.title) + "（" + s.minutes + " 分钟）" +
+          (s.why ? "<br><small>" + esc(s.why) + "</small>" : "") + "</section>";
+        return;
+      }
+      var hasC = s.blocks.some(function (b) { return b.type === "cards" || b.type === "mistakes" || JSON.stringify(b).indexOf("{{") >= 0; });
+      secs += '<section class="sec" id="s' + i + '"><div class="sec-h"><h2>' + esc(s.title) + '</h2><span class="tag">' + s.minutes +
+        " 分钟</span></div>" + (s.why ? '<p class="why">' + inl(s.why) + "</p>" : "") +
+        (hasC ? '<div class="tools"><button class="btn ghost" data-toggle="s' + i + '">全部显示 / 全部遮住</button></div>' : "") +
+        s.blocks.map(block).join("") +
+        '<div class="done-row"><button class="done-btn" data-done="' + i + '"></button></div></section>';
+    });
+    document.getElementById("plan").innerHTML = plan;
+    document.getElementById("secs").innerHTML = secs;
+    if (D.ranking && D.ranking.length) {
+      document.getElementById("whybox").innerHTML = '<details class="why-box"><summary>为什么这样安排？（提分效率排序）</summary>' +
+        "<p>" + inl(D.principle || "") + "</p><table><tr><th>知识点</th><th>分值</th><th>失分风险</th><th>复习用时</th><th>效率</th><th>本模式</th></tr>" +
+        D.ranking.map(function (r) {
+          return "<tr><td>" + esc(r.knowledge) + "</td><td>" + esc(r.value) + "</td><td>" + esc(r.loss) + "</td><td>" + esc(r.minutes) +
+            "</td><td>" + esc(r.efficiency) + "</td><td>" + (r.included ? "✅" : "—") + "</td></tr>";
+        }).join("") + "</table></details>";
+    }
+    if (D.after && D.after.length) {
+      document.getElementById("after").innerHTML = '<section class="sec"><div class="sec-h"><h2>复习完，测一测</h2></div>' +
+        '<p class="why">先做推荐的那一级；达标了再挑战下一级。错题导出后让 Claude 录入错题库。</p><div class="levels">' +
+        D.after.map(function (a) {
+          return '<a class="lv' + (a.recommended ? " rec" : "") + '" href="' + esc(a.href) + '"><b>第 ' + a.level + " 级 · " + esc(a.label) +
+            "</b><span>达标线 " + a.pass + "%" + (a.recommended ? " · 推荐" : "") + "</span></a>";
+        }).join("") + "</div></section>";
+    }
+    document.getElementById("foot").innerHTML = esc(D.footer || "");
+  }
+  render();
+
+  // ---------- 遮挡 ----------
+  document.addEventListener("click", function (e) {
+    var c = e.target.closest(".c");
+    if (c) { c.classList.toggle("on"); return; }
+    var t = e.target.closest("[data-toggle]");
+    if (t) {
+      var cs = document.querySelectorAll("#" + t.dataset.toggle + " .c");
+      var allOn = Array.prototype.every.call(cs, function (x) { return x.classList.contains("on"); });
+      cs.forEach(function (x) { x.classList.toggle("on", !allOn); });
+    }
+  });
+
+  // ---------- 分段计时 ----------
+  var N = SEGS.length, TOTAL = SEGS.reduce(function (a, s) { return a + s.minutes; }, 0) * 60;
+  var KEY = "review:" + D.title + ":" + D.mode + ":" + (D.created || "");
+  var store = { get: function () { try { return localStorage.getItem(KEY); } catch (e) { return null; } },
+                set: function (v) { try { localStorage.setItem(KEY, v); } catch (e) {} } };
+  var st = {};
+  try { st = JSON.parse(store.get() || "{}") || {}; } catch (e) { st = {}; }
+  if (!st.done || st.done.length !== N) st.done = SEGS.map(function () { return false; });
+  st.elapsed = st.elapsed || 0;
+  var startedAt = null, timer = null, lastSeg = -1;
+  var $clock = document.getElementById("clock"), $now = document.getElementById("now"),
+      $bar = document.getElementById("progBar"), $start = document.getElementById("startBtn");
+  var planLinks = document.querySelectorAll("#plan a"),
+      secEls = SEGS.map(function (s, i) { return document.getElementById("s" + i); });
+  var studyIdx = SEGS.map(function (s, i) { return s.kind === "break" ? -1 : i; }).filter(function (i) { return i >= 0; });
+
+  function save() { store.set(JSON.stringify(st)); }
+  function elapsed() { return st.elapsed + (startedAt ? (Date.now() - startedAt) / 1000 : 0); }
+  function segAt(sec) { var m = sec / 60, acc = 0; for (var i = 0; i < N; i++) { acc += SEGS[i].minutes; if (m < acc) return i; } return N; }
+  function tick() {
+    var e = elapsed(), seg = segAt(e);
+    $clock.textContent = fmtClock(TOTAL - e);
+    var doneCount = studyIdx.filter(function (i) { return st.done[i]; }).length;
+    $bar.style.width = (doneCount / Math.max(1, studyIdx.length) * 100) + "%";
+    planLinks.forEach(function (a, i) { a.classList.toggle("cur", startedAt !== null && i === seg); a.classList.toggle("done", !!st.done[i]); });
+    secEls.forEach(function (s, i) { s.classList.toggle("cur", startedAt !== null && i === seg); });
+    if (seg >= N) {
+      $now.innerHTML = "<b>时间到！</b>完成 " + doneCount + "/" + studyIdx.length + " 段。";
+    } else if (startedAt !== null || st.elapsed > 0) {
+      var acc = 0; for (var i = 0; i <= seg; i++) acc += SEGS[i].minutes;
+      $now.innerHTML = "现在：<b>" + esc(SEGS[seg].title) + "</b><br>本段还剩 " + fmtClock(acc * 60 - e);
+    }
+    document.querySelectorAll("[data-done]").forEach(function (b) {
+      var i = +b.dataset.done; b.classList.toggle("ok", !!st.done[i]);
+      b.textContent = st.done[i] ? "已完成 ✓（点此撤销）" : "这一段我过完了 ✓";
+    });
+    if (startedAt !== null && seg !== lastSeg) {
+      if (lastSeg !== -1 && seg < N) {
+        if (navigator.vibrate) navigator.vibrate(300);
+        secEls[seg].scrollIntoView({ behavior: "smooth" });
+      }
+      if (seg >= N) pause();
+      lastSeg = seg;
+    }
+  }
+  function start() {
+    if (elapsed() >= TOTAL) { st.elapsed = 0; st.done = SEGS.map(function () { return false; }); save(); }
+    startedAt = Date.now(); lastSeg = segAt(elapsed());
+    timer = setInterval(tick, 500); $start.textContent = "暂停"; tick();
+    secEls[Math.min(lastSeg, N - 1)].scrollIntoView({ behavior: "smooth" });
+  }
+  function pause() {
+    if (startedAt === null) return;
+    st.elapsed = elapsed(); startedAt = null; clearInterval(timer); save();
+    $start.textContent = st.elapsed >= TOTAL ? "开始" : "继续"; tick();
+  }
+  $start.onclick = function () { startedAt === null ? start() : pause(); };
+  document.getElementById("resetBtn").onclick = function () {
+    if (!confirm("清空计时和完成记录，重新开始？")) return;
+    pause(); st = { done: SEGS.map(function () { return false; }), elapsed: 0 }; save();
+    $start.textContent = "开始"; $now.textContent = "按「开始」计时，每段到点会提醒你换下一段"; lastSeg = -1; tick();
+  };
+  document.querySelectorAll("[data-done]").forEach(function (b) {
+    b.onclick = function () { var i = +b.dataset.done; st.done[i] = !st.done[i]; save(); tick(); };
+  });
+  window.addEventListener("pagehide", function () { if (startedAt !== null) { st.elapsed = elapsed(); save(); } });
+  if (st.elapsed > 0) $start.textContent = st.elapsed >= TOTAL ? "开始" : "继续";
+  tick();
+})();
+</script>
+</body>
+</html>
