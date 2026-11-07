@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>测试题</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #fff; --text: #1f2328; --muted: #6b7280; --line: #e5e7eb;
+    --primary: #2563eb; --primary-soft: #eff6ff;
+    --ok: #15803d; --ok-soft: #ecfdf3; --bad: #c2410c; --bad-soft: #fff4ed;
+    --half: #a16207; --half-soft: #fefce8;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.7 -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 24px 16px 120px; }
+  header h1 { font-size: 24px; margin: 0 0 4px; }
+  header .meta { color: var(--muted); font-size: 14px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; margin: 14px 0; }
+  .section-title { font-weight: 600; color: var(--muted); margin: 28px 0 6px; font-size: 15px; }
+  .q-head { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; margin-bottom: 8px; }
+  .q-no { font-weight: 700; }
+  .tag { font-size: 12px; padding: 1px 8px; border-radius: 99px; background: #f1f5f9; color: var(--muted); }
+  .stem { white-space: pre-wrap; }
+  .opts { margin-top: 10px; display: grid; gap: 6px; }
+  .opt { display: flex; gap: 10px; align-items: flex-start; padding: 8px 12px; border: 1px solid var(--line);
+    border-radius: 8px; cursor: pointer; }
+  .opt:hover { border-color: var(--primary); }
+  .opt input { margin-top: 6px; }
+  .opt.sel { border-color: var(--primary); background: var(--primary-soft); }
+  .opt.right { border-color: var(--ok); background: var(--ok-soft); }
+  .opt.wrongpick { border-color: var(--bad); background: var(--bad-soft); }
+  .blank { width: 9em; padding: 2px 6px; margin: 0 4px; border: none; border-bottom: 2px solid #94a3b8;
+    font: inherit; background: transparent; text-align: center; }
+  .blank:focus { outline: none; border-color: var(--primary); }
+  .blank.ok { border-color: var(--ok); color: var(--ok); }
+  .blank.bad { border-color: var(--bad); color: var(--bad); }
+  textarea { width: 100%; min-height: 110px; margin-top: 10px; padding: 10px; font: inherit;
+    border: 1px solid var(--line); border-radius: 8px; resize: vertical; }
+  .card.st-correct { border-left: 5px solid var(--ok); }
+  .card.st-wrong { border-left: 5px solid var(--bad); }
+  .card.st-partial, .card.st-pending { border-left: 5px solid var(--half); }
+  .fb { margin-top: 12px; padding: 12px 14px; border-radius: 8px; font-size: 15px; }
+  .fb.correct { background: var(--ok-soft); }
+  .fb.wrong { background: var(--bad-soft); }
+  .fb.partial, .fb.pending { background: var(--half-soft); }
+  .fb .verdict { font-weight: 700; }
+  .fb .row { margin-top: 4px; }
+  .fb .label { color: var(--muted); }
+  .fb .points label { display: block; cursor: pointer; }
+  .selfbtns button { margin: 6px 6px 0 0; }
+  button { font: inherit; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--line);
+    background: #fff; cursor: pointer; }
+  button:hover { border-color: var(--primary); }
+  button.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+  button.on { background: var(--primary-soft); border-color: var(--primary); }
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,.96);
+    border-top: 1px solid var(--line); backdrop-filter: blur(6px); }
+  .bar .inner { max-width: 820px; margin: 0 auto; padding: 10px 16px; display: flex; gap: 8px;
+    align-items: center; flex-wrap: wrap; }
+  .bar .progress { color: var(--muted); font-size: 14px; margin-right: auto; }
+  .score-big { font-size: 40px; font-weight: 800; }
+  .score-big small { font-size: 18px; color: var(--muted); font-weight: 400; }
+  .stats { display: flex; gap: 22px; flex-wrap: wrap; color: var(--muted); margin: 4px 0 12px; }
+  .stats b { color: var(--text); }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 500; }
+  .meter { height: 8px; background: #eef0f3; border-radius: 99px; overflow: hidden; min-width: 80px; }
+  .meter i { display: block; height: 100%; border-radius: 99px; }
+  .hidden { display: none !important; }
+  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #111827; color: #fff;
+    padding: 8px 16px; border-radius: 8px; font-size: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.show { opacity: .92; }
+  .level-box { margin: 4px 0 14px; padding: 10px 12px; border-radius: 8px; font-size: 15px; }
+  .level-box.pass { background: var(--ok-soft); }
+  .level-box.fail { background: var(--half-soft); }
+  .next-btn { display: inline-block; margin-top: 6px; padding: 4px 12px; border-radius: 8px; background: var(--ok); color: #fff; text-decoration: none; }
+  @media print { .bar, .actions { display: none; } }
+</style>
+</head>
+<body>
+<div style="background:#111827;font:14px/1 -apple-system,'PingFang SC',sans-serif;padding:10px 14px"><a href="../../../../index.html" style="color:#fff;text-decoration:none">← 返回复习主页</a></div>
+<div class="wrap">
+  <header>
+    <h1 id="title"></h1>
+    <div class="meta" id="meta"></div>
+  </header>
+  <div id="summary" class="hidden"></div>
+  <div id="questions"></div>
+</div>
+
+<div class="bar"><div class="inner">
+  <span class="progress" id="progress"></span>
+  <span id="before-actions">
+    <button class="primary" id="btn-submit">交卷</button>
+  </span>
+  <span id="after-actions" class="hidden">
+    <button id="btn-filter">只看错题</button>
+    <button id="btn-retry">重做错题</button>
+    <button id="btn-reset">全部重做</button>
+    <button id="btn-copy">复制结果</button>
+    <button class="primary" id="btn-export">导出答题记录</button>
+  </span>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script id="quiz-data" type="application/json">{
+ "title": "九年级道德与法治 · 期中重点（第1–8课） 标准模拟",
+ "unit": "九年级道德与法治 · 期中重点（第1–8课）",
+ "level": 2,
+ "subject": "道德与法治",
+ "grade": "九年级",
+ "source": [
+  "01_复习提纲/道德与法治/微信图片_20261107173809_2858_30.jpg",
+  "01_复习提纲/道德与法治/微信图片_20261107173810_2859_30.jpg",
+  "01_复习提纲/道德与法治/微信图片_20261107173816_2860_30.jpg",
+  "01_复习提纲/道德与法治/微信图片_20261107173819_2861_30.jpg",
+  "01_复习提纲/道德与法治/微信图片_20261107173821_2862_30.jpg",
+  "01_复习提纲/道德与法治/微信图片_20261107173824_2863_30.jpg",
+  "01_复习提纲/道德与法治/微信图片_20261107173827_2864_30.jpg",
+  "01_复习提纲/道德与法治/微信图片_20261107173829_2865_30.jpg",
+  "01_复习提纲/道德与法治/微信图片_20261107173830_2866_30.jpg"
+ ],
+ "created": "2026-11-07",
+ "questions": [
+  {
+   "id": 1,
+   "type": "single",
+   "knowledge": "百年奋斗的主题",
+   "difficulty": "基础",
+   "stem": "中国共产党百年奋斗的主题是（　　）",
+   "options": [
+    "全面建成小康社会",
+    "实现中华民族伟大复兴",
+    "实现共产主义",
+    "推进社会主义建设"
+   ],
+   "answer": "B",
+   "explanation": "讲义 1.1-1：中国共产党百年奋斗的主题是实现中华民族伟大复兴。C「实现共产主义」是党的最高理想和最终目标（2.1），不是百年奋斗的主题；A、D 是某一阶段的任务。"
+  },
+  {
+   "id": 2,
+   "type": "single",
+   "knowledge": "四个历史时期",
+   "difficulty": "基础",
+   "stem": "为实现中华民族伟大复兴创造了根本社会条件的是（　　）",
+   "options": [
+    "社会主义革命和建设时期",
+    "改革开放和社会主义现代化建设新时期",
+    "新民主主义革命时期",
+    "中国特色社会主义新时代"
+   ],
+   "answer": "C",
+   "explanation": "讲义 1.1-3(1)：新民主主义革命时期，完成新民主主义革命、建立中华人民共和国，为民族复兴创造根本社会条件，宣告中国人民站起来了。"
+  },
+  {
+   "id": 3,
+   "type": "single",
+   "knowledge": "四个历史时期",
+   "difficulty": "中等",
+   "stem": "完成社会主义革命，确立社会主义基本制度，为实现中华民族伟大复兴奠定了（　　）",
+   "options": [
+    "根本社会条件",
+    "根本政治前提和制度基础",
+    "充满活力的体制保证",
+    "更为坚实的物质基础"
+   ],
+   "answer": "B",
+   "explanation": "讲义 1.1-3(2)：社会主义革命和建设时期，为民族复兴奠定根本政治前提和制度基础。A 是新民主主义革命时期；C 是改革开放新时期；D 是新时代。四个时期的「历史作用」最容易混，要一一对应。"
+  },
+  {
+   "id": 4,
+   "type": "fill",
+   "knowledge": "四个伟大",
+   "difficulty": "基础",
+   "stem": "「四个伟大」是指伟大斗争、____、伟大事业、____。",
+   "answer": [
+    [
+     "伟大工程"
+    ],
+    [
+     "伟大梦想"
+    ]
+   ],
+   "unordered": true,
+   "explanation": "讲义 1.1（必考）：「四个伟大」——伟大斗争、伟大工程、伟大事业、伟大梦想。"
+  },
+  {
+   "id": 5,
+   "type": "multiple",
+   "knowledge": "四个历史时期",
+   "difficulty": "中等",
+   "stem": "中国特色社会主义新时代，为实现中华民族伟大复兴提供了（　　）",
+   "options": [
+    "更为完善的制度保证",
+    "更为坚实的物质基础",
+    "根本社会条件",
+    "更为主动的精神力量"
+   ],
+   "answer": [
+    "A",
+    "B",
+    "D"
+   ],
+   "explanation": "讲义 1.1-3(4)：新时代为民族复兴提供更为完善的制度保证、更为坚实的物质基础、更为主动的精神力量。C「根本社会条件」属于新民主主义革命时期。"
+  },
+  {
+   "id": 6,
+   "type": "single",
+   "knowledge": "以人民为中心",
+   "difficulty": "基础",
+   "stem": "「江山就是人民，人民就是江山。」人民立场是中国共产党的（　　）",
+   "options": [
+    "根本宗旨",
+    "最高理想",
+    "根本政治立场",
+    "第一要务"
+   ],
+   "answer": "C",
+   "explanation": "讲义「为什么坚持以人民为中心」②：人民立场是中国共产党的根本政治立场。A 根本宗旨是全心全意为人民服务；B 最高理想是实现共产主义；D 发展是党执政兴国的第一要务。"
+  },
+  {
+   "id": 7,
+   "type": "multiple",
+   "knowledge": "站稳人民立场",
+   "difficulty": "基础",
+   "stem": "党怎样站稳人民立场？（　　）",
+   "options": [
+    "践行全心全意为人民服务的根本宗旨",
+    "把党的利益放在人民利益之上",
+    "贯彻党的群众路线",
+    "一切为了群众，一切依靠群众，从群众中来，到群众中去"
+   ],
+   "answer": [
+    "A",
+    "C",
+    "D"
+   ],
+   "explanation": "讲义 2.2-2（重点）：①践行党的根本宗旨，坚持全心全意为人民服务；②贯彻党的群众路线，一切为了群众，一切依靠群众，从群众中来，到群众中去。B 错误：党在任何时候都把人民利益放在第一位（2.2-1）。"
+  },
+  {
+   "id": 8,
+   "type": "judge",
+   "knowledge": "以人民为中心",
+   "difficulty": "基础",
+   "stem": "人民是历史的创造者，是决定党和国家前途命运的根本力量。",
+   "answer": true,
+   "explanation": "讲义「为什么坚持以人民为中心」②原话。"
+  },
+  {
+   "id": 9,
+   "type": "single",
+   "knowledge": "党的领导核心地位",
+   "difficulty": "中等",
+   "stem": "中国共产党的领导是中国特色社会主义制度的（　　）",
+   "options": [
+    "最本质的特征",
+    "最根本保证",
+    "最大优势",
+    "坚强领导核心"
+   ],
+   "answer": "C",
+   "explanation": "讲义 3.1-1（重点）：①党是中国特色社会主义事业的坚强领导核心；②党的领导是中国特色社会主义最本质的特征；③党的领导是中国特色社会主义制度的最大优势；④党的领导是实现社会主义现代化和民族复兴的最根本保证。看清题干说的是「事业」「中国特色社会主义」「制度」还是「现代化和民族复兴」。"
+  },
+  {
+   "id": 10,
+   "type": "fill",
+   "knowledge": "党的领导核心地位",
+   "difficulty": "中等",
+   "stem": "中国共产党的领导是中国特色社会主义____的特征，是实现社会主义现代化和民族复兴的____。",
+   "answer": [
+    [
+     "最本质"
+    ],
+    [
+     "最根本保证"
+    ]
+   ],
+   "explanation": "讲义 3.1-1②④原话。"
+  },
+  {
+   "id": 11,
+   "type": "single",
+   "knowledge": "两个维护",
+   "difficulty": "基础",
+   "stem": "坚持和加强党的全面领导，最重要的是（　　）",
+   "options": [
+    "坚决维护党中央权威和集中统一领导",
+    "听党话、跟党走",
+    "以经济建设为中心",
+    "贯彻新发展理念"
+   ],
+   "answer": "A",
+   "explanation": "讲义 3.2-2（「两个维护」）①：坚持和加强党的全面领导，最重要的是坚决维护党中央权威和集中统一领导。B 是青少年怎样坚持党的领导；C、D 是发展经济方面的要求。"
+  },
+  {
+   "id": 12,
+   "type": "judge",
+   "knowledge": "党的全面领导",
+   "difficulty": "基础",
+   "stem": "党的全面领导，是指党只领导政治方面的工作。",
+   "answer": false,
+   "explanation": "讲义 3.2-1：党的领导是全面的、系统的、整体的。「党政军民学，东西南北中，党是领导一切的」。"
+  },
+  {
+   "id": 13,
+   "type": "single",
+   "knowledge": "社会主要矛盾",
+   "difficulty": "基础",
+   "stem": "新时代我国社会主要矛盾已经转化为（　　）",
+   "options": [
+    "人民日益增长的物质文化需要同落后的社会生产之间的矛盾",
+    "人民日益增长的美好生活需要同落后的社会生产之间的矛盾",
+    "人民日益增长的物质文化需要和不平衡不充分的发展之间的矛盾",
+    "人民日益增长的美好生活需要和不平衡不充分的发展之间的矛盾"
+   ],
+   "answer": "D",
+   "explanation": "讲义 4.1-2（重点）：新时代我国社会主要矛盾已经转化为人民日益增长的美好生活需要和不平衡不充分的发展之间的矛盾。这是中国特色社会主义进入新时代的基本依据。记住两个关键词：「美好生活需要」「不平衡不充分」。"
+  },
+  {
+   "id": 14,
+   "type": "single",
+   "knowledge": "主要矛盾变化的判断依据",
+   "difficulty": "提高",
+   "stem": "「我国各区域各领域各方面还存在发展失衡问题，制约了整体发展水平的提升。」这属于社会主要矛盾发生变化的判断依据中的（　　）",
+   "options": [
+    "生产力层面",
+    "人民需求层面",
+    "发展制约层面",
+    "国际地位层面"
+   ],
+   "answer": "C",
+   "explanation": "讲义 4.1-3：(1) 短缺经济和供给不足根本改变、生产力显著提高——生产力层面；(2) 人民对美好生活的向往更加强烈——人民需求层面；(3) 各区域各领域各方面存在发展失衡——发展制约层面。D 不是判断依据之一。"
+  },
+  {
+   "id": 15,
+   "type": "judge",
+   "knowledge": "两个没有变",
+   "difficulty": "中等",
+   "stem": "我国社会主要矛盾发生了变化，说明我国已经不再处于社会主义初级阶段。",
+   "answer": false,
+   "explanation": "讲义 4.1-4「两个没有变」：社会主要矛盾的变化，没有改变我国仍处于并将长期处于社会主义初级阶段的基本国情，没有改变我国是世界最大发展中国家的国际地位。"
+  },
+  {
+   "id": 16,
+   "type": "multiple",
+   "knowledge": "新时代的主要内涵",
+   "difficulty": "提高",
+   "stem": "关于新时代是一个什么样的时代，下列说法正确的有（　　）",
+   "options": [
+    "是已经全面建成社会主义现代化强国的时代",
+    "是承前启后、继往开来、在新的历史条件下继续夺取中国特色社会主义伟大胜利的时代",
+    "是全国各族人民团结奋斗、不断创造美好生活、逐步实现全体人民共同富裕的时代",
+    "是我国不断为人类作出更大贡献的时代"
+   ],
+   "answer": [
+    "B",
+    "C",
+    "D"
+   ],
+   "explanation": "讲义 4.2-2（重点）五个「时代」：夺取胜利、全面建设现代化强国、实现共同富裕、实现中国梦、对人类作出贡献。A 错：新时代是「决胜全面建成小康社会、进而全面建设社会主义现代化强国」的时代，现代化强国还在建设中，到本世纪中叶才建成。"
+  },
+  {
+   "id": 17,
+   "type": "single",
+   "knowledge": "系统科学的理论体系",
+   "difficulty": "基础",
+   "stem": "「两个结合」是指坚持把马克思主义基本原理同中国具体实际相结合，同（　　）相结合。",
+   "options": [
+    "中华优秀传统文化",
+    "西方现代化模式",
+    "人类一切优秀文明成果",
+    "社会主义核心价值观"
+   ],
+   "answer": "A",
+   "explanation": "讲义 5.1(1)（必考）：坚持把马克思主义基本原理同中国具体实际相结合，坚持把马克思主义基本原理同中华优秀传统文化相结合。"
+  },
+  {
+   "id": 18,
+   "type": "single",
+   "knowledge": "长期坚持习近平新时代中国特色社会主义思想",
+   "difficulty": "中等",
+   "stem": "关于为什么要长期坚持并不断发展习近平新时代中国特色社会主义思想，下列说法正确的是（　　）",
+   "options": [
+    "这一思想已经完全定型，不需要再发展",
+    "这一思想只适用于经济领域",
+    "这一思想不需要经过实践检验",
+    "坚持和发展这一思想，就是真正坚持和发展马克思主义"
+   ],
+   "answer": "D",
+   "explanation": "讲义 5.2-1(3) 原话。A 错：它必将随着强国建设、民族复兴伟业的全面拓展而持续发展、不断丰富、更加完善；C 错：它是经过实践检验又指导实践发展的强大思想武器；B 说法无依据。"
+  },
+  {
+   "id": 19,
+   "type": "single",
+   "knowledge": "五位一体",
+   "difficulty": "基础",
+   "stem": "「五位一体」总体布局不包括（　　）",
+   "options": [
+    "经济建设",
+    "生态文明建设",
+    "社会建设",
+    "国防建设"
+   ],
+   "answer": "D",
+   "explanation": "讲义第 6 课导语：「五位一体」是经济建设、政治建设、文化建设、社会建设、生态文明建设。"
+  },
+  {
+   "id": 20,
+   "type": "multiple",
+   "knowledge": "民主政治不断发展",
+   "difficulty": "基础",
+   "stem": "下列属于新时代民主政治不断发展的具体表现的有（　　）",
+   "options": [
+    "人民当家作主制度体系不断完善",
+    "社会保障体系不断完善",
+    "协商民主广泛深入发展",
+    "法治中国建设迈出坚实步伐"
+   ],
+   "answer": [
+    "A",
+    "C",
+    "D"
+   ],
+   "explanation": "讲义 6.2-2：人民当家作主制度体系不断完善；协商民主广泛深入发展；基层民主活力增强；法治中国建设迈出坚实步伐。B「社会保障体系不断完善」是民生福祉的表现（6.4）。"
+  },
+  {
+   "id": 21,
+   "type": "judge",
+   "knowledge": "民生福祉持续增进",
+   "difficulty": "基础",
+   "stem": "增进民生福祉是发展的根本目的。",
+   "answer": true,
+   "explanation": "讲义 6.4 原话。对比：发展是党执政兴国的第一要务（6.1）。"
+  },
+  {
+   "id": 22,
+   "type": "single",
+   "knowledge": "文化自信日益增强",
+   "difficulty": "中等",
+   "stem": "文化自信是更基础、更广泛、更深厚的自信，是一个国家、一个民族发展中（　　）的力量。",
+   "options": [
+    "更基础、更广泛、更深厚",
+    "第一动力",
+    "最基本、最深沉、最持久",
+    "根本目的"
+   ],
+   "answer": "C",
+   "explanation": "讲义 6.3：文化自信是「更基础、更广泛、更深厚」的自信，是一个国家、一个民族发展中「最基本、最深沉、最持久」的力量。前一组是「更」，后一组是「最」，别混。"
+  },
+  {
+   "id": 23,
+   "type": "fill",
+   "knowledge": "两步走战略",
+   "difficulty": "中等",
+   "stem": "「两步走」战略：从 2020 年到 2035 年，____；从 2035 年到本世纪中叶，把我国建成____的社会主义现代化强国。",
+   "answer": [
+    [
+     "基本实现社会主义现代化"
+    ],
+    [
+     "富强民主文明和谐美丽"
+    ]
+   ],
+   "explanation": "讲义 7.1-2（重点）原话。注意第一步是「基本实现」现代化，第二步才是建成「富强民主文明和谐美丽」的现代化强国。"
+  },
+  {
+   "id": 24,
+   "type": "multiple",
+   "knowledge": "中国式现代化的中国特色",
+   "difficulty": "基础",
+   "stem": "中国式现代化的中国特色包括（　　）",
+   "options": [
+    "是人口规模巨大的现代化",
+    "是全体人民共同富裕的现代化",
+    "是物质文明和精神文明相协调的现代化",
+    "是走对外扩张道路的现代化"
+   ],
+   "answer": [
+    "A",
+    "B",
+    "C"
+   ],
+   "explanation": "讲义 7.2-2（重点）五条：人口规模巨大；全体人民共同富裕；物质文明和精神文明相协调；人与自然和谐共生；走和平发展道路。D 与「走和平发展道路」相反。"
+  },
+  {
+   "id": 25,
+   "type": "single",
+   "knowledge": "新发展理念",
+   "difficulty": "中等",
+   "stem": "新发展理念中，注重解决发展不平衡问题的是（　　）",
+   "options": [
+    "创新",
+    "协调",
+    "绿色",
+    "共享"
+   ],
+   "answer": "B",
+   "explanation": "讲义 8.1-1（重点）：创新解决发展动力问题；协调解决发展不平衡问题；绿色解决人与自然和谐共生问题；开放解决内外联动问题；共享解决社会公平正义问题。"
+  },
+  {
+   "id": 26,
+   "type": "single",
+   "knowledge": "新发展理念",
+   "difficulty": "提高",
+   "stem": "「引领发展的第一动力」和「中国特色社会主义的本质要求」分别对应新发展理念中的（　　）",
+   "options": [
+    "创新、共享",
+    "协调、开放",
+    "创新、协调",
+    "开放、共享"
+   ],
+   "answer": "A",
+   "explanation": "讲义 8.1-1：创新是引领发展的第一动力；共享是中国特色社会主义的本质要求。另外：协调是持续健康发展的内在要求，绿色是永续发展的必要条件，开放是国家繁荣发展的必由之路。"
+  },
+  {
+   "id": 27,
+   "type": "single",
+   "knowledge": "构建新发展格局",
+   "difficulty": "中等",
+   "stem": "国际形势充满不稳定性和不确定性，我们要把握发展的主动权，保证我国经济正常运行和社会大局稳定。这说明构建新发展格局要（　　）",
+   "options": [
+    "以国内大循环为主体",
+    "以国际市场为主体",
+    "关起门来搞建设",
+    "放弃参与经济全球化"
+   ],
+   "answer": "A",
+   "explanation": "讲义 8.2-2（重点）(1)：这对应「以国内为主」，即新发展格局以国内大循环为主体。(2) 经济全球化浪潮下要促使国内市场和国际市场相互联通、相互促进，所以 C、D 错误；B 与「以国内大循环为主体」相反。"
+  },
+  {
+   "id": 28,
+   "type": "short",
+   "knowledge": "四个历史时期",
+   "difficulty": "提高",
+   "score": 8,
+   "stem": "为什么说没有中国共产党就没有中华民族伟大复兴？请结合党的四个历史奋斗时期，说出每个时期对民族复兴的历史作用。",
+   "answer": "①新民主主义革命时期：完成新民主主义革命，建立中华人民共和国，为实现中华民族伟大复兴创造了根本社会条件。②社会主义革命和建设时期：完成社会主义革命，确立社会主义基本制度，推进社会主义建设，为民族复兴奠定了根本政治前提和制度基础。③改革开放和社会主义现代化建设新时期：实行改革开放，解放和发展社会生产力，为民族复兴提供了充满活力的体制保证和快速发展的物质条件。④中国特色社会主义新时代：创造了新时代中国特色社会主义的伟大成就，为民族复兴提供了更为完善的制度保证、更为坚实的物质基础、更为主动的精神力量。",
+   "points": [
+    "新民主主义革命时期：根本社会条件",
+    "社会主义革命和建设时期：根本政治前提和制度基础",
+    "改革开放新时期：充满活力的体制保证、快速发展的物质条件",
+    "新时代：更为完善的制度保证、更为坚实的物质基础、更为主动的精神力量"
+   ],
+   "explanation": "讲义 1.1-3（重点、必考题）。按「时期—成就—历史作用」写，每个时期写出历史作用的关键词就能得分。"
+  },
+  {
+   "id": 29,
+   "type": "short",
+   "knowledge": "以人民为中心",
+   "difficulty": "提高",
+   "score": 8,
+   "stem": "为什么要坚持以人民为中心？党怎样做到以人民为中心？",
+   "answer": "为什么：①党的角度：是党的初心使命的要求，要为人民谋幸福，为中华民族谋复兴；初心使命是党的性质宗旨、理想信念、奋斗目标的集中体现。②人民角度：江山就是人民，人民就是江山。人民立场是中国共产党的根本政治立场。人民是历史的创造者，是决定党和国家前途命运的根本力量。怎样做：①党要践行初心使命，为人民谋幸福，为中华民族谋复兴。②党要站稳人民立场这一根本政治立场：践行全心全意为人民服务的根本宗旨；自觉贯彻党的群众路线，一切为了群众，一切依靠群众，从群众中来，到群众中去。",
+   "points": [
+    "党的角度：初心使命的要求（为人民谋幸福、为民族谋复兴）",
+    "人民角度：江山就是人民；人民立场是根本政治立场；人民是历史的创造者、根本力量",
+    "做法①：践行初心使命",
+    "做法②：站稳人民立场——全心全意为人民服务的根本宗旨 + 党的群众路线"
+   ],
+   "explanation": "讲义第 2 课导语（手写「要背诵」）。「为什么」分党、人民两个角度，「怎么做」分初心使命、人民立场两条。"
+  },
+  {
+   "id": 30,
+   "type": "short",
+   "knowledge": "新发展理念",
+   "difficulty": "提高",
+   "score": 8,
+   "stem": "新发展理念包括哪五个方面？各自主要解决什么问题？新发展理念有什么意义？",
+   "answer": "①创新：引领发展的第一动力，解决发展动力问题。②协调：持续健康发展的内在要求，解决发展不平衡问题。③绿色：永续发展的必要条件，解决人与自然和谐共生问题。④开放：国家繁荣发展的必由之路，解决内外联动问题。⑤共享：中国特色社会主义的本质要求，解决社会公平正义问题。意义：新发展理念明确了我国社会主义现代化建设的指导原则，进一步回答了实现什么样的发展、怎样实现发展的问题。",
+   "points": [
+    "创新—发展动力；协调—发展不平衡",
+    "绿色—人与自然和谐共生；开放—内外联动",
+    "共享—社会公平正义",
+    "意义：明确了现代化建设的指导原则，回答了实现什么样的发展、怎样实现发展的问题"
+   ],
+   "explanation": "讲义 8.1（重点、必考题）和 8.1-2（必考）。口诀「创动、协衡、绿和、开联、共公」。"
+  }
+ ],
+ "_nav": {
+  "level": 2,
+  "label": "标准模拟",
+  "pass": 80,
+  "next": null
+ }
+}</script>
+<script>
+(function () {
+  "use strict";
+  var QUIZ = JSON.parse(document.getElementById("quiz-data").textContent);
+  var LETTERS = "ABCDEFGHIJ";
+  var TYPE_NAME = { single: "单选题", multiple: "多选题", judge: "判断题", fill: "填空题", short: "简答题" };
+  var BLANK_RE = /_{3,}/g;
+  var STORE_KEY = "quiz:" + QUIZ.title + ":" + (QUIZ.created || "");
+  var TYPE_ORDER = ["single", "multiple", "judge", "fill", "short"];
+  var qs = QUIZ.questions.map(function (q, i) { if (q.id == null) q.id = i + 1; q._i = i; return q; });
+  qs.sort(function (a, b) { // 按题型分组显示，同题型内保持原顺序
+    return (TYPE_ORDER.indexOf(a.type) - TYPE_ORDER.indexOf(b.type)) || (a._i - b._i);
+  });
+
+  // ---------- 状态 ----------
+  var state = load() || { answers: {}, self: {}, submitted: false, attempt: 1, retryIds: null };
+  var filterWrong = false;
+
+  function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) { return null; } }
+  var NAV = QUIZ._nav || null; // 分级信息：{level, label, pass, next:{label, href}}
+  function save() {
+    if (state.submitted) { // 记下得分率，复习主页用来显示「达标 / 通过到第几级」
+      var d = summaryData();
+      state.percent = d.total ? Math.round(d.got / d.total * 100) : 0;
+      state.pending = d.counts.pending;
+    }
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  // ---------- 工具 ----------
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function norm(s) {
+    return String(s == null ? "" : s).normalize("NFKC").replace(/\s+/g, "")
+      .replace(/["'“”‘’「」『』《》]/g, "").replace(/[。.，,、；;！!？?]+$/, "").toLowerCase();
+  }
+  function blankCount(q) {
+    var m = String(q.stem).match(BLANK_RE);
+    return m ? m.length : (Array.isArray(q.answer) ? q.answer.length : 1);
+  }
+  function fillAnswers(q) { // 统一为 [[可接受写法...], ...]
+    return (q.answer || []).map(function (a) { return Array.isArray(a) ? a : [a]; });
+  }
+  function maxScore(q) {
+    if (q.score != null) return Number(q.score);
+    if (q.type === "fill") return 2 * blankCount(q);
+    return { single: 2, multiple: 3, judge: 1, short: 5 }[q.type] || 1;
+  }
+  function round1(x) { return Math.round(x * 10) / 10; }
+  function correctText(q) {
+    if (q.type === "single") return q.answer;
+    if (q.type === "multiple") return (q.answer || []).slice().sort().join("");
+    if (q.type === "judge") return q.answer ? "正确 ✓" : "错误 ✗";
+    if (q.type === "fill") return fillAnswers(q).map(function (a, i) { return "第" + (i + 1) + "空：" + a[0]; }).join("；")
+      + (q.unordered ? "（顺序可互换）" : "");
+    return q.answer;
+  }
+  function userText(q) {
+    var a = state.answers[q.id];
+    if (q.type === "single") return a || "（未作答）";
+    if (q.type === "multiple") return a && a.length ? a.slice().sort().join("") : "（未作答）";
+    if (q.type === "judge") return a == null ? "（未作答）" : (a ? "正确 ✓" : "错误 ✗");
+    if (q.type === "fill") {
+      var n = blankCount(q), arr = a || [];
+      var any = false, out = [];
+      for (var i = 0; i < n; i++) { if (arr[i]) any = true; out.push("第" + (i + 1) + "空：" + (arr[i] || "（空）")); }
+      return any ? out.join("；") : "（未作答）";
+    }
+    return a && a.trim() ? a : "（未作答）";
+  }
+  function isAnswered(q) {
+    var a = state.answers[q.id];
+    if (q.type === "multiple") return !!(a && a.length);
+    if (q.type === "judge") return a === true || a === false;
+    if (q.type === "fill") return !!(a && a.some(function (x) { return x && x.trim(); }));
+    return !!(a && String(a).trim());
+  }
+
+  // ---------- 判分 ----------
+  function grade(q) {
+    var full = maxScore(q), a = state.answers[q.id], got = 0, status, detail = null;
+    if (q.type === "single") {
+      status = a === q.answer ? "correct" : "wrong";
+      got = status === "correct" ? full : 0;
+    } else if (q.type === "multiple") {
+      var ans = q.answer || [], pick = a || [];
+      var hasWrong = pick.some(function (x) { return ans.indexOf(x) < 0; });
+      var allRight = !hasWrong && pick.length === ans.length;
+      if (allRight) { status = "correct"; got = full; }
+      else if (!hasWrong && pick.length > 0) { status = "partial"; got = full / 2; }
+      else { status = "wrong"; got = 0; }
+    } else if (q.type === "judge") {
+      status = a === q.answer ? "correct" : "wrong";
+      got = status === "correct" ? full : 0;
+    } else if (q.type === "fill") {
+      var accepts = fillAnswers(q), user = (a || []).map(norm), n = accepts.length, okCount = 0;
+      detail = [];
+      if (q.unordered) {
+        var used = {};
+        user.forEach(function (u, i) {
+          var hit = -1;
+          for (var k = 0; k < n; k++) {
+            if (!used[k] && u && accepts[k].map(norm).indexOf(u) >= 0) { hit = k; break; }
+          }
+          if (hit >= 0) { used[hit] = true; okCount++; }
+          detail[i] = hit >= 0;
+        });
+      } else {
+        for (var i = 0; i < n; i++) {
+          var ok = !!user[i] && accepts[i].map(norm).indexOf(user[i]) >= 0;
+          detail[i] = ok; if (ok) okCount++;
+        }
+      }
+      got = full * okCount / n;
+      status = okCount === n ? "correct" : okCount > 0 ? "partial" : "wrong";
+    } else { // short：自评
+      var s = state.self[q.id];
+      if (q.points && q.points.length) {
+        if (!s || !s.checked) { status = "pending"; got = 0; }
+        else {
+          var c = s.checked.filter(Boolean).length;
+          got = full * c / q.points.length;
+          status = c === q.points.length ? "correct" : c > 0 ? "partial" : "wrong";
+        }
+      } else {
+        if (!s || s.level == null) { status = "pending"; got = 0; }
+        else { got = full * s.level; status = s.level === 1 ? "correct" : s.level > 0 ? "partial" : "wrong"; }
+      }
+      if (!isAnswered(q) && status === "pending") { status = "wrong"; }
+    }
+    return { status: status, got: round1(got), full: full, detail: detail };
+  }
+
+  // ---------- 渲染 ----------
+  function render() {
+    document.title = QUIZ.title;
+    document.getElementById("title").textContent = QUIZ.title;
+    var total = qs.reduce(function (s, q) { return s + maxScore(q); }, 0);
+    document.getElementById("meta").textContent = [NAV ? "第 " + NAV.level + " 级 · " + NAV.label : "", QUIZ.grade, QUIZ.subject,
+      "共 " + qs.length + " 题", "满分 " + total + " 分", NAV ? "达标线 " + NAV.pass + "%" : ""]
+      .filter(Boolean).join(" · ");
+
+    var box = document.getElementById("questions");
+    box.innerHTML = "";
+    var lastType = null, sectionNo = 0;
+    qs.forEach(function (q, idx) {
+      if (q.type !== lastType) {
+        sectionNo++;
+        var t = document.createElement("div");
+        t.className = "section-title";
+        t.textContent = "一二三四五六七八九十".charAt(sectionNo - 1) + "、" + TYPE_NAME[q.type];
+        t.dataset.section = q.type;
+        box.appendChild(t);
+        lastType = q.type;
+      }
+      box.appendChild(renderQuestion(q, idx + 1));
+    });
+    applyVisibility();
+    renderSummary();
+    updateBar();
+  }
+
+  function renderQuestion(q, no) {
+    var g = state.submitted ? grade(q) : null;
+    var card = document.createElement("div");
+    card.className = "card" + (g ? " st-" + g.status : "");
+    card.id = "q-" + q.id;
+    card.dataset.qid = q.id;
+    var locked = state.submitted;
+
+    var head = '<div class="q-head"><span class="q-no">' + no + '.</span>' +
+      (q.knowledge ? '<span class="tag">' + esc(q.knowledge) + '</span>' : "") +
+      (q.difficulty ? '<span class="tag">' + esc(q.difficulty) + '</span>' : "") +
+      '<span class="tag">' + maxScore(q) + ' 分</span></div>';
+    var body = "";
+    var a = state.answers[q.id];
+
+    if (q.type === "fill") {
+      var i = 0, vals = a || [], det = g && g.detail;
+      var stemHtml = esc(q.stem).replace(BLANK_RE, function () {
+        var k = i++, cls = det ? (det[k] ? " ok" : " bad") : "";
+        return '<input class="blank' + cls + '" data-blank="' + k + '" value="' + esc(vals[k] || "") + '"' + (locked ? " disabled" : "") + ">";
+      });
+      if (i === 0) { // 题干里没写下划线，就在后面补输入框
+        for (var j = 0; j < blankCount(q); j++) {
+          var c2 = det ? (det[j] ? " ok" : " bad") : "";
+          stemHtml += ' <input class="blank' + c2 + '" data-blank="' + j + '" value="' + esc(vals[j] || "") + '"' + (locked ? " disabled" : "") + ">";
+        }
+      }
+      body = '<div class="stem">' + stemHtml + "</div>";
+    } else {
+      body = '<div class="stem">' + esc(q.stem) + (q.type === "multiple" ? "（多选）" : "") + "</div>";
+    }
+
+    if (q.type === "single" || q.type === "multiple" || q.type === "judge") {
+      var opts = q.type === "judge" ? [["T", "正确 ✓"], ["F", "错误 ✗"]]
+        : q.options.map(function (o, k) { return [LETTERS[k], LETTERS[k] + ". " + o]; });
+      body += '<div class="opts">';
+      opts.forEach(function (o) {
+        var key = o[0], sel;
+        if (q.type === "multiple") sel = !!(a && a.indexOf(key) >= 0);
+        else if (q.type === "judge") sel = (a === true && key === "T") || (a === false && key === "F");
+        else sel = a === key;
+        var cls = "opt" + (sel ? " sel" : "");
+        if (g) {
+          var isRight = q.type === "judge" ? ((key === "T") === q.answer)
+            : q.type === "multiple" ? q.answer.indexOf(key) >= 0 : q.answer === key;
+          if (isRight) cls += " right"; else if (sel) cls += " wrongpick";
+        }
+        body += '<label class="' + cls + '"><input type="' + (q.type === "multiple" ? "checkbox" : "radio") +
+          '" name="q' + q.id + '" value="' + key + '"' + (sel ? " checked" : "") + (locked ? " disabled" : "") +
+          "><span>" + esc(o[1]) + "</span></label>";
+      });
+      body += "</div>";
+    }
+    if (q.type === "short") {
+      body += '<textarea placeholder="在这里写你的答案…"' + (locked ? " disabled" : "") + ">" + esc(a || "") + "</textarea>";
+    }
+    if (g) body += renderFeedback(q, g);
+    card.innerHTML = head + body;
+    bindQuestion(card, q);
+    return card;
+  }
+
+  function renderFeedback(q, g) {
+    var verdict = { correct: "✅ 回答正确", wrong: "❌ 回答错误", partial: "🟡 部分正确", pending: "📝 请对照要点自评" }[g.status];
+    var h = '<div class="fb ' + g.status + '"><div class="verdict">' + verdict +
+      '<span style="float:right;font-weight:400">' + g.got + " / " + g.full + " 分</span></div>";
+    if (q.type !== "short") {
+      h += '<div class="row"><span class="label">你的答案：</span>' + esc(userText(q)) + "</div>";
+      h += '<div class="row"><span class="label">正确答案：</span><b>' + esc(correctText(q)) + "</b></div>";
+    } else {
+      h += '<div class="row"><span class="label">参考答案：</span>' + esc(q.answer) + "</div>";
+      var s = state.self[q.id] || {};
+      if (q.points && q.points.length) {
+        h += '<div class="row points"><span class="label">得分要点（勾选你答到的）：</span>';
+        q.points.forEach(function (p, k) {
+          var ck = s.checked && s.checked[k];
+          h += '<label><input type="checkbox" data-point="' + k + '"' + (ck ? " checked" : "") + "> " + esc(p) + "</label>";
+        });
+        h += "</div>";
+      } else {
+        h += '<div class="row selfbtns"><span class="label">自评：</span>' +
+          [[1, "全答对"], [0.5, "答对一部分"], [0, "没答对"]].map(function (b) {
+            return '<button data-level="' + b[0] + '"' + (s.level === b[0] ? ' class="on"' : "") + ">" + b[1] + "</button>";
+          }).join("") + "</div>";
+      }
+    }
+    if (q.explanation) h += '<div class="row"><span class="label">解析：</span>' + esc(q.explanation) + "</div>";
+    return h + "</div>";
+  }
+
+  function bindQuestion(card, q) {
+    if (!state.submitted) {
+      card.querySelectorAll('input[type=radio]').forEach(function (el) {
+        el.addEventListener("change", function () {
+          state.answers[q.id] = q.type === "judge" ? el.value === "T" : el.value;
+          save(); refreshCard(q); updateBar();
+        });
+      });
+      card.querySelectorAll('input[type=checkbox]').forEach(function (el) {
+        el.addEventListener("change", function () {
+          var arr = (state.answers[q.id] || []).filter(function (x) { return x !== el.value; });
+          if (el.checked) arr.push(el.value);
+          state.answers[q.id] = arr.sort();
+          save(); refreshCard(q); updateBar();
+        });
+      });
+      card.querySelectorAll("input.blank").forEach(function (el) {
+        el.addEventListener("input", function () {
+          var arr = state.answers[q.id] || [];
+          arr[Number(el.dataset.blank)] = el.value;
+          state.answers[q.id] = arr; save(); updateBar();
+        });
+      });
+      var ta = card.querySelector("textarea");
+      if (ta) ta.addEventListener("input", function () { state.answers[q.id] = ta.value; save(); updateBar(); });
+    } else if (q.type === "short") {
+      card.querySelectorAll("input[data-point]").forEach(function (el) {
+        el.addEventListener("change", function () {
+          var s = state.self[q.id] || { checked: q.points.map(function () { return false; }) };
+          s.checked[Number(el.dataset.point)] = el.checked;
+          state.self[q.id] = s; save(); refreshCard(q); renderSummary(); updateBar();
+        });
+      });
+      card.querySelectorAll("button[data-level]").forEach(function (el) {
+        el.addEventListener("click", function () {
+          state.self[q.id] = { level: Number(el.dataset.level) }; save(); refreshCard(q); renderSummary(); updateBar();
+        });
+      });
+    }
+  }
+
+  function refreshCard(q) {
+    var old = document.getElementById("q-" + q.id);
+    var no = qs.indexOf(q) + 1;
+    var neu = renderQuestion(q, no);
+    if (old.classList.contains("hidden")) neu.classList.add("hidden");
+    old.replaceWith(neu);
+  }
+
+  function summaryData() {
+    var total = 0, got = 0, counts = { correct: 0, partial: 0, wrong: 0, pending: 0 }, byK = {}, order = [];
+    qs.forEach(function (q) {
+      var g = grade(q);
+      total += g.full; got += g.got; counts[g.status]++;
+      var k = q.knowledge || "未分类";
+      if (!byK[k]) { byK[k] = { full: 0, got: 0, n: 0, wrong: 0 }; order.push(k); }
+      byK[k].full += g.full; byK[k].got += g.got; byK[k].n++;
+      if (g.status === "wrong" || g.status === "partial") byK[k].wrong++;
+    });
+    return { total: total, got: round1(got), counts: counts, byK: byK, order: order };
+  }
+
+  function renderSummary() {
+    var box = document.getElementById("summary");
+    if (!state.submitted) { box.classList.add("hidden"); return; }
+    box.classList.remove("hidden");
+    var d = summaryData(), pct = d.total ? Math.round(d.got / d.total * 100) : 0;
+    var color = pct >= 85 ? "var(--ok)" : pct >= 60 ? "var(--half)" : "var(--bad)";
+    var h = '<div class="card"><div class="score-big" style="color:' + color + '">' + d.got +
+      " <small>/ " + d.total + " 分（" + pct + "%）</small></div>";
+    h += '<div class="stats"><span>✅ 全对 <b>' + d.counts.correct + "</b></span><span>🟡 部分对 <b>" + d.counts.partial +
+      "</b></span><span>❌ 错误 <b>" + d.counts.wrong + "</b></span>" +
+      (d.counts.pending ? "<span>📝 待自评 <b>" + d.counts.pending + "</b>（简答题请往下翻对照要点勾选）</span>" : "") +
+      (state.attempt > 1 ? "<span>第 <b>" + state.attempt + "</b> 次作答</span>" : "") + "</div>";
+    if (NAV) {
+      var passed = pct >= NAV.pass;
+      h += '<div class="level-box ' + (passed ? "pass" : "fail") + '">' +
+        (d.counts.pending ? "简答题自评完再看是否达标。" :
+          passed ? "✅ <b>" + esc(NAV.label) + "达标</b>（" + pct + "% ≥ " + NAV.pass + "%）" +
+            (NAV.next ? "，可以挑战下一级：" : "，三级全部完成！") :
+          "⏳ <b>还没达标</b>（" + pct + "% / 达标线 " + NAV.pass + "%）。先看错题解析，导出答题记录让 Claude 分析，再点「重做错题」。") +
+        (passed && NAV.next && !d.counts.pending ? ' <a class="next-btn" href="' + esc(NAV.next.href) + '">第 ' + NAV.next.level + " 级 · " + esc(NAV.next.label) + " →</a>" : "") +
+        "</div>";
+    }
+    h += "<table><tr><th>知识点</th><th>题数</th><th>得分率</th><th></th></tr>";
+    var rows = d.order.map(function (k) { var v = d.byK[k]; return [k, v, v.full ? v.got / v.full : 0]; })
+      .sort(function (x, y) { return x[2] - y[2]; });
+    rows.forEach(function (r) {
+      var p = Math.round(r[2] * 100), c = p >= 85 ? "var(--ok)" : p >= 60 ? "var(--half)" : "var(--bad)";
+      h += "<tr><td>" + esc(r[0]) + "</td><td>" + r[1].n + "</td><td>" + p + "%</td><td><div class=\"meter\"><i style=\"width:" +
+        p + "%;background:" + c + '"></i></div></td></tr>';
+    });
+    h += "</table></div>";
+    box.innerHTML = h;
+  }
+
+  function applyVisibility() {
+    var showIds = null;
+    if (!state.submitted && state.retryIds) showIds = state.retryIds;
+    if (state.submitted && filterWrong) {
+      showIds = qs.filter(function (q) { return grade(q).status !== "correct"; }).map(function (q) { return q.id; });
+    }
+    var visibleTypes = {};
+    qs.forEach(function (q) {
+      var el = document.getElementById("q-" + q.id);
+      var show = !showIds || showIds.indexOf(q.id) >= 0;
+      el.classList.toggle("hidden", !show);
+      if (show) visibleTypes[q.type] = true;
+    });
+    document.querySelectorAll(".section-title").forEach(function (t) {
+      t.classList.toggle("hidden", !visibleTypes[t.dataset.section]);
+    });
+    document.getElementById("btn-filter").classList.toggle("on", filterWrong);
+    document.getElementById("btn-filter").textContent = filterWrong ? "显示全部" : "只看错题";
+  }
+
+  function updateBar() {
+    document.getElementById("before-actions").classList.toggle("hidden", state.submitted);
+    document.getElementById("after-actions").classList.toggle("hidden", !state.submitted);
+    var p = document.getElementById("progress");
+    if (state.submitted) {
+      var d = summaryData();
+      p.textContent = "得分 " + d.got + " / " + d.total;
+    } else {
+      var pool = state.retryIds ? qs.filter(function (q) { return state.retryIds.indexOf(q.id) >= 0; }) : qs;
+      var done = pool.filter(isAnswered).length;
+      p.textContent = (state.retryIds ? "重做错题：" : "已答 ") + done + " / " + pool.length;
+    }
+  }
+
+  // ---------- 操作 ----------
+  function toast(msg) {
+    var t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show");
+    setTimeout(function () { t.classList.remove("show"); }, 1800);
+  }
+
+  document.getElementById("btn-submit").addEventListener("click", function () {
+    var pool = state.retryIds ? qs.filter(function (q) { return state.retryIds.indexOf(q.id) >= 0; }) : qs;
+    var left = pool.filter(function (q) { return !isAnswered(q); });
+    if (left.length && !confirm("还有 " + left.length + " 题没有作答，确定交卷吗？")) {
+      document.getElementById("q-" + left[0].id).scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    state.submitted = true; state.retryIds = null; state.submittedAt = new Date().toISOString();
+    filterWrong = false; save(); render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  document.getElementById("btn-filter").addEventListener("click", function () {
+    filterWrong = !filterWrong; applyVisibility();
+  });
+
+  document.getElementById("btn-retry").addEventListener("click", function () {
+    var wrong = qs.filter(function (q) { return grade(q).status !== "correct"; });
+    if (!wrong.length) { toast("没有错题，全部答对了 🎉"); return; }
+    if (!confirm("清空 " + wrong.length + " 道错题的答案并重新作答？答对的题会保留。")) return;
+    wrong.forEach(function (q) { delete state.answers[q.id]; delete state.self[q.id]; });
+    state.retryIds = wrong.map(function (q) { return q.id; });
+    state.submitted = false; state.attempt = (state.attempt || 1) + 1; filterWrong = false;
+    save(); render(); window.scrollTo({ top: 0 });
+  });
+
+  document.getElementById("btn-reset").addEventListener("click", function () {
+    if (!confirm("清空全部答案，从头再做一遍？")) return;
+    state = { answers: {}, self: {}, submitted: false, attempt: (state.attempt || 1) + 1, retryIds: null };
+    filterWrong = false; save(); render(); window.scrollTo({ top: 0 });
+  });
+
+  function buildRecord() {
+    var d = summaryData();
+    return {
+      quiz_title: QUIZ.title, subject: QUIZ.subject, level: NAV ? NAV.level : null, level_name: NAV ? NAV.label : null, grade: QUIZ.grade, source: QUIZ.source, quiz_created: QUIZ.created,
+      submitted_at: state.submittedAt || new Date().toISOString(), attempt: state.attempt || 1,
+      score: d.got, total: d.total, percent: d.total ? Math.round(d.got / d.total * 100) : 0,
+      counts: d.counts,
+      by_knowledge: d.order.map(function (k) { var v = d.byK[k];
+        return { knowledge: k, questions: v.n, wrong_or_partial: v.wrong, score: round1(v.got), total: v.full }; }),
+      questions: qs.map(function (q, i) {
+        var g = grade(q);
+        return { no: i + 1, id: q.id, type: TYPE_NAME[q.type], knowledge: q.knowledge, difficulty: q.difficulty,
+          stem: q.stem, options: q.options, user_answer: userText(q), correct_answer: correctText(q),
+          status: { correct: "正确", partial: "部分正确", wrong: "错误", pending: "待自评" }[g.status],
+          score: g.got, full: g.full,
+          self_check: q.type === "short" ? (state.self[q.id] || null) : undefined };
+      })
+    };
+  }
+
+  function stamp() {
+    var t = new Date(), p = function (n) { return (n < 10 ? "0" : "") + n; };
+    return t.getFullYear() + p(t.getMonth() + 1) + p(t.getDate()) + "-" + p(t.getHours()) + p(t.getMinutes());
+  }
+
+  document.getElementById("btn-export").addEventListener("click", function () {
+    var blob = new Blob([JSON.stringify(buildRecord(), null, 2)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "答题记录_" + QUIZ.title.replace(/[\\\/:*?"<>|\s·]+/g, "_") + "_" + stamp() + ".json";
+    document.body.appendChild(a); a.click(); a.remove();
+    toast("已导出到「下载」文件夹，回到 Claude 说「分析我的错题」即可");
+  });
+
+  document.getElementById("btn-copy").addEventListener("click", function () {
+    var r = buildRecord();
+    var lines = ["【" + r.quiz_title + "】答题结果：" + r.score + " / " + r.total + " 分（" + r.percent + "%）", ""];
+    r.questions.filter(function (q) { return q.status !== "正确"; }).forEach(function (q) {
+      lines.push(q.no + ". [" + q.type + "｜" + (q.knowledge || "") + "] " + q.stem);
+      if (q.options) lines.push("   选项：" + q.options.map(function (o, k) { return LETTERS[k] + "." + o; }).join("  "));
+      lines.push("   我的答案：" + q.user_answer);
+      lines.push("   正确答案：" + q.correct_answer + "（" + q.status + "，" + q.score + "/" + q.full + "）");
+      lines.push("");
+    });
+    lines.push("请帮我分析错题。");
+    var text = lines.join("\n");
+    var done = function () { toast("已复制，粘贴给 Claude 即可"); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+    } else { fallbackCopy(text); done(); }
+  });
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand("copy"); ta.remove();
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
