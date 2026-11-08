@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>复习</title>
+<style>
+  :root {
+    --bg: #f6f4ef; --card: #fff; --ink: #222; --sub: #6b6b6b; --line: #e6e1d6;
+    --red: #c0392b; --red-bg: #fdecea; --blue: #2b6cb0; --blue-bg: #e8f1fb;
+    --green: #2f855a; --green-bg: #e6f4ea; --gold: #b7791f; --gold-bg: #fdf5e3;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.7 -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 14px 80px; }
+  .bar { position: sticky; top: 0; z-index: 10; background: rgba(246,244,239,.96);
+    backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+  .bar-in { max-width: 720px; margin: 0 auto; padding: 8px 14px; display: flex; align-items: center; gap: 10px; }
+  .clock { font: 600 22px/1 ui-monospace, Menlo, monospace; min-width: 74px; }
+  .now { flex: 1; font-size: 13px; color: var(--sub); line-height: 1.35; }
+  .now b { color: var(--ink); }
+  .btn { border: 0; border-radius: 8px; padding: 8px 12px; font-size: 14px; cursor: pointer;
+    background: var(--ink); color: #fff; text-decoration: none; display: inline-block; }
+  .btn.ghost { background: transparent; color: var(--sub); border: 1px solid var(--line); }
+  .prog { height: 4px; background: var(--line); }
+  .prog i { display: block; height: 100%; width: 0; background: var(--green); transition: width .3s; }
+  header.hero { padding: 18px 0 4px; }
+  h1 { font-size: 23px; margin: 0 0 6px; line-height: 1.35; }
+  .lead { color: var(--sub); margin: 0; font-size: 14px; }
+  .modes { display: flex; gap: 6px; margin: 12px 0 4px; flex-wrap: wrap; }
+  .modes a { text-decoration: none; color: var(--sub); border: 1px solid var(--line); background: var(--card);
+    border-radius: 99px; padding: 4px 14px; font-size: 14px; }
+  .modes a.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .plan { display: grid; gap: 6px; margin: 14px 0 6px; }
+  .plan a { display: flex; gap: 10px; align-items: center; text-decoration: none; color: inherit;
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+  .plan a.cur { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+  .plan a.done { opacity: .5; }
+  .plan a.brk { background: transparent; border-style: dashed; }
+  .plan .t { font: 600 13px ui-monospace, Menlo, monospace; color: var(--sub); min-width: 92px; }
+  .plan .n { flex: 1; font-size: 15px; }
+  .m { font-size: 12px; padding: 1px 8px; border-radius: 99px; background: var(--red-bg); color: var(--red); white-space: nowrap; }
+  .m.b { background: var(--blue-bg); color: var(--blue); }
+  .m.g { background: var(--green-bg); color: var(--green); }
+  details.why-box { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin: 10px 0; font-size: 14px; }
+  details.why-box summary { cursor: pointer; color: var(--sub); }
+  section.sec { background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 16px 10px; margin: 18px 0; scroll-margin-top: 70px; }
+  section.sec.cur { border-color: var(--ink); }
+  section.sec.brk { background: transparent; border-style: dashed; text-align: center; color: var(--sub); }
+  .sec-h { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .sec-h h2 { font-size: 19px; margin: 0; flex: 1; }
+  .tag { font-size: 12px; padding: 2px 8px; border-radius: 99px; background: var(--gold-bg); color: var(--gold); }
+  .why { font-size: 13px; color: var(--sub); margin: 4px 0 10px; }
+  h3 { font-size: 16px; margin: 18px 0 8px; padding-left: 8px; border-left: 4px solid var(--ink); }
+  p { margin: 6px 0; }
+  ul, ol { margin: 6px 0; padding-left: 22px; }
+  li { margin: 3px 0; }
+  .tools { display: flex; gap: 8px; margin: 8px 0; flex-wrap: wrap; }
+  .tools .btn { font-size: 13px; padding: 6px 10px; }
+  .c { background: #d9d4c7; color: transparent; border-radius: 4px; padding: 0 2px; cursor: pointer;
+    transition: background .15s, color .15s; -webkit-tap-highlight-color: transparent; }
+  .c * { color: transparent !important; background: transparent !important; }
+  .c.on { background: var(--green-bg); color: var(--green); }
+  .c.on * { color: inherit !important; }
+  .line { padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  .line:last-child { border-bottom: 0; }
+  .src { display: block; font-size: 12px; color: var(--sub); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .fc { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 14px; line-height: 1.5; }
+  .fc b { display: block; font-size: 15px; }
+  .fc .c { display: inline-block; margin-top: 2px; }
+  .key { background: var(--red-bg); color: var(--red); padding: 0 3px; border-radius: 3px; font-weight: 600; }
+  .note { background: var(--blue-bg); border-radius: 10px; padding: 10px 12px; font-size: 14px; margin: 10px 0; }
+  .warn { background: var(--red-bg); border-radius: 10px; padding: 10px 12px; font-size: 14px; margin: 10px 0; }
+  .warn > b, .note > b { display: block; margin-bottom: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 6px 0; }
+  th, td { border: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #faf8f3; font-weight: 600; white-space: nowrap; }
+  .typo { display: flex; flex-wrap: wrap; gap: 6px; }
+  .typo span.chip { border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; font-size: 15px; background: #fffdf8; }
+  .typo .key { background: none; padding: 0; font-weight: 700; }
+  .mq { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin: 8px 0; font-size: 15px; }
+  .mq .meta { font-size: 12px; color: var(--sub); }
+  .mq .opts { color: var(--sub); font-size: 14px; }
+  .mq .ans { margin-top: 6px; }
+  .golink { display: block; text-align: center; margin: 10px 0; }
+  .done-row { display: flex; justify-content: flex-end; margin-top: 12px; }
+  .done-btn { border: 1px solid var(--green); color: var(--green); background: #fff; border-radius: 8px;
+    padding: 7px 14px; font-size: 14px; cursor: pointer; }
+  .done-btn.ok { background: var(--green); color: #fff; }
+  .levels { display: grid; gap: 8px; margin-bottom: 8px; }
+  .lv { display: flex; justify-content: space-between; align-items: center; gap: 8px; text-decoration: none; color: inherit;
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .lv span { font-size: 13px; color: var(--sub); }
+  .lv.rec { border-color: var(--green); background: var(--green-bg); }
+  .lv.rec span { color: var(--green); }
+  .dot { text-emphasis: dot; -webkit-text-emphasis: dot; text-emphasis-position: under right; -webkit-text-emphasis-position: under right; }
+  .uline { text-decoration: underline; text-underline-offset: 3px; }
+  .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; font-size: .85em; line-height: 1.15; margin: 0 2px; }
+  .frac > span:first-child { border-bottom: 1px solid currentColor; padding: 0 2px; }
+  .sqrt { border-top: 1px solid currentColor; padding: 0 2px; margin-left: 1px; }
+  .fig { margin: 8px 0; text-align: center; } .fig svg, .fig img { max-width: 100%; height: auto; }
+  details.mat { background: #faf8f3; border-radius: 8px; padding: 6px 10px; margin: 6px 0; font-size: 15px; }
+  details.mat summary { cursor: pointer; color: var(--sub); }
+  details.mat .m-text { white-space: pre-wrap; margin-top: 4px; }
+  footer { text-align: center; color: var(--sub); font-size: 13px; margin-top: 24px; }
+</style>
+</head>
+<body>
+<div style="background:#111827;font:14px/1 -apple-system,'PingFang SC',sans-serif;padding:10px 14px"><a href="../../../index.html" style="color:#fff;text-decoration:none">← 返回复习主页</a></div>
+<div class="bar">
+  <div class="bar-in">
+    <div class="clock" id="clock">00:00</div>
+    <div class="now" id="now">按「开始」计时，每段到点会提醒你换下一段</div>
+    <button class="btn" id="startBtn">开始</button>
+    <button class="btn ghost" id="resetBtn">重置</button>
+  </div>
+  <div class="prog"><i id="progBar"></i></div>
+</div>
+<div class="wrap">
+  <header class="hero">
+    <h1 id="title"></h1>
+    <p class="lead" id="lead"></p>
+    <nav class="modes" id="modes"></nav>
+  </header>
+  <div class="plan" id="plan"></div>
+  <div id="whybox"></div>
+  <div id="secs"></div>
+  <div id="after"></div>
+  <footer id="foot"></footer>
+</div>
+
+<script id="review-data" type="application/json">{"title": "九年级数学 · 期中复习提纲（旋转、二次函数、反比例函数、圆） · 完整复习", "mode": "full", "created": "2026-11-08", "lead": "按章节顺序把全部知识点过一遍：旋转 → 二次函数 → 反比例函数 → 圆 → 圆锥。已掌握的快速过，薄弱的细读。可以在休息处分成两三次完成。", "principle": "按 6 份作业里的红笔批改来取舍：错得最多的是反比例函数（增减性、k 的几何意义、分类讨论）和圆（外心内心、切线、圆锥），这些放在最前面、讲得最细；旋转、二次函数基础、弧长这些作业里基本都做对了，只列要点、快速过。每个薄弱点都讲「为什么」，再配你自己做错的原题，最后用遮住的问答卡自测。", "modes": [{"label": "1 小时", "href": "1小时.html", "on": false}, {"label": "半天", "href": "半天.html", "on": false}, {"label": "完整复习", "href": "完整复习.html", "on": true}], "segments": [{"title": "旋转与中心对称", "tag": "已掌握 · 快速过", "minutes": 15, "why": "作业 92 的旋转题（第 1、4、11、17 题）你都做对了，看一遍要点即可。", "blocks": [{"type": "recall", "lines": [{"text": "旋转三要素：{{旋转中心}}、{{旋转方向}}、{{旋转角}}", "src": "旋转定义"}, {"text": "旋转的性质：对应点到旋转中心的距离{{相等}}；对应点与旋转中心连线所成的角都等于{{旋转角}}；旋转前后的图形{{全等}}", "src": "旋转性质"}, {"text": "中心对称：对应点连线都经过{{对称中心}}，并且被对称中心{{平分}}", "src": "中心对称"}, {"text": "中心对称图形：绕某点旋转{{180°}}后能和自身重合", "src": "作业 92 第 1 题"}, {"text": "点 P(a, b) 关于原点对称的点：{{(−a, −b)}}", "src": "坐标"}]}, {"type": "cards", "items": [{"q": "点 (a, b) 绕原点**顺时针**旋转 90°，得到？", "a": "(b, −a)。验证：(1, 0) 顺时针转 90° 到 (0, −1)。"}, {"q": "点 (a, b) 绕原点**逆时针**旋转 90°，得到？", "a": "(−b, a)"}, {"q": "点旋转时经过的路径长怎么算？", "a": "是一段弧：l = nπr/180，r 是**这个点到旋转中心的距离**（作业 92 第 17 题：r = √18 = 3√2，路径 = 3√2π/2）。"}]}]}, {"title": "二次函数基础", "tag": "已掌握 · 快速过", "minutes": 20, "why": "作业 93 的顶点、平移、图象信号题（第 2、4、6、8、9、12、14 题）都做对了，保持住。", "blocks": [{"type": "table", "head": ["形式", "顶点", "对称轴"], "rows": [["一般式 y = ax² + bx + c", "(−b/2a, (4ac − b²)/4a)", "x = {{−b/2a}}"], ["顶点式 y = a(x − h)² + k", "{{(h, k)}}", "x = h"]]}, {"type": "recall", "lines": [{"text": "平移口诀：{{左加右减}}（改 x），{{上加下减}}（改整个式子）；先化成顶点式再平移", "src": "作业 93 第 6 题"}, {"text": "比较函数值：看点到对称轴的距离。a > 0 时离对称轴越{{远}}，函数值越大", "src": "作业 93 第 8 题"}]}, {"type": "table", "head": ["看什么", "说明什么"], "rows": [["开口方向", "a 的正负（向上 a > 0）"], ["对称轴位置", "a、b {{左同右异}}（对称轴在 y 轴左边，a、b 同号）"], ["与 y 轴交点", "c 的正负"], ["与 x 轴交点个数", "b² − 4ac 的正负（两个交点 > 0）"], ["x = 1 / x = −1 / x = 2 处的高度", "a + b + c / a − b + c / 4a + 2b + c 的正负"]]}, {"type": "cards", "items": [{"q": "y = x² − 2x + 3 化成顶点式", "a": "y = (x − 1)² + 2"}, {"q": "对称轴 x = −1 能推出 a、b 什么关系？", "a": "−b/2a = −1，所以 [[b = 2a]]（不是 2a + b = 0）"}]}]}, {"title": "反比例函数的图象、性质与增减性", "tag": "薄弱 · 重点", "minutes": 30, "why": "错得最多的一块：作业 93 第 5 题、作业 75 第 5 题都是「增减性」用错。规则本身不难，关键是**它成立的条件**。", "blocks": [{"type": "h", "text": "1. 定义"}, {"type": "recall", "lines": [{"text": "y = k/x（k ≠ 0），也可以写成 y = kx⁻¹ 或 xy = {{k}}", "src": "定义"}, {"text": "判断两个量成反比例：它们的{{乘积}}是定值", "src": "作业 75 第 22 题（吸管长度 × 频率 ≈ 87000）"}]}, {"type": "warn", "title": "定义题的两个条件", "text": "y = (m − 1)x^{m² − 2} 是反比例函数：指数 m² − 2 = {{−1}}，而且系数 m − 1 {{≠ 0}}。所以 m = ±1 里只能取 m = −1（作业 93 第 11 题你做对了）。"}, {"type": "h", "text": "2. 图象和性质"}, {"type": "table", "head": ["", "k > 0", "k < 0"], "rows": [["图象在", "第{{一、三}}象限", "第{{二、四}}象限"], ["增减性", "**在每个象限内**，y 随 x 增大而{{减小}}", "**在每个象限内**，y 随 x 增大而{{增大}}"], ["对称性", "关于原点{{中心对称}}，也是轴对称图形（对称轴 y = x、y = −x）", "同左"]]}, {"type": "h", "text": "3. 为什么一定要说「在每个象限内」？"}, {"type": "text", "text": "反比例函数的图象是**断开的两支**。拿 y = 1/x 来看：x = −1 时 y = −1，x = 1 时 y = 1。x 从 −1 增大到 1，y 也从 −1 增大到 1，可是「k > 0 时 y 随 x 增大而减小」——矛盾了吗？不矛盾，因为这两个点**不在同一支上**。从左边那支跳到右边那支，y 直接从负数变成了正数。所以增减性只能在**同一支（同一个象限）**里用。"}, {"type": "list", "ordered": true, "items": ["**比较大小第一步：按正负分组。**k > 0 时，x > 0 的点 y 是正的，x < 0 的点 y 是负的——正的一定比负的大。", "**第二步：同一象限内，再用增减性。**", "**拿不准就代数：**令 k = 1（或题目的 k）直接算出 y 值比较，最稳。"]}, {"type": "note", "title": "你的原题 · 作业 93 第 5 题", "text": "y = k/x（k > 0），A(−1, y₁)、B(1, y₂)、C(2, y₃)。A 在第三象限，y₁ < 0，最小；B、C 在第一象限，x 越大 y 越小，y₃ < y₂。答案 y₁ < y₃ < y₂。你选的 y₁ < y₂ < y₃，是把「一、三象限都减小」当成了整条曲线都减小，又把方向记反了。"}, {"type": "h", "text": "4. 已知 x 的范围，求 y 的范围"}, {"type": "recall", "lines": [{"text": "口诀：先代{{端点}}，再看{{单调}}；x 的范围里含 0 时要{{拆成两段}}", "src": "作业 75 第 5 题"}]}, {"type": "text", "text": "例 1：y = −6/x，1 < x < 3。x = 1 时 y = −6，x = 3 时 y = −2；这段在第四象限，k < 0，y 随 x 增大而增大，所以 −6 < y < −2。（你选了 2 < y < 6，是没注意 k 是负的。）"}, {"type": "text", "min": "half", "text": "例 2（含 0 要拆开）：y = 6/x，x > −3。拆成 x > 0：y > 0；−3 < x < 0：在第三象限 y 随 x 增大而减小，x 接近 −3 时 y 接近 −2，x 接近 0 时 y 趋向负无穷，所以 y < −2。合起来 y < −2 或 y > 0。"}, {"type": "warn", "title": "范围跨过 0 = 没有最值", "text": "x 的范围跨过 0（例如 −1 ≤ x ≤ 1，x ≠ 0）时，靠近 0 的地方 y 会变得无穷大或无穷小，所以既没有最大值也没有最小值。这就是作业 75 第 18 题 (2) 答案是 a < 0 的原因。"}, {"type": "h", "text": "5. 和一次函数一起：交点与不等式", "min": "half"}, {"type": "text", "min": "half", "text": "解 kx + b > m/x：看「直线在双曲线**上方**」的部分对应的 x。分界点有三个：两个交点的横坐标，还有 x = 0（y 轴，双曲线在这里断开）。作业 75 第 7 题、第 20 题 (3) 你都做对了，方法保持住。"}, {"type": "cards", "items": [{"q": "y = −4/x 上有 A(−2, y₁)、B(−1, y₂)、C(3, y₃)，比大小", "a": "y₁ = 2，y₂ = 4，y₃ = −4/3，所以 y₃ < y₁ < y₂"}, {"q": "y = −12/x，−6 < x < −2 时 y 的范围", "a": "2 < y < 6（端点 x = −6 → 2，x = −2 → 6，第二象限 y 随 x 增大而增大）"}, {"q": "「k > 0 时，y 随 x 增大而减小」这句话对吗？", "a": "不对，要加「在每个象限内」"}]}]}, {"title": "k 的几何意义与 k 的符号", "tag": "薄弱 · 重点", "minutes": 30, "why": "作业 93 第 7、13、15 题，作业 75 第 6、16 题都栽在这里：要么忘了乘 ½，要么忘了定正负。", "blocks": [{"type": "recall", "lines": [{"text": "从双曲线上一点向两条坐标轴作垂线，围成的矩形面积 = {{|k|}}", "src": "k 的几何意义"}, {"text": "从双曲线上一点向一条坐标轴作垂线，和原点连成的三角形面积 = {{|k|/2}}", "src": "k 的几何意义"}]}, {"type": "text", "text": "**为什么？**设点 P(x, y) 在 y = k/x 上，那么 xy = k。矩形的两条边长是 |x| 和 |y|，面积 = |x|·|y| = |xy| = |k|。三角形是矩形的一半，所以是 |k|/2。"}, {"type": "warn", "title": "易错 1：面积只能告诉你 |k|", "text": "由面积求出的是 |k|，最后一步一定要看图象在哪个象限来定正负：在二、四象限，k 就是负的。作业 93 第 15 题答案是 −6，你写了 4；第 13 题 A 在第二象限，k 也应该是 −6，请核对一下。"}, {"type": "warn", "title": "易错 2：三角形要乘 ½", "text": "作业 93 第 7 题：B 在 y = 5/x 上，C 在 y = −1/x 上，BC ∥ x 轴，A 在 x 轴上。BC × 高 = 两个矩形面积之和 5 + 1 = 6，可这是三角形，S = ½ × 6 = 3。你选了 6。"}, {"type": "h", "text": "常见变形（都化成「矩形」或「矩形的一半」）"}, {"type": "table", "head": ["图形", "面积"], "rows": [["平行四边形 ABCD，A 在双曲线上，AB ∥ x 轴，C、D 在 x 轴上（作业 93 第 13 题）", "{{|k|}}（和矩形同底等高）"], ["两条双曲线夹着的三角形，第三个顶点在坐标轴上（作业 93 第 7 题）", "{{½(|k₁| + |k₂|)}}"], ["过原点的直线交双曲线于 A、B，AC ⊥ x 轴于 C，△ABC", "{{|k|}}（A、B 关于原点对称，是两个 |k|/2）"]]}, {"type": "h", "text": "过原点的直线：坐标成比例", "min": "half"}, {"type": "text", "min": "half", "text": "作业 75 第 16 题：A 在 y = k/x 上，AO 延长交 y = k/(4x) 于 B。A、O、B 共线，B 的坐标是 A 的坐标乘同一个数 t：B = (ta, tk/a)。代入得 t² = 1/4，t = −½，即 OB = ½·OA。再按「AO = AC → C(2a, 0)」算面积：S△AOC = k，S△BOC = k/2，合计 3k/2 = 6，k = 4。"}, {"type": "h", "text": "由图象定 k 的范围（作业 75 第 6 题）", "min": "half"}, {"type": "list", "min": "half", "ordered": true, "items": ["先看象限定符号：二、四象限 → k < 0，正数选项全部排除。", "再看图里虚线标出的点：曲线在这个点的**上方还是下方**，就列出 k 的不等式。", "把几个不等式合起来，在选项里找。"]}, {"type": "cards", "items": [{"q": "A 在第二象限的双曲线 y = k/x 上，AB ⊥ y 轴于 B，S△AOB = 3，k = ?", "a": "½|k| = 3，|k| = 6；第二象限，k = −6"}, {"q": "B 在 y = 6/x（x > 0）上，C 在 y = −2/x（x < 0）上，BC ∥ x 轴，A 在 x 轴上，S△ABC = ?", "a": "½ × (6 + 2) = 4"}, {"q": "由面积求 k 的最后一步是什么？", "a": "看图象所在象限，确定 k 的[[正负]]"}]}]}, {"title": "分类讨论：什么时候要分情况", "tag": "薄弱", "minutes": 20, "why": "作业 75 第 18 题两问都错在漏情况；作业 92 第 15 题也藏着第二种情况。", "blocks": [{"type": "table", "head": ["信号", "要分的情况", "例子"], "rows": [["点的位置没说在哪个象限", "两点在{{同一象限}} / {{不同象限}}", "作业 75 第 18 题 (1)"], ["三角形形状没说", "锐角三角形 / 钝角三角形（外心在内 / 在外）", "作业 92 第 15 题：125° 或 145°"], ["弦所对的圆周角", "顶点在优弧上 / 劣弧上，两个角{{互补}}", "作业 92 第 3 题：45° 或 135°（你做对了）"], ["x 的范围可能包含 0", "x > 0 和 x < 0 分开算", "作业 75 第 18 题 (2)"]]}, {"type": "h", "text": "例题拆解 · 作业 75 第 18 题 (1)"}, {"type": "text", "text": "k > 0，P(m, y₁)、Q(−3, y₂) 在 y = k/x 上，y₁ > y₂，求 m。Q 在第三象限，y₂ < 0。"}, {"type": "list", "items": ["**情况一：P 在第一象限（m > 0）**。y₁ > 0 > y₂，一定成立 ✅", "**情况二：P 在第三象限（m < 0）**。和 Q 在同一象限，k > 0 时 y 随 x 增大而减小。y₁ > y₂ 说明 P 的 x 更小，即 m < −3。", "答案：**m < −3 或 m > 0**。你写的 m > −3，既漏了情况一，又把情况二的方向弄反了。"]}, {"type": "note", "title": "防漏三问", "text": "做完一道题，问自己：① 点可能在别的象限吗？② 图形可能是别的形状吗？③ 答案只有一个值合理吗？"}, {"type": "cards", "items": [{"q": "y = −6/x，P(m, y₁)、Q(2, y₂)，y₁ < y₂，求 m", "a": "y₂ = −3。m < 0 时 y₁ > 0，不行；m > 0 时同在第四象限，y 随 x 增大而增大，m < 2。答案 0 < m < 2"}, {"q": "⊙O 中弦 AB 所对的圆心角是 100°，AB 所对的圆周角是多少？", "a": "50° 或 130°"}]}]}, {"kind": "break", "title": "休息（可以在这里分次）", "minutes": 15, "why": "起来走走、喝水、远眺，别刷手机。"}, {"title": "函数的应用：待定系数、分段、拱桥、配方求最值", "tag": "薄弱 · 大题", "minutes": 40, "why": "解答题的主要分数来源。作业 75 第 17、19、21 题，作业 93 第 16 题都在这里丢分，每类都有固定步骤。", "blocks": [{"type": "h", "text": "1. 待定系数法（作业 75 第 17 题）"}, {"type": "list", "ordered": true, "items": ["**设**：几个函数就设几个系数。y₁ 与 x 成正比例、y₂ 与 x 成反比例 → y = k₁x + k₂/x。", "**代**：已知几组 (x, y) 就代入几次，列方程组。", "**解**：解出 k₁、k₂。", "**验**：把已知点代回去检验，一分钟就能发现计算错误。"]}, {"type": "text", "text": "原题：x = 1 时 y = −1 → k₁ + k₂ = −1；x = −2 时 y = −5/2 → −2k₁ − k₂/2 = −5/2，乘 −2 得 4k₁ + k₂ = 5。相减得 k₁ = 2，k₂ = −3，y = 2x − 3/x。"}, {"type": "h", "text": "2. 分段函数（作业 75 第 19 题 (3)）"}, {"type": "list", "ordered": true, "items": ["写出每一段的式子和 x 的范围。**分界点同时属于两段**，用它求下一段的系数（如 C(10, 20) → k = 200）。", "每一段**分别**解不等式（12 ≤ y ≤ 20）。", "把各段得到的区间**接起来**。", "时长 = 末 − 初。"]}, {"type": "text", "text": "原题：AB 段 2x + 10 ≥ 12 → x ≥ 1；BC 段整段 20℃；CD 段 200/x ≥ 12 → x ≤ 50/3。连起来 1 ≤ x ≤ 50/3，时长 50/3 − 1 = 47/3 小时。"}, {"type": "h", "text": "3. 抛物线拱桥：以拱顶为原点建坐标系（作业 93 第 16 题）"}, {"type": "list", "ordered": true, "items": ["拱顶放在原点，抛物线写成 y = ax²（只有一个未知数，最好算）。", "水面在拱顶下方 h 米、宽 d 米 → 点 (d/2, −h) 在抛物线上，求出 a。", "水位变化后，新的水面离拱顶 h′ 米 → 令 y = −h′，解出 x，宽度 = 2|x|。"]}, {"type": "text", "text": "原题：(2, −2) 在 y = ax² 上，a = −½；水位下降 1 米，y = −3，x² = 6，宽 2√6 米。"}, {"type": "h", "text": "4. 配方求最值：x + a/x 型（作业 75 第 21 题）"}, {"type": "recall", "lines": [{"text": "x > 0 时，x + a/x = (√x − √a/√x)² + 2√a ≥ {{2√a}}，当 x = {{√a}} 时取到最小值", "src": "阅读材料的方法"}, {"text": "x < 0 时，令 t = −x > 0，x + a/x = −(t + a/t) ≤ {{−2√a}}，当 x = {{−√a}} 时取到最大值", "src": "作业 75 第 21 题 (2)"}]}, {"type": "text", "text": "**为什么配方能求最值？**一个数的平方一定 ≥ 0，所以 (…)² + 2√a 最小就是 2√a，当括号里等于 0 时取到。"}, {"type": "text", "text": "**应用题（第 21 题 (3)）**：总路程 = 隧道长 + 车身总长 + **(车辆数 − 1)** 个车距 = 185 + 40 + 9 × v²/9 = 225 + v²。时间 t = 225/v + v ≥ 2√225 = 30，v = 15 m/s 时最少 30 秒。"}, {"type": "h", "text": "5. 判断能不能（作业 75 第 22 题 (3)，你做对了）", "min": "half"}, {"type": "text", "min": "half", "text": "用求出的函数反算：频率 262 Hz → 长度 87000 ÷ 262 ≈ 332 mm，超过吸管长 200 mm，所以**不能**。结论要和实际限制比较。"}, {"type": "cards", "items": [{"q": "x > 0 时 x + 9/x 的最小值？", "a": "2√9 = 6，x = 3 时取到"}, {"q": "6 辆车过隧道，有几个车距？", "a": "5 个"}, {"q": "分段函数里求下一段的 k，用哪个点？", "a": "两段的[[分界点]]"}]}]}, {"title": "坐标里的几何：一线三垂直、对角线中点", "tag": "薄弱", "minutes": 25, "why": "作业 93 第 10 题（一线三垂直）、作业 92 第 10 题（矩形）都是没有方法才错的。", "blocks": [{"type": "h", "text": "1. 一线三垂直（K 字形）"}, {"type": "text", "text": "**看到什么**：一个直角的顶点在坐标轴上（或在一条直线上），两条直角边各连到一个点。**怎么做**：从另外两个点向这条轴作垂线，就出现两个相似（或全等）的直角三角形。"}, {"type": "text", "text": "**为什么相似**：直角顶点 C 在 x 轴上，∠ACO + ∠BCD = 180° − 90° = 90°，又 ∠ACO + ∠OAC = 90°，所以 ∠OAC = ∠BCD，再加上两个直角，△AOC ∽ △CDB。"}, {"type": "note", "title": "你的原题 · 作业 93 第 10 题", "text": "OA = OC = 3，∠ACB = 90°，AC = 2BC。△AOC ∽ △CDB，相似比 2 : 1，所以 CD = OA/2 = 1.5，BD = OC/2 = 1.5，B(4.5, 1.5)，k = 4.5 × 1.5 = 27/4。"}, {"type": "h", "text": "2. 平行四边形 / 矩形的对角线"}, {"type": "recall", "lines": [{"text": "平行四边形对角线互相{{平分}} → 对角线交点是两条对角线的{{中点}}", "src": "作业 92 第 10 题"}, {"text": "矩形对角线还{{相等}} → 交点到四个顶点的距离都相等（OA = OB = OC = OD）", "src": "作业 92 第 10 题"}, {"text": "中点坐标 = ((x₁ + x₂)/2, (y₁ + y₂)/2)；对角线交点是原点时，C 和 A 关于原点对称，C = {{(−x_A, −y_A)}}", "src": "坐标公式"}]}, {"type": "note", "title": "你的原题 · 作业 92 第 10 题", "text": "OA = OB，设 AF = a，A(4, a)，OB = 3a，16 + a² = 9a²，a = √2，C(−4, −√2)。选项 C 说 (−4, −1)，是错的。你选了 D（面积 24√2），其实 D 是对的。"}, {"type": "warn", "title": "「下列结论不正确的是」", "text": "这类题每个选项都要算一遍，不要凭感觉排除。"}, {"type": "cards", "items": [{"q": "A(0, 4)、C(2, 0)，∠ACB = 90°，AC = 2BC，B 在第一象限，B = ?", "a": "向 x 轴作垂线 BD，△AOC ∽ △CDB，CD = 4/2 = 2，BD = 2/2 = 1，B(4, 1)"}, {"q": "两点间距离公式", "a": "√((x₁ − x₂)² + (y₁ − y₂)²)"}]}]}, {"kind": "break", "title": "休息（可以在这里分次）", "minutes": 15, "why": "起来走走、喝水、远眺，别刷手机。"}, {"title": "圆的基本性质：垂径定理、弧弦圆心角", "tag": "基本掌握", "minutes": 25, "why": "垂径定理的计算你会，但作业 92 第 16 题「过一点的最短弦」不会。", "blocks": [{"type": "recall", "lines": [{"text": "垂径定理：垂直于弦的直径{{平分这条弦}}，并且平分弦所对的{{两条弧}}", "src": "垂径定理"}, {"text": "推论：平分弦（{{不是直径}}）的直径垂直于弦，并且平分弦所对的两条弧", "src": "推论"}, {"text": "同圆或等圆中，圆心角、弧、弦三者，一组相等，其余两组也{{相等}}", "src": "弧弦圆心角"}]}, {"type": "text", "text": "**计算核心**：半径 r、弦心距 d、半弦 a/2 组成直角三角形，**r² = d² + (a/2)²**。知道任意两个就能求第三个。弓形高 h 的题：设半径 r，列 r² = (r − h)² + (a/2)²。"}, {"type": "h", "text": "过圆内一点 P 的最长弦和最短弦"}, {"type": "text", "text": "**为什么**：弦长 = 2√(r² − d²)，d 是圆心到弦的距离。d 越大，弦越短。过 P 的弦，圆心到它的距离 d 最大只能是 OP（弦垂直于 OP 时）。所以：**最长弦 = 直径**（d = 0），**最短弦垂直于 OP**，长 2√(r² − OP²)。"}, {"type": "note", "title": "你的原题 · 作业 92 第 16 题", "text": "D(2, 4) 到 y 轴的距离是 2，y 轴上的弦长 6，半弦 3，r² = 4 + 9 = 13。B(2, 3)，DB = 1。最短弦：半弦 = √(13 − 1) = 2√3，弦长 4√3。"}, {"type": "warn", "title": "前提别漏", "text": "「圆心角、弧、弦相等」的结论必须在{{同圆或等圆}}中才成立。"}, {"type": "cards", "items": [{"q": "⊙O 半径 5，OP = 3，过 P 的最短弦和最长弦？", "a": "最短 2√(25 − 9) = 8，最长 10"}, {"q": "弦长 8，弦心距 3，半径？", "a": "√(3² + 4²) = 5"}]}]}, {"title": "圆周角定理与证明书写", "tag": "基本掌握 · 书写", "minutes": 25, "why": "会用，但证明里总缺「同弧所对」这一步（圆周角作业第 4–6 题、作业 92 第 21 题老师都补了）。", "blocks": [{"type": "recall", "lines": [{"text": "同弧或等弧所对的圆周角{{相等}}，都等于这条弧所对圆心角的{{一半}}", "src": "圆周角定理"}, {"text": "直径所对的圆周角是{{直角}}；90° 的圆周角所对的弦是{{直径}}", "src": "推论"}, {"text": "圆内接四边形：对角{{互补}}；外角等于{{内对角}}", "src": "推论"}]}, {"type": "h", "text": "怎么找一个角「所对的弧」"}, {"type": "text", "text": "顶点在圆上的角，两条边和圆各有一个交点，这两个交点之间、**不经过角的顶点**的那段弧，就是它所对的弧。四边形 ABCD 内接于圆：∠B（顶点 B）所对的弧是 ADC，∠C 所对的弧是 BAD。"}, {"type": "h", "text": "证明书写模板（每用一次定理都要写出弧）"}, {"type": "list", "items": ["∵ 弧 BC = 弧 BC（同弧），∴ ∠BDC = ∠BAC", "∵ AB 是直径，∴ ∠ACB = 90°（直径所对的圆周角是直角）", "∵ OC ⊥ AB，∴ 弧 AD = 弧 BD（垂径定理），∴ ∠APD = ½∠AOD", "∵ ∠ADB = ∠DBC，∴ 弧 AB = 弧 CD，∴ AB = CD（等弧对等弦）"]}, {"type": "h", "text": "常用辅助线"}, {"type": "table", "head": ["看到", "就去"], "rows": [["直径", "连出圆周角，得到 {{90°}}"], ["弧的中点", "连半径（垂直平分弦），或连弦得等角"], ["两条平行弦", "连一条对角线，用{{内错角}}得等弧（平行弦夹等弧）"], ["切点", "连{{半径}}，得垂直"]]}, {"type": "note", "title": "作业 92 第 21 题最短证法", "text": "AD ∥ BC，求证 AB = CD。连 BD：∠ADB = ∠DBC（内错角）→ 弧 AB = 弧 CD → AB = CD。你一开始写了 ∠DBC = ∠BDA 又划掉了，那条思路其实是对的。"}, {"type": "cards", "items": [{"q": "四边形 ABCD 内接于⊙O，∠ABC 所对的弧是？", "a": "弧 ADC"}, {"q": "∠BDC = ∠BAC 的理由怎么写？", "a": "∵ 弧 BC = 弧 BC（同弧所对的圆周角相等）"}]}]}, {"title": "点与圆、外心与内心", "tag": "薄弱 · 重点", "minutes": 25, "why": "作业 13 第 5、6 题，作业 92 第 15 题都错了；外心、内心的定义和公式一混就错。", "blocks": [{"type": "recall", "lines": [{"text": "点与圆：d < r 点在圆{{内}}，d = r 在圆{{上}}，d > r 在圆{{外}}", "src": "点与圆"}, {"text": "{{不在同一直线上}}的三个点确定一个圆", "src": "作业 13 第 1 题"}]}, {"type": "table", "head": ["", "外心 O", "内心 I"], "rows": [["是什么的交点", "三边的{{垂直平分线}}", "三个内角的{{角平分线}}"], ["到谁距离相等", "到三个{{顶点}}（OA = OB = OC）", "到三条{{边}}"], ["位置", "锐角在内、直角在{{斜边中点}}、钝角在外", "永远在三角形{{内部}}"], ["角度公式", "∠BOC = {{2∠A}}（O 在形内）", "∠BIC = {{90° + ½∠A}}"], ["直角三角形的半径", "R = 斜边 / 2", "r = (a + b − c) / 2"]]}, {"type": "text", "text": "**∠BIC 公式怎么来的**：∠IBC + ∠ICB = ½(∠B + ∠C) = ½(180° − ∠A) = 90° − ½∠A，所以 ∠BIC = 180° − (90° − ½∠A) = 90° + ½∠A。"}, {"type": "note", "title": "你的原题 · 作业 92 第 15 题", "text": "∠BOC = 140° → ∠A = 70° → ∠BIC = 90° + 35° = 125°（你写了 115°）。如果是钝角三角形（O 在外），∠A = 110°，∠BIC = 145°。"}, {"type": "h", "text": "判断「O 是哪个三角形的外心」"}, {"type": "text", "text": "只要找出到 O **距离相等的三个点**。作业 13 第 6 题：OA = OB = OC（外心），正方形 OCDE 中 OE = OC，所以 OA = OB = OE，O 是 △AEB 的外心。OD 是对角线，比 OC 长，所以不是 △ACD。"}, {"type": "h", "text": "坐标里求外心"}, {"type": "list", "ordered": true, "items": ["找最好算的一条垂直平分线（端点在坐标轴上的边，如 O(0,0)、A(2,0) 的垂直平分线是 x = 1）。", "设圆心 M(1, y)，用 MO = MB 列方程（两边平方去根号）。", "求出 y，半径 = MO。作业 13 第 5 题：M(1, 2)，半径 √5。"]}, {"type": "cards", "items": [{"q": "锐角△ABC 中 ∠BOC = 100°（O 为外心），∠BIC = ?", "a": "∠A = 50°，∠BIC = 90° + 25° = 115°"}, {"q": "O(0,0)、A(6,0)、B(2,4) 的外接圆半径？", "a": "圆心 (3, y)：9 + y² = 1 + (y − 4)²，y = 1，半径 √10"}, {"q": "外心到什么距离相等？内心呢？", "a": "外心到三个[[顶点]]；内心到三条[[边]]"}]}]}, {"title": "切线的判定、性质与证明", "tag": "薄弱 · 大题", "minutes": 35, "why": "作业 92 第 23 题 (2) 只写了第一步；切线证明是解答题必考，套路固定。", "blocks": [{"type": "recall", "lines": [{"text": "切线的判定：经过半径的{{外端}}并且{{垂直于这条半径}}的直线是圆的切线", "src": "判定定理"}, {"text": "切线的性质：圆的切线{{垂直于}}过切点的半径", "src": "性质定理"}, {"text": "切线长定理：从圆外一点引两条切线，切线长{{相等}}，圆心和这点的连线{{平分}}两切线的夹角", "src": "作业 92 第 14 题"}]}, {"type": "table", "head": ["题目条件", "方法", "要证的"], "rows": [["直线和圆**有公共点**（给了切点）", "{{连半径，证垂直}}", "∠ODE = 90°"], ["**没说**有公共点", "{{作垂直，证半径}}", "圆心到直线距离 = r"]]}, {"type": "h", "text": "证垂直的三种常用办法"}, {"type": "list", "ordered": true, "items": ["**两角相加 = 90°**：用等腰（OD = OB 是半径）把角搬过来，凑成一个已知的直角（作业 92 第 23 题）。", "**平行转移**：证 OD ∥ AE，又已知 DE ⊥ AE，所以 DE ⊥ OD（角平分线型）。", "**全等**：证含 ∠ODE 的三角形和一个有直角的三角形全等。"]}, {"type": "h", "text": "你的原题 · 作业 92 第 23 题 (2) 完整写法"}, {"type": "list", "items": ["连接 OD、BD。∵ AB 是直径，∴ ∠ADB = 90°，∴ ∠BDC = 90°。", "∵ E 是 BC 中点，∴ DE = BE = ½BC（直角三角形斜边上的中线等于斜边的一半），∴ ∠EDB = ∠EBD。", "∵ OD = OB，∴ ∠ODB = ∠OBD。", "∴ ∠ODE = ∠ODB + ∠EDB = ∠OBD + ∠EBD = ∠ABC = 90°。", "∵ OD 是半径，∴ DE 是⊙O 的切线。"]}, {"type": "warn", "title": "最后一句不能省", "text": "结论前要写「∵ OD 是⊙O 的{{半径}}」，否则只证了垂直，没满足「经过半径外端」。"}, {"type": "h", "text": "证明两线垂直的综合题（作业 92 第 20 题 (2)）", "min": "half"}, {"type": "text", "min": "half", "text": "要证 BE ⊥ OF，就证 ∠EBO + ∠BOF = 90°。正方形 OCDB 关于对角线 BC 对称 → ∠FOC = ∠FDC；CD ∥ AB → ∠FDC = ∠EAO；△AOE ≌ △BOE → ∠EAO = ∠EBO。所以 ∠EBO = ∠FOC，∠EBO + ∠BOF = ∠FOC + ∠BOF = 90°。思路：**用对称、平行、全等把角搬到一起**。"}, {"type": "cards", "items": [{"q": "AB 是直径，AD 平分 ∠BAC 交⊙O 于 D，DE ⊥ AC 于 E（在 AC 延长线上），证 DE 是切线的关键一步？", "a": "连 OD：OA = OD → ∠OAD = ∠ODA = ∠DAE → OD ∥ AE → OD ⊥ DE"}, {"q": "PA、PB 是切线，∠P = 60°，PA = 2，AB = ?", "a": "PA = PB 且 ∠P = 60°，等边三角形，AB = 2"}]}]}, {"kind": "break", "title": "休息", "minutes": 15, "why": "起来走走、喝水、远眺，别刷手机。"}, {"title": "弧长、扇形、阴影面积、正多边形", "tag": "基本掌握", "minutes": 20, "why": "公式都会，作业 92 第 7 题阴影面积本来做对了（先写 A）又改错；正多边形和弧长都做对了。", "blocks": [{"type": "recall", "lines": [{"text": "弧长 l = {{nπr / 180}}", "src": "公式"}, {"text": "扇形面积 S = {{nπr² / 360}} = {{½lr}}", "src": "公式"}]}, {"type": "h", "text": "阴影面积的三种办法"}, {"type": "list", "ordered": true, "items": ["**直接法**：阴影本身就是扇形 / 三角形。", "**和差法**：阴影 = 大图形 − 小图形（如弓形 = 扇形 − 三角形）。", "**等积转化**：找出面积相等的两块（全等、对称、同底等高、sin120° = sin60° 的两个三角形），把阴影拼成规则图形。"]}, {"type": "note", "title": "你的原题 · 作业 92 第 7 题", "text": "∠DOB = 60°，∠AOC = 120°，S△AOC = S△BOD（两边都是半径，夹角 120° 和 60° 的正弦相等）。阴影 = △BOD + 弓形 BD = 扇形 BOD = 60/360 × 4π = 2π/3，选 A。你最初写的「1/6 × 2² × π」就是对的。"}, {"type": "table", "head": ["正 n 边形（外接圆半径 R）", "边长", "边心距"], "rows": [["正三角形", "√3 R", "R / 2"], ["正方形", "{{√2 R}}", "{{√2 R / 2}}"], ["正六边形", "{{R}}", "√3 R / 2"]]}, {"type": "text", "text": "中心角 = 360° / n。作业 92 第 18 题（正方形边长 6√2、边心距 3√2）你做对了。"}]}, {"title": "圆锥：母线、底面半径、展开图", "tag": "薄弱 · 重点", "minutes": 30, "why": "作业 21 第 6、7、9 题都错在「哪个长度是哪个」：扇形半径当成底面半径，直径当成半径，最短路径沿着弧走。", "blocks": [{"type": "table", "head": ["圆锥", "侧面展开的扇形"], "rows": [["母线 l", "扇形的{{半径}}"], ["底面周长 2πr", "扇形的{{弧长}}"], ["侧面积 πrl", "扇形面积"], ["—", "圆心角 n = {{360° × r / l}}"]]}, {"type": "recall", "lines": [{"text": "高 h、底面半径 r、母线 l：{{l² = r² + h²}}", "src": "轴截面直角三角形"}, {"text": "全面积 = 侧面积 + 底面积 = {{πrl + πr²}}", "src": "公式"}]}, {"type": "text", "text": "**为什么圆心角 = 360° × r / l**：展开后扇形弧长 = 底面周长，nπl/180 = 2πr，整理得 n = 360r/l。所以**母线是底面半径的几倍，圆心角就是 360° 的几分之一**。"}, {"type": "warn", "title": "易错 1：扇形的半径是母线，不是底面半径", "text": "作业 21 第 6 题：扇形半径 6、圆心角 120°。S侧 = 120π × 36 / 360 = 12π；弧长 = 4π = 2πr → 底面半径 r = 2；S全 = 12π + 4π = 16π。"}, {"type": "warn", "title": "易错 2：给的是直径，先除以 2", "text": "作业 21 第 7 题：直径 6 → r = 3，l = √(9 + 16) = 5，S全 = 15π + 9π = 24π。你用 6 算出 l = 2√13。做题前先把「直径」两个字圈出来。"}, {"type": "h", "text": "侧面最短路径"}, {"type": "list", "ordered": true, "items": ["把侧面沿母线剪开，展开成扇形。", "用 n = 360° × r / l 求圆心角。", "在展开图上标出起点和终点，**连线段**（两点之间线段最短）。", "用勾股定理或特殊三角形算出长度。**不能沿底面圆周算弧长**。"]}, {"type": "text", "text": "例：母线 6、底面半径 2，从 A 绕一周回到 A：n = 120°，展开图里 △OAA′ 两边是 6、夹角 120°，AA′ = 6√3。"}, {"type": "h", "text": "旋转体（作业 21 第 8 题，你做对了）", "min": "half"}, {"type": "text", "min": "half", "text": "直角三角形绕斜边旋转一周 → 两个底面重合的圆锥。共同底面半径 = 斜边上的高 = 两直角边之积 ÷ 斜边（6 × 8 ÷ 10 = 4.8），两条母线分别是两条直角边。"}, {"type": "cards", "items": [{"q": "半径 9、圆心角 240° 的扇形围成圆锥，底面半径？", "a": "弧长 = 240π × 9 / 180 = 12π = 2πr，r = 6"}, {"q": "底面直径 8、高 3 的圆锥，母线？", "a": "r = 4，l = √(16 + 9) = 5"}, {"q": "圆锥侧面积 = 底面积的 2 倍，展开图圆心角？", "a": "πrl = 2πr² → l = 2r → n = 360° × r/l = 180°"}]}]}, {"title": "巩固练习：用新题检验", "tag": "自测", "minutes": 60, "why": "两套巩固题都是针对你的错题出的新题，题干和数字都换过了。", "blocks": [{"type": "text", "text": "先限时做，交卷后看解析；错的题回到本页对应的小节重看。做完点「导出答题记录」，回到 Claude 说「批改」，错题会进数学错题库。"}, {"type": "link", "text": "函数作业错题巩固（15 题）→", "href": "../../../测试题/数学/九年级_数学_函数作业错题_巩固_20261108/测试题.html"}, {"type": "link", "text": "圆与圆锥作业错题巩固（12 题）→", "href": "../../../测试题/数学/九年级_数学_圆与圆锥作业错题_巩固_20261108/测试题.html"}]}, {"title": "错题库回顾", "tag": "错题", "minutes": 20, "why": "做错过的题最容易再错：先自己说答案，再点开核对。", "blocks": [{"type": "note", "title": "错题库里暂时没有未掌握的数学错题", "text": "这段时间把前面各段里遮住的内容再快速过一遍，说不出来的停下来看。"}]}], "ranking": [{"knowledge": "反比例函数的增减性（在每个象限内）", "value": "★★★", "loss": "高", "minutes": "12′", "efficiency": "A", "modes": ["1h", "half", "full"], "included": true}, {"knowledge": "k 的几何意义与 k 的符号", "value": "★★★", "loss": "高", "minutes": "10′", "efficiency": "A", "modes": ["1h", "half", "full"], "included": true}, {"knowledge": "外心、内心（定义、角度公式、坐标求法）", "value": "★★", "loss": "高", "minutes": "8′", "efficiency": "A", "modes": ["1h", "half", "full"], "included": true}, {"knowledge": "切线的判定与证明书写", "value": "★★★", "loss": "高", "minutes": "10′", "efficiency": "A", "modes": ["1h", "half", "full"], "included": true}, {"knowledge": "圆锥（母线、底面半径、展开图对应）", "value": "★★", "loss": "高", "minutes": "10′", "efficiency": "A", "modes": ["1h", "half", "full"], "included": true}, {"knowledge": "分类讨论（象限、三角形形状、弦的两侧）", "value": "★★", "loss": "高", "minutes": "15′", "efficiency": "B", "modes": ["half", "full"], "included": true}, {"knowledge": "函数应用（待定系数、分段、拱桥、配方求最值）", "value": "★★★", "loss": "高", "minutes": "30′", "efficiency": "B", "modes": ["half", "full"], "included": true}, {"knowledge": "坐标几何（一线三垂直、对角线中点）", "value": "★★", "loss": "高", "minutes": "15′", "efficiency": "B", "modes": ["half", "full"], "included": true}, {"knowledge": "圆周角定理与证明书写", "value": "★★★", "loss": "中", "minutes": "15′", "efficiency": "B", "modes": ["half", "full"], "included": true}, {"knowledge": "垂径定理与最短弦", "value": "★★", "loss": "中", "minutes": "20′", "efficiency": "C", "modes": ["full"], "included": true}, {"knowledge": "弧长、扇形、阴影面积、正多边形", "value": "★★", "loss": "中", "minutes": "20′", "efficiency": "C", "modes": ["full"], "included": true}, {"knowledge": "二次函数基础（顶点、平移、图象信号）", "value": "★★★", "loss": "低", "minutes": "20′", "efficiency": "C", "modes": ["full"], "included": true}, {"knowledge": "旋转与中心对称", "value": "★★", "loss": "低", "minutes": "15′", "efficiency": "C", "modes": ["full"], "included": true}], "footer": "", "after": []}</script>
+<script>
+(function () {
+  "use strict";
+  var D = JSON.parse(document.getElementById("review-data").textContent);
+  var SEGS = D.segments;
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function fmt(s) {
+    return esc(s)
+      .replace(/\[\[([\s\S]+?)\]\]/g, '<span class="dot">$1</span>')
+      .replace(/\+\+([\s\S]+?)\+\+/g, '<span class="uline">$1</span>')
+      .replace(/\*\*([\s\S]+?)\*\*/g, "<b>$1</b>")
+      .replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, '<span class="frac"><span>$1</span><span>$2</span></span>')
+      .replace(/\\sqrt\{([^{}]*)\}/g, '√<span class="sqrt">$1</span>')
+      .replace(/\^\{([^{}]*)\}/g, "<sup>$1</sup>")
+      .replace(/_\{([^{}]*)\}/g, "<sub>$1</sub>");
+  }
+  function figure(f) {
+    if (!f) return "";
+    var s = String(f);
+    return '<div class="fig">' + (s.indexOf("<svg") === 0 ? s : '<img src="' + esc(s) + '" alt="插图">') + "</div>";
+  }
+  // 行内标记：{{遮住}}  [[红色重点]]  **加粗**  换行 \n
+  function inl(s) {
+    return esc(s).replace(/\{\{([\s\S]+?)\}\}/g, '<span class="c">$1</span>')
+      .replace(/\[\[([\s\S]+?)\]\]/g, '<span class="key">$1</span>')
+      .replace(/\*\*([\s\S]+?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
+  }
+  function fmtClock(s) {
+    s = Math.max(0, Math.round(s));
+    var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
+    var p = function (n) { return (n < 10 ? "0" : "") + n; };
+    return (h ? h + ":" + p(m) : p(m)) + ":" + p(x);
+  }
+  function fmtAt(min) { var h = Math.floor(min / 60), m = min % 60; return h + ":" + (m < 10 ? "0" : "") + m; }
+
+  // ---------- 渲染内容块 ----------
+  function block(b) {
+    switch (b.type) {
+      case "h": return "<h3>" + inl(b.text) + "</h3>";
+      case "text": return "<p>" + inl(b.text) + "</p>";
+      case "recall": return b.lines.map(function (l) {
+        return '<div class="line">' + inl(l.text) + (l.src ? '<span class="src">' + inl(l.src) + "</span>" : "") + "</div>";
+      }).join("");
+      case "cards": return '<div class="cards">' + b.items.map(function (c) {
+        return '<div class="fc"><b>' + inl(c.q) + '</b><span class="c">' + inl(c.a) + "</span></div>";
+      }).join("") + "</div>";
+      case "list": var tg = b.ordered ? "ol" : "ul";
+        return "<" + tg + ">" + b.items.map(function (x) { return "<li>" + inl(x) + "</li>"; }).join("") + "</" + tg + ">";
+      case "table": return "<table><tr>" + b.head.map(function (x) { return "<th>" + inl(x) + "</th>"; }).join("") + "</tr>" +
+        b.rows.map(function (r) { return "<tr>" + r.map(function (x) { return "<td>" + inl(x) + "</td>"; }).join("") + "</tr>"; }).join("") + "</table>";
+      case "note": case "warn":
+        return '<div class="' + b.type + '">' + (b.title ? "<b>" + inl(b.title) + "</b>" : "") + inl(b.text) + "</div>";
+      case "chips": return '<div class="typo">' + b.items.map(function (x) { return '<span class="chip">' + inl(x) + "</span>"; }).join("") + "</div>";
+      case "link": return '<a class="btn golink" href="' + esc(b.href) + '">' + inl(b.text) + "</a>";
+      case "mistakes": return b.items.map(function (q) {
+        return '<div class="mq"><div class="meta">' + esc(q.knowledge) + " · 错过 " + q.wrong_count + " 次</div>" +
+          (q.material ? '<details class="mat"><summary>' + fmt(q.material_title || "材料") + '</summary><div class="m-text">' + fmt(q.material) + "</div>" + figure(q.material_figure) + "</details>" : "") +
+          fmt(q.stem) + figure(q.figure) +
+          (q.options ? '<div class="opts">' + q.options.map(fmt).join("　") + "</div>" : "") +
+          '<div class="ans">答案：<span class="c">' + fmt(q.answer) + (q.tip ? "　｜　" + fmt(q.tip) : "") + "</span></div></div>";
+      }).join("");
+      default: return "";
+    }
+  }
+
+  function render() {
+    document.title = D.title;
+    document.getElementById("title").textContent = D.title;
+    document.getElementById("lead").innerHTML = inl(D.lead || "");
+    document.getElementById("modes").innerHTML = D.modes.map(function (m) {
+      return '<a href="' + esc(m.href) + '"' + (m.on ? ' class="on"' : "") + ">" + esc(m.label) + "</a>";
+    }).join("");
+    var at = 0, plan = "", secs = "";
+    SEGS.forEach(function (s, i) {
+      var brk = s.kind === "break";
+      plan += '<a href="#s' + i + '"' + (brk ? ' class="brk"' : "") + '><span class="t">' + fmtAt(at) + "–" + fmtAt(at + s.minutes) +
+        '</span><span class="n">' + esc(s.title) + "</span>" +
+        (s.tag ? '<span class="m' + (s.tag === "错题" ? " b" : s.tag === "自测" ? " g" : "") + '">' + esc(s.tag) + "</span>" : "") + "</a>";
+      at += s.minutes;
+      if (brk) {
+        secs += '<section class="sec brk" id="s' + i + '">☕ ' + esc(s.title) + "（" + s.minutes + " 分钟）" +
+          (s.why ? "<br><small>" + esc(s.why) + "</small>" : "") + "</section>";
+        return;
+      }
+      var hasC = s.blocks.some(function (b) { return b.type === "cards" || b.type === "mistakes" || JSON.stringify(b).indexOf("{{") >= 0; });
+      secs += '<section class="sec" id="s' + i + '"><div class="sec-h"><h2>' + esc(s.title) + '</h2><span class="tag">' + s.minutes +
+        " 分钟</span></div>" + (s.why ? '<p class="why">' + inl(s.why) + "</p>" : "") +
+        (hasC ? '<div class="tools"><button class="btn ghost" data-toggle="s' + i + '">全部显示 / 全部遮住</button></div>' : "") +
+        s.blocks.map(block).join("") +
+        '<div class="done-row"><button class="done-btn" data-done="' + i + '"></button></div></section>';
+    });
+    document.getElementById("plan").innerHTML = plan;
+    document.getElementById("secs").innerHTML = secs;
+    if (D.ranking && D.ranking.length) {
+      document.getElementById("whybox").innerHTML = '<details class="why-box"><summary>为什么这样安排？（提分效率排序）</summary>' +
+        "<p>" + inl(D.principle || "") + "</p><table><tr><th>知识点</th><th>分值</th><th>失分风险</th><th>复习用时</th><th>效率</th><th>本模式</th></tr>" +
+        D.ranking.map(function (r) {
+          return "<tr><td>" + esc(r.knowledge) + "</td><td>" + esc(r.value) + "</td><td>" + esc(r.loss) + "</td><td>" + esc(r.minutes) +
+            "</td><td>" + esc(r.efficiency) + "</td><td>" + (r.included ? "✅" : "—") + "</td></tr>";
+        }).join("") + "</table></details>";
+    }
+    if (D.after && D.after.length) {
+      document.getElementById("after").innerHTML = '<section class="sec"><div class="sec-h"><h2>复习完，测一测</h2></div>' +
+        '<p class="why">先做推荐的那一级；达标了再挑战下一级。错题导出后让 Claude 录入错题库。</p><div class="levels">' +
+        D.after.map(function (a) {
+          return '<a class="lv' + (a.recommended ? " rec" : "") + '" href="' + esc(a.href) + '"><b>第 ' + a.level + " 级 · " + esc(a.label) +
+            "</b><span>达标线 " + a.pass + "%" + (a.recommended ? " · 推荐" : "") + "</span></a>";
+        }).join("") + "</div></section>";
+    }
+    document.getElementById("foot").innerHTML = esc(D.footer || "");
+  }
+  render();
+
+  // ---------- 遮挡 ----------
+  document.addEventListener("click", function (e) {
+    var c = e.target.closest(".c");
+    if (c) { c.classList.toggle("on"); return; }
+    var t = e.target.closest("[data-toggle]");
+    if (t) {
+      var cs = document.querySelectorAll("#" + t.dataset.toggle + " .c");
+      var allOn = Array.prototype.every.call(cs, function (x) { return x.classList.contains("on"); });
+      cs.forEach(function (x) { x.classList.toggle("on", !allOn); });
+    }
+  });
+
+  // ---------- 分段计时 ----------
+  var N = SEGS.length, TOTAL = SEGS.reduce(function (a, s) { return a + s.minutes; }, 0) * 60;
+  var KEY = "review:" + D.title + ":" + D.mode + ":" + (D.created || "");
+  var store = { get: function () { try { return localStorage.getItem(KEY); } catch (e) { return null; } },
+                set: function (v) { try { localStorage.setItem(KEY, v); } catch (e) {} } };
+  var st = {};
+  try { st = JSON.parse(store.get() || "{}") || {}; } catch (e) { st = {}; }
+  if (!st.done || st.done.length !== N) st.done = SEGS.map(function () { return false; });
+  st.elapsed = st.elapsed || 0;
+  var startedAt = null, timer = null, lastSeg = -1;
+  var $clock = document.getElementById("clock"), $now = document.getElementById("now"),
+      $bar = document.getElementById("progBar"), $start = document.getElementById("startBtn");
+  var planLinks = document.querySelectorAll("#plan a"),
+      secEls = SEGS.map(function (s, i) { return document.getElementById("s" + i); });
+  var studyIdx = SEGS.map(function (s, i) { return s.kind === "break" ? -1 : i; }).filter(function (i) { return i >= 0; });
+
+  function save() { store.set(JSON.stringify(st)); }
+  function elapsed() { return st.elapsed + (startedAt ? (Date.now() - startedAt) / 1000 : 0); }
+  function segAt(sec) { var m = sec / 60, acc = 0; for (var i = 0; i < N; i++) { acc += SEGS[i].minutes; if (m < acc) return i; } return N; }
+  function tick() {
+    var e = elapsed(), seg = segAt(e);
+    $clock.textContent = fmtClock(TOTAL - e);
+    var doneCount = studyIdx.filter(function (i) { return st.done[i]; }).length;
+    $bar.style.width = (doneCount / Math.max(1, studyIdx.length) * 100) + "%";
+    planLinks.forEach(function (a, i) { a.classList.toggle("cur", startedAt !== null && i === seg); a.classList.toggle("done", !!st.done[i]); });
+    secEls.forEach(function (s, i) { s.classList.toggle("cur", startedAt !== null && i === seg); });
+    if (seg >= N) {
+      $now.innerHTML = "<b>时间到！</b>完成 " + doneCount + "/" + studyIdx.length + " 段。";
+    } else if (startedAt !== null || st.elapsed > 0) {
+      var acc = 0; for (var i = 0; i <= seg; i++) acc += SEGS[i].minutes;
+      $now.innerHTML = "现在：<b>" + esc(SEGS[seg].title) + "</b><br>本段还剩 " + fmtClock(acc * 60 - e);
+    }
+    document.querySelectorAll("[data-done]").forEach(function (b) {
+      var i = +b.dataset.done; b.classList.toggle("ok", !!st.done[i]);
+      b.textContent = st.done[i] ? "已完成 ✓（点此撤销）" : "这一段我过完了 ✓";
+    });
+    if (startedAt !== null && seg !== lastSeg) {
+      if (lastSeg !== -1 && seg < N) {
+        if (navigator.vibrate) navigator.vibrate(300);
+        secEls[seg].scrollIntoView({ behavior: "smooth" });
+      }
+      if (seg >= N) pause();
+      lastSeg = seg;
+    }
+  }
+  function start() {
+    if (elapsed() >= TOTAL) { st.elapsed = 0; st.done = SEGS.map(function () { return false; }); save(); }
+    startedAt = Date.now(); lastSeg = segAt(elapsed());
+    timer = setInterval(tick, 500); $start.textContent = "暂停"; tick();
+    secEls[Math.min(lastSeg, N - 1)].scrollIntoView({ behavior: "smooth" });
+  }
+  function pause() {
+    if (startedAt === null) return;
+    st.elapsed = elapsed(); startedAt = null; clearInterval(timer); save();
+    $start.textContent = st.elapsed >= TOTAL ? "开始" : "继续"; tick();
+  }
+  $start.onclick = function () { startedAt === null ? start() : pause(); };
+  document.getElementById("resetBtn").onclick = function () {
+    if (!confirm("清空计时和完成记录，重新开始？")) return;
+    pause(); st = { done: SEGS.map(function () { return false; }), elapsed: 0 }; save();
+    $start.textContent = "开始"; $now.textContent = "按「开始」计时，每段到点会提醒你换下一段"; lastSeg = -1; tick();
+  };
+  document.querySelectorAll("[data-done]").forEach(function (b) {
+    b.onclick = function () { var i = +b.dataset.done; st.done[i] = !st.done[i]; save(); tick(); };
+  });
+  window.addEventListener("pagehide", function () { if (startedAt !== null) { st.elapsed = elapsed(); save(); } });
+  if (st.elapsed > 0) $start.textContent = st.elapsed >= TOTAL ? "开始" : "继续";
+  tick();
+})();
+</script>
+</body>
+</html>
