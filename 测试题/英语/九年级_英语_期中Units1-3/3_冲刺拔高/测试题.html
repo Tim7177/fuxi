@@ -59,6 +59,7 @@
     border-top: 1px solid var(--line); backdrop-filter: blur(6px); }
   .bar .inner { max-width: 820px; margin: 0 auto; padding: 10px 16px; display: flex; gap: 8px;
     align-items: center; flex-wrap: wrap; }
+  button.ghost { color: var(--muted); background: transparent; }
   .bar .progress { color: var(--muted); font-size: 14px; margin-right: auto; }
   .score-big { font-size: 40px; font-weight: 800; }
   .score-big small { font-size: 18px; color: var(--muted); font-weight: 400; }
@@ -128,13 +129,13 @@
 
 <div class="bar"><div class="inner">
   <span class="progress" id="progress"></span>
+  <button class="ghost" id="btn-clear" title="清空这套题的全部作答记录">重置</button>
   <span id="before-actions">
     <button id="btn-submit">结束，看总结</button>
   </span>
   <span id="after-actions" class="hidden">
     <button id="btn-filter">只看错题</button>
     <button id="btn-retry">重做错题</button>
-    <button id="btn-reset">全部重做</button>
     <button id="btn-copy">复制结果</button>
     <button class="primary" id="btn-export">导出答题记录</button>
   </span>
@@ -977,10 +978,13 @@
     save(); render(); window.scrollTo({ top: 0 });
   });
 
-  document.getElementById("btn-reset").addEventListener("click", function () {
-    if (!confirm("清空全部答案，从头再做一遍？")) return;
-    state = { answers: {}, self: {}, done: {}, submitted: false, attempt: (state.attempt || 1) + 1, retryIds: null };
-    filterWrong = false; save(); render(); window.scrollTo({ top: 0 });
+  // 重置：彻底清空这套题的作答记录（进度、得分、重做次数），回到没做过的状态，主页上也显示「未开始」
+  document.getElementById("btn-clear").addEventListener("click", function () {
+    if (!confirm("清空这套题的全部作答记录，回到没做过的状态？\n（包括已做的题、得分和重做次数，不能恢复）")) return;
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    state = { answers: {}, self: {}, done: {}, submitted: false, attempt: 1, retryIds: null };
+    filterWrong = false; render(); window.scrollTo({ top: 0 });
+    toast("已重置");
   });
 
   function buildRecord() {
