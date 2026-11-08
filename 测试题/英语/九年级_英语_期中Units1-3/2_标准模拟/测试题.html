@@ -104,6 +104,14 @@
   details.sample { margin-top: 8px; }
   details.sample summary { cursor: pointer; color: var(--primary); }
   details.sample .s-text { white-space: pre-wrap; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin-top: 6px; }
+  .q-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+  .q-actions button { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .why-box { margin-top: 8px; padding: 10px 12px; border-radius: 8px; background: #fff; border: 1px solid #f5c9b3; }
+  .why-box .h { font-weight: 700; color: var(--bad); margin-bottom: 2px; }
+  .fix-box { margin-top: 8px; padding: 10px 12px; border-radius: 8px; background: var(--primary-soft); }
+  .fix-box .h { font-weight: 700; color: var(--primary); margin-bottom: 2px; }
+  details.exp { margin-top: 6px; }
+  details.exp summary { cursor: pointer; color: var(--muted); font-size: 14px; }
   @media print { .bar, .actions { display: none; } }
 </style>
 </head>
@@ -121,7 +129,7 @@
 <div class="bar"><div class="inner">
   <span class="progress" id="progress"></span>
   <span id="before-actions">
-    <button class="primary" id="btn-submit">交卷</button>
+    <button id="btn-submit">结束，看总结</button>
   </span>
   <span id="after-actions" class="hidden">
     <button id="btn-filter">只看错题</button>
@@ -858,6 +866,8 @@
   // ---------- 状态 ----------
   var state = load() || { answers: {}, self: {}, submitted: false, attempt: 1, retryIds: null };
   var filterWrong = false;
+  state.done = state.done || {};   // 每题做完即批改：记录哪些题已提交
+  function isDone(q) { return state.submitted || !!state.done[q.id]; }
 
   function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)); } catch (e) { return null; } }
   var NAV = QUIZ._nav || null; // 分级信息：{level, label, pass, next:{label, href}}
@@ -1053,12 +1063,12 @@
   }
 
   function renderQuestion(q, no) {
-    var g = state.submitted ? grade(q) : null;
+    var g = isDone(q) ? grade(q) : null;
     var card = document.createElement("div");
     card.className = "card" + (g ? " st-" + g.status : "");
     card.id = "q-" + q.id;
     card.dataset.qid = q.id;
-    var locked = state.submitted;
+    var locked = isDone(q);
 
     var head = '<div class="q-head"><span class="q-no">' + no + '.</span>' +
       (q.knowledge ? '<span class="tag">' + esc(q.knowledge) + '</span>' : "") +
@@ -1122,6 +1132,10 @@
       body += '<textarea class="essay" placeholder="' + (essayLang(q) === "en" ? "Write your composition here…" : "在这里写作文…") + '"' +
         (locked ? " disabled" : "") + ">" + esc(a || "") + '</textarea><div class="wc" data-wc></div>';
     }
+    if (!g && q.type !== "single" && q.type !== "judge") {
+      body += '<div class="q-actions"><button data-submit>' +
+        (q.type === "short" || q.type === "essay" ? "提交，看参考答案" : "提交本题") + "</button></div>";
+    }
     if (g) body += renderFeedback(q, g);
     card.innerHTML = head + body;
     if (q.type === "essay") updateWc(card, q, a);
@@ -1161,6 +1175,13 @@
     } else if (q.type !== "short") {
       h += '<div class="row"><span class="label">你的答案：</span>' + esc(userText(q)) + "</div>";
       h += '<div class="row"><span class="label">正确答案：</span><b>' + fmt(correctText(q)) + "</b></div>";
+      if (g.status === "correct") {
+        if (q.explanation) h += '<details class="exp"><summary>看讲解</summary><div class="row">' + fmt(q.explanation) + "</div></details>";
+      } else {
+        h += '<div class="why-box"><div class="h">为什么错</div>' + (q.explanation ? fmt(q.explanation) : "对照正确答案，找出和你的答案不同的地方。") + "</div>";
+        h += fixBox(q);
+      }
+      return h + "</div>";
     } else {
       h += '<div class="row"><span class="label">参考答案：</span>' + fmt(q.answer) + "</div>" + figure(q.answer_figure);
       var s = state.self[q.id] || {};
@@ -1178,17 +1199,44 @@
           }).join("") + "</div>";
       }
     }
-    if (q.explanation) h += '<div class="row"><span class="label">解析：</span>' + fmt(q.explanation) + "</div>";
+    if (q.explanation) h += '<div class="row"><span class="label">讲解：</span>' + fmt(q.explanation) + "</div>";
+    if (q.type === "short" && (g.status === "wrong" || g.status === "partial")) h += fixBox(q);
     return h + "</div>";
   }
 
+  // 怎么改进：优先用题目里的 tip（一句话避错要点），没有就给通用做法
+  function fixBox(q) {
+    var t = q.tip ? fmt(q.tip)
+      : "这题考「" + esc(q.knowledge || "本知识点") + "」。把上面讲解里最关键的一句读两遍、遮住说一遍；整套做完后点「重做错题」再做一次，连续做对两次才算真正掌握。";
+    return '<div class="fix-box"><div class="h">💡 怎么改进</div>' + t + "</div>";
+  }
+
+  function markDone(q) {
+    state.done[q.id] = true;
+    save(); refreshCard(q); updateBar();
+    var pool = state.retryIds ? qs.filter(function (x) { return state.retryIds.indexOf(x.id) >= 0; }) : qs;
+    if (pool.every(function (x) { return state.done[x.id]; })) finish(false);
+  }
+
+  function finish(scrollTop) {
+    state.submitted = true; state.retryIds = null; state.submittedAt = new Date().toISOString();
+    filterWrong = false; save(); renderSummary(); updateBar(); applyVisibility();
+    if (scrollTop) window.scrollTo({ top: 0, behavior: "smooth" });
+    else toast("这套题做完了，总结在页面最上方");
+  }
+
   function bindQuestion(card, q) {
-    if (!state.submitted) {
+    if (!isDone(q)) {
       card.querySelectorAll('input[type=radio]').forEach(function (el) {
         el.addEventListener("change", function () {
           state.answers[q.id] = q.type === "judge" ? el.value === "T" : el.value;
-          save(); refreshCard(q); updateBar();
+          markDone(q);
         });
+      });
+      var sb = card.querySelector("[data-submit]");
+      if (sb) sb.addEventListener("click", function () {
+        if (!isAnswered(q)) { toast("先作答，再提交"); return; }
+        markDone(q);
       });
       card.querySelectorAll('input[type=checkbox]').forEach(function (el) {
         el.addEventListener("change", function () {
@@ -1328,8 +1376,11 @@
       p.textContent = "得分 " + d.got + " / " + d.total;
     } else {
       var pool = state.retryIds ? qs.filter(function (q) { return state.retryIds.indexOf(q.id) >= 0; }) : qs;
-      var done = pool.filter(isAnswered).length;
-      p.textContent = (state.retryIds ? "重做错题：" : "已答 ") + done + " / " + pool.length;
+      var doneQs = pool.filter(function (q) { return state.done[q.id]; });
+      var right = doneQs.filter(function (q) { return grade(q).status === "correct"; }).length;
+      var wrongN = doneQs.filter(function (q) { var st = grade(q).status; return st === "wrong" || st === "partial"; }).length;
+      p.textContent = (state.retryIds ? "重做错题 " : "已做 ") + doneQs.length + " / " + pool.length +
+        (doneQs.length ? " · ✅ " + right + " · ❌ " + wrongN : "");
     }
   }
 
@@ -1341,14 +1392,12 @@
 
   document.getElementById("btn-submit").addEventListener("click", function () {
     var pool = state.retryIds ? qs.filter(function (q) { return state.retryIds.indexOf(q.id) >= 0; }) : qs;
-    var left = pool.filter(function (q) { return !isAnswered(q); });
-    if (left.length && !confirm("还有 " + left.length + " 题没有作答，确定交卷吗？")) {
+    var left = pool.filter(function (q) { return !state.done[q.id]; });
+    if (left.length && !confirm("还有 " + left.length + " 题没做，现在结束吗？没做的会算错。")) {
       document.getElementById("q-" + left[0].id).scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-    state.submitted = true; state.retryIds = null; state.submittedAt = new Date().toISOString();
-    filterWrong = false; save(); render();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    finish(true); render();
   });
 
   document.getElementById("btn-filter").addEventListener("click", function () {
@@ -1359,7 +1408,7 @@
     var wrong = qs.filter(function (q) { return grade(q).status !== "correct"; });
     if (!wrong.length) { toast("没有错题，全部答对了 🎉"); return; }
     if (!confirm("清空 " + wrong.length + " 道错题的答案并重新作答？答对的题会保留。")) return;
-    wrong.forEach(function (q) { delete state.answers[q.id]; delete state.self[q.id]; });
+    wrong.forEach(function (q) { delete state.answers[q.id]; delete state.self[q.id]; delete state.done[q.id]; });
     state.retryIds = wrong.map(function (q) { return q.id; });
     state.submitted = false; state.attempt = (state.attempt || 1) + 1; filterWrong = false;
     save(); render(); window.scrollTo({ top: 0 });
@@ -1367,7 +1416,7 @@
 
   document.getElementById("btn-reset").addEventListener("click", function () {
     if (!confirm("清空全部答案，从头再做一遍？")) return;
-    state = { answers: {}, self: {}, submitted: false, attempt: (state.attempt || 1) + 1, retryIds: null };
+    state = { answers: {}, self: {}, done: {}, submitted: false, attempt: (state.attempt || 1) + 1, retryIds: null };
     filterWrong = false; save(); render(); window.scrollTo({ top: 0 });
   });
 
