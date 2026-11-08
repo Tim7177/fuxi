@@ -77,6 +77,33 @@
   .level-box.pass { background: var(--ok-soft); }
   .level-box.fail { background: var(--half-soft); }
   .next-btn { display: inline-block; margin-top: 6px; padding: 4px 12px; border-radius: 8px; background: var(--ok); color: #fff; text-decoration: none; }
+  /* 材料题组、插图、公式、加点字、作文 */
+  .material { background: #fbfaf6; border: 1px solid var(--line); border-left: 5px solid #94a3b8; border-radius: 12px; padding: 14px 18px; margin: 14px 0 6px; }
+  .material .m-title { font-weight: 700; margin-bottom: 4px; }
+  .material .m-range { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .material .m-text { white-space: pre-wrap; }
+  details.mat { background: #fbfaf6; border-radius: 8px; padding: 6px 10px; margin-bottom: 8px; font-size: 15px; }
+  details.mat summary { cursor: pointer; color: var(--muted); }
+  details.mat .m-text { white-space: pre-wrap; margin-top: 4px; }
+  .fig { margin: 8px 0; text-align: center; }
+  .fig svg, .fig img { max-width: 100%; height: auto; }
+  .dot { text-emphasis: dot; -webkit-text-emphasis: dot; text-emphasis-position: under right; -webkit-text-emphasis-position: under right; }
+  .uline { text-decoration: underline; text-underline-offset: 3px; }
+  .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; font-size: .85em; line-height: 1.15; margin: 0 2px; }
+  .frac > span:first-child { border-bottom: 1px solid currentColor; padding: 0 2px; }
+  .sqrt { border-top: 1px solid currentColor; padding: 0 2px; margin-left: 1px; }
+  .req { font-size: 14px; color: var(--muted); margin: 6px 0; padding-left: 20px; }
+  textarea.essay { min-height: 280px; line-height: 1.8; }
+  .wc { font-size: 13px; color: var(--muted); text-align: right; margin-top: 4px; }
+  .wc.bad { color: var(--bad); }
+  .dims { display: grid; gap: 6px; margin-top: 6px; }
+  .dim { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .dim b { min-width: 6em; }
+  .dim select { font: inherit; padding: 2px 6px; }
+  .dim .d-desc { font-size: 13px; color: var(--muted); flex-basis: 100%; }
+  details.sample { margin-top: 8px; }
+  details.sample summary { cursor: pointer; color: var(--primary); }
+  details.sample .s-text { white-space: pre-wrap; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin-top: 6px; }
   @media print { .bar, .actions { display: none; } }
 </style>
 </head>
@@ -591,14 +618,29 @@
   "use strict";
   var QUIZ = JSON.parse(document.getElementById("quiz-data").textContent);
   var LETTERS = "ABCDEFGHIJ";
-  var TYPE_NAME = { single: "单选题", multiple: "多选题", judge: "判断题", fill: "填空题", short: "简答题" };
+  var TYPE_NAME = { single: "单选题", multiple: "多选题", judge: "判断题", fill: "填空题", short: "简答题", essay: "作文" };
   var BLANK_RE = /_{3,}/g;
   var STORE_KEY = "quiz:" + QUIZ.title + ":" + (QUIZ.created || "");
-  var TYPE_ORDER = ["single", "multiple", "judge", "fill", "short"];
-  var qs = QUIZ.questions.map(function (q, i) { if (q.id == null) q.id = i + 1; q._i = i; return q; });
-  qs.sort(function (a, b) { // 按题型分组显示，同题型内保持原顺序
-    return (TYPE_ORDER.indexOf(a.type) - TYPE_ORDER.indexOf(b.type)) || (a._i - b._i);
+  // 显示顺序：选择 → 判断 → 填空 → 材料题组（按 section 分大题）→ 简答 → 作文
+  var GROUPS = {}, qs = [], groupSecs = [];
+  QUIZ.questions.forEach(function (q, i) {
+    if (q.id == null) q.id = i + 1;
+    if (q.type === "group") {
+      GROUPS[q.id] = q;
+      var sec = "g:" + (q.section || "材料题");
+      if (groupSecs.indexOf(sec) < 0) groupSecs.push(sec);
+      (q.questions || []).forEach(function (s, j) {
+        var c = {}; for (var k in s) c[k] = s[k];
+        c.id = q.id + "-" + (s.id != null ? s.id : j + 1);
+        c._group = q.id; c._sec = sec; c._i = i + (j + 1) / 1000;
+        c.knowledge = c.knowledge || q.knowledge; c.difficulty = c.difficulty || q.difficulty;
+        qs.push(c);
+      });
+    } else { q._sec = q.type; q._i = i; qs.push(q); }
   });
+  var SEC_ORDER = ["single", "multiple", "judge", "fill"].concat(groupSecs, ["short", "essay"]);
+  function secName(sec) { return sec.indexOf("g:") === 0 ? sec.slice(2) : TYPE_NAME[sec]; }
+  qs.sort(function (a, b) { return (SEC_ORDER.indexOf(a._sec) - SEC_ORDER.indexOf(b._sec)) || (a._i - b._i); });
 
   // ---------- 状态 ----------
   var state = load() || { answers: {}, self: {}, submitted: false, attempt: 1, retryIds: null };
@@ -618,6 +660,32 @@
   // ---------- 工具 ----------
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
     return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  // 题目文字的轻量标记：[[加点字]] ++下划线++ **加粗** x^{2} H_{2}O \frac{1}{2} \sqrt{3}
+  function fmt(s) {
+    return esc(s)
+      .replace(/\[\[([\s\S]+?)\]\]/g, '<span class="dot">$1</span>')
+      .replace(/\+\+([\s\S]+?)\+\+/g, '<span class="uline">$1</span>')
+      .replace(/\*\*([\s\S]+?)\*\*/g, "<b>$1</b>")
+      .replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, '<span class="frac"><span>$1</span><span>$2</span></span>')
+      .replace(/\\sqrt\{([^{}]*)\}/g, '√<span class="sqrt">$1</span>')
+      .replace(/\^\{([^{}]*)\}/g, "<sup>$1</sup>")
+      .replace(/_\{([^{}]*)\}/g, "<sub>$1</sub>");
+  }
+  function figure(f) {
+    if (!f) return "";
+    var s = String(f);
+    return '<div class="fig">' + (s.indexOf("<svg") === 0 ? s : '<img src="' + esc(s) + '" alt="插图">') + "</div>";
+  }
+  function countWords(q, text) {
+    text = String(text || "");
+    if (essayLang(q) === "en") { var m = text.match(/[A-Za-z]+(?:['’-][A-Za-z]+)*/g); return m ? m.length : 0; }
+    return text.replace(/[\s\p{P}\p{S}]/gu, "").length;
+  }
+  function essayLang(q) { return q.lang || (QUIZ.subject === "英语" ? "en" : "zh"); }
+  function essayFull(q) {
+    if (q.score != null) return Number(q.score);
+    return (q.rubric || []).reduce(function (a, r) { return a + Number(r.score || 0); }, 0) || 20;
+  }
   function norm(s) {
     return String(s == null ? "" : s).normalize("NFKC").replace(/\s+/g, "")
       .replace(/["'“”‘’「」『』《》]/g, "").replace(/[。.，,、；;！!？?]+$/, "").toLowerCase();
@@ -632,11 +700,12 @@
   function maxScore(q) {
     if (q.score != null) return Number(q.score);
     if (q.type === "fill") return 2 * blankCount(q);
+    if (q.type === "essay") return essayFull(q);
     return { single: 2, multiple: 3, judge: 1, short: 5 }[q.type] || 1;
   }
   function round1(x) { return Math.round(x * 10) / 10; }
   function correctText(q) {
-    if (q.type === "single") return q.answer;
+    if (q.type === "single") return q.answer + (q.options ? "．" + q.options[LETTERS.indexOf(q.answer)] : "");
     if (q.type === "multiple") return (q.answer || []).slice().sort().join("");
     if (q.type === "judge") return q.answer ? "正确 ✓" : "错误 ✗";
     if (q.type === "fill") return fillAnswers(q).map(function (a, i) { return "第" + (i + 1) + "空：" + a[0]; }).join("；")
@@ -701,6 +770,17 @@
       }
       got = full * okCount / n;
       status = okCount === n ? "correct" : okCount > 0 ? "partial" : "wrong";
+    } else if (q.type === "essay") { // 作文：按评分维度自评
+      var es = state.self[q.id], rub = q.rubric || [];
+      if (!isAnswered(q)) { status = "wrong"; got = 0; }
+      else if (!rub.length) {
+        if (!es || es.level == null) { status = "pending"; got = 0; }
+        else { got = full * es.level; status = es.level >= 0.85 ? "correct" : es.level > 0 ? "partial" : "wrong"; }
+      } else if (!es || !es.dims || rub.some(function (r, k) { return es.dims[k] == null; })) { status = "pending"; got = 0; }
+      else {
+        got = es.dims.reduce(function (x, y) { return x + Number(y || 0); }, 0);
+        status = got >= full * 0.85 ? "correct" : got > 0 ? "partial" : "wrong";
+      }
     } else { // short：自评
       var s = state.self[q.id];
       if (q.points && q.points.length) {
@@ -730,17 +810,28 @@
 
     var box = document.getElementById("questions");
     box.innerHTML = "";
-    var lastType = null, sectionNo = 0;
+    var lastSec = null, sectionNo = 0, lastGroup = null;
     qs.forEach(function (q, idx) {
-      if (q.type !== lastType) {
+      if (q._sec !== lastSec) {
         sectionNo++;
         var t = document.createElement("div");
         t.className = "section-title";
-        t.textContent = "一二三四五六七八九十".charAt(sectionNo - 1) + "、" + TYPE_NAME[q.type];
-        t.dataset.section = q.type;
+        t.textContent = "一二三四五六七八九十".charAt(sectionNo - 1) + "、" + secName(q._sec);
+        t.dataset.section = q._sec;
         box.appendChild(t);
-        lastType = q.type;
+        lastSec = q._sec;
       }
+      if (q._group != null && q._group !== lastGroup) {
+        var G = GROUPS[q._group], subs = qs.filter(function (x) { return x._group === q._group; });
+        var first = qs.indexOf(subs[0]) + 1, last = qs.indexOf(subs[subs.length - 1]) + 1;
+        var m = document.createElement("div");
+        m.className = "material"; m.id = "m-" + q._group; m.dataset.group = q._group;
+        m.innerHTML = (G.title ? '<div class="m-title">' + fmt(G.title) + "</div>" : "") +
+          '<div class="m-range">阅读材料，完成第 ' + first + (last > first ? "–" + last : "") + " 题</div>" +
+          '<div class="m-text">' + fmt(G.material || "") + "</div>" + figure(G.figure);
+        box.appendChild(m);
+      }
+      lastGroup = q._group != null ? q._group : null;
       box.appendChild(renderQuestion(q, idx + 1));
     });
     applyVisibility();
@@ -765,7 +856,7 @@
 
     if (q.type === "fill") {
       var i = 0, vals = a || [], det = g && g.detail;
-      var stemHtml = esc(q.stem).replace(BLANK_RE, function () {
+      var stemHtml = fmt(q.stem).replace(BLANK_RE, function () {
         var k = i++, cls = det ? (det[k] ? " ok" : " bad") : "";
         return '<input class="blank' + cls + '" data-blank="' + k + '" value="' + esc(vals[k] || "") + '"' + (locked ? " disabled" : "") + ">";
       });
@@ -777,12 +868,22 @@
       }
       body = '<div class="stem">' + stemHtml + "</div>";
     } else {
-      body = '<div class="stem">' + esc(q.stem) + (q.type === "multiple" ? "（多选）" : "") + "</div>";
+      body = '<div class="stem">' + fmt(q.stem) + (q.type === "multiple" ? "（多选）" : "") + "</div>";
+    }
+    // 单独出现的材料（如错题重做里的题组小题）
+    if (q.material && q._group == null) {
+      body = '<details class="mat" open><summary>' + fmt(q.material_title || "材料") + '</summary><div class="m-text">' +
+        fmt(q.material) + "</div>" + figure(q.material_figure) + "</details>" + body;
+    }
+    body += figure(q.figure);
+    if (q.type === "essay" && q.requirements) {
+      var reqs = Array.isArray(q.requirements) ? q.requirements : [q.requirements];
+      body += '<ul class="req">' + reqs.map(function (r) { return "<li>" + fmt(r) + "</li>"; }).join("") + "</ul>";
     }
 
     if (q.type === "single" || q.type === "multiple" || q.type === "judge") {
       var opts = q.type === "judge" ? [["T", "正确 ✓"], ["F", "错误 ✗"]]
-        : q.options.map(function (o, k) { return [LETTERS[k], LETTERS[k] + ". " + o]; });
+        : q.options.map(function (o, k) { return [LETTERS[k], o]; });
       body += '<div class="opts">';
       opts.forEach(function (o) {
         var key = o[0], sel;
@@ -797,34 +898,64 @@
         }
         body += '<label class="' + cls + '"><input type="' + (q.type === "multiple" ? "checkbox" : "radio") +
           '" name="q' + q.id + '" value="' + key + '"' + (sel ? " checked" : "") + (locked ? " disabled" : "") +
-          "><span>" + esc(o[1]) + "</span></label>";
+          "><span>" + (q.type === "judge" ? esc(o[1]) : key + ". " + fmt(o[1])) + "</span></label>";
       });
       body += "</div>";
     }
     if (q.type === "short") {
       body += '<textarea placeholder="在这里写你的答案…"' + (locked ? " disabled" : "") + ">" + esc(a || "") + "</textarea>";
     }
+    if (q.type === "essay") {
+      body += '<textarea class="essay" placeholder="' + (essayLang(q) === "en" ? "Write your composition here…" : "在这里写作文…") + '"' +
+        (locked ? " disabled" : "") + ">" + esc(a || "") + '</textarea><div class="wc" data-wc></div>';
+    }
     if (g) body += renderFeedback(q, g);
     card.innerHTML = head + body;
+    if (q.type === "essay") updateWc(card, q, a);
     bindQuestion(card, q);
     return card;
   }
 
+  function updateWc(card, q, text) {
+    var el = card.querySelector("[data-wc]"); if (!el) return;
+    var n = countWords(q, text), w = q.words, unit = essayLang(q) === "en" ? "词" : "字";
+    var bad = w && ((w[0] && n < w[0]) || (w[1] && n > w[1]));
+    el.textContent = "已写 " + n + " " + unit + (w ? "（要求 " + (w[0] || "") + (w[1] ? "–" + w[1] : " 以上") + " " + unit + "）" : "");
+    el.classList.toggle("bad", !!(bad && n));
+  }
+
   function renderFeedback(q, g) {
     var verdict = { correct: "✅ 回答正确", wrong: "❌ 回答错误", partial: "🟡 部分正确", pending: "📝 请对照要点自评" }[g.status];
+    if (q.type === "essay") verdict = { correct: "✅ 自评优秀", wrong: "❌ 还需重写", partial: "🟡 自评得分", pending: "📝 请按评分维度自评" }[g.status];
     var h = '<div class="fb ' + g.status + '"><div class="verdict">' + verdict +
       '<span style="float:right;font-weight:400">' + g.got + " / " + g.full + " 分</span></div>";
-    if (q.type !== "short") {
+    if (q.type === "essay") {
+      var es = state.self[q.id] || {}, rub = q.rubric || [];
+      if (rub.length) {
+        h += '<div class="row"><span class="label">按评分维度给自己打分：</span><div class="dims">' + rub.map(function (r, k) {
+          var cur = es.dims ? es.dims[k] : null, opts = '<option value="">—</option>';
+          for (var v = Number(r.score); v >= 0; v--) opts += '<option value="' + v + '"' + (cur === v ? " selected" : "") + ">" + v + "</option>";
+          return '<div class="dim"><b>' + fmt(r.name) + '</b><select data-dim="' + k + '">' + opts + "</select><span>/ " + r.score + " 分</span>" +
+            (r.desc ? '<span class="d-desc">' + fmt(r.desc) + "</span>" : "") + "</div>";
+        }).join("") + "</div></div>";
+      } else {
+        h += '<div class="row selfbtns"><span class="label">自评：</span>' + [[1, "很满意"], [0.7, "还可以"], [0.4, "要重写"]].map(function (b) {
+          return '<button data-level="' + b[0] + '"' + (es.level === b[0] ? ' class="on"' : "") + ">" + b[1] + "</button>"; }).join("") + "</div>";
+      }
+      if (q.points && q.points.length) h += '<div class="row"><span class="label">内容要点：</span>' + q.points.map(fmt).join("；") + "</div>";
+      if (q.sample) h += '<details class="sample"><summary>先自评，再点开看范文</summary><div class="s-text">' + fmt(q.sample) + "</div></details>";
+      h += '<div class="row"><span class="label">想要详细批改：</span>点「导出答题记录」，回到 Claude 说「批改作文」，会逐句改错并给升格建议。</div>';
+    } else if (q.type !== "short") {
       h += '<div class="row"><span class="label">你的答案：</span>' + esc(userText(q)) + "</div>";
-      h += '<div class="row"><span class="label">正确答案：</span><b>' + esc(correctText(q)) + "</b></div>";
+      h += '<div class="row"><span class="label">正确答案：</span><b>' + fmt(correctText(q)) + "</b></div>";
     } else {
-      h += '<div class="row"><span class="label">参考答案：</span>' + esc(q.answer) + "</div>";
+      h += '<div class="row"><span class="label">参考答案：</span>' + fmt(q.answer) + "</div>" + figure(q.answer_figure);
       var s = state.self[q.id] || {};
       if (q.points && q.points.length) {
         h += '<div class="row points"><span class="label">得分要点（勾选你答到的）：</span>';
         q.points.forEach(function (p, k) {
           var ck = s.checked && s.checked[k];
-          h += '<label><input type="checkbox" data-point="' + k + '"' + (ck ? " checked" : "") + "> " + esc(p) + "</label>";
+          h += '<label><input type="checkbox" data-point="' + k + '"' + (ck ? " checked" : "") + "> " + fmt(p) + "</label>";
         });
         h += "</div>";
       } else {
@@ -834,7 +965,7 @@
           }).join("") + "</div>";
       }
     }
-    if (q.explanation) h += '<div class="row"><span class="label">解析：</span>' + esc(q.explanation) + "</div>";
+    if (q.explanation) h += '<div class="row"><span class="label">解析：</span>' + fmt(q.explanation) + "</div>";
     return h + "</div>";
   }
 
@@ -862,7 +993,23 @@
         });
       });
       var ta = card.querySelector("textarea");
-      if (ta) ta.addEventListener("input", function () { state.answers[q.id] = ta.value; save(); updateBar(); });
+      if (ta) ta.addEventListener("input", function () {
+        state.answers[q.id] = ta.value; save(); updateBar();
+        if (q.type === "essay") updateWc(card, q, ta.value);
+      });
+    } else if (q.type === "essay") {
+      card.querySelectorAll("select[data-dim]").forEach(function (el) {
+        el.addEventListener("change", function () {
+          var s = state.self[q.id] || {}; s.dims = s.dims || [];
+          s.dims[Number(el.dataset.dim)] = el.value === "" ? null : Number(el.value);
+          state.self[q.id] = s; save(); refreshCard(q); renderSummary(); updateBar();
+        });
+      });
+      card.querySelectorAll("button[data-level]").forEach(function (el) {
+        el.addEventListener("click", function () {
+          state.self[q.id] = { level: Number(el.dataset.level) }; save(); refreshCard(q); renderSummary(); updateBar();
+        });
+      });
     } else if (q.type === "short") {
       card.querySelectorAll("input[data-point]").forEach(function (el) {
         el.addEventListener("change", function () {
@@ -910,12 +1057,12 @@
       " <small>/ " + d.total + " 分（" + pct + "%）</small></div>";
     h += '<div class="stats"><span>✅ 全对 <b>' + d.counts.correct + "</b></span><span>🟡 部分对 <b>" + d.counts.partial +
       "</b></span><span>❌ 错误 <b>" + d.counts.wrong + "</b></span>" +
-      (d.counts.pending ? "<span>📝 待自评 <b>" + d.counts.pending + "</b>（简答题请往下翻对照要点勾选）</span>" : "") +
+      (d.counts.pending ? "<span>📝 待自评 <b>" + d.counts.pending + "</b>（简答题、作文请往下翻对照要点自评）</span>" : "") +
       (state.attempt > 1 ? "<span>第 <b>" + state.attempt + "</b> 次作答</span>" : "") + "</div>";
     if (NAV) {
       var passed = pct >= NAV.pass;
       h += '<div class="level-box ' + (passed ? "pass" : "fail") + '">' +
-        (d.counts.pending ? "简答题自评完再看是否达标。" :
+        (d.counts.pending ? "简答题、作文自评完再看是否达标。" :
           passed ? "✅ <b>" + esc(NAV.label) + "达标</b>（" + pct + "% ≥ " + NAV.pass + "%）" +
             (NAV.next ? "，可以挑战下一级：" : "，三级全部完成！") :
           "⏳ <b>还没达标</b>（" + pct + "% / 达标线 " + NAV.pass + "%）。先看错题解析，导出答题记录让 Claude 分析，再点「重做错题」。") +
@@ -945,7 +1092,12 @@
       var el = document.getElementById("q-" + q.id);
       var show = !showIds || showIds.indexOf(q.id) >= 0;
       el.classList.toggle("hidden", !show);
-      if (show) visibleTypes[q.type] = true;
+      if (show) visibleTypes[q._sec] = true;
+    });
+    document.querySelectorAll(".material[data-group]").forEach(function (m) {
+      var gid = m.dataset.group;
+      m.classList.toggle("hidden", !qs.some(function (q) {
+        return String(q._group) === gid && !document.getElementById("q-" + q.id).classList.contains("hidden"); }));
     });
     document.querySelectorAll(".section-title").forEach(function (t) {
       t.classList.toggle("hidden", !visibleTypes[t.dataset.section]);
@@ -1017,11 +1169,15 @@
         return { knowledge: k, questions: v.n, wrong_or_partial: v.wrong, score: round1(v.got), total: v.full }; }),
       questions: qs.map(function (q, i) {
         var g = grade(q);
+        var G = q._group != null ? GROUPS[q._group] : null;
         return { no: i + 1, id: q.id, type: TYPE_NAME[q.type], knowledge: q.knowledge, difficulty: q.difficulty,
-          stem: q.stem, options: q.options, user_answer: userText(q), correct_answer: correctText(q),
+          group: G ? { id: G.id, section: G.section || "材料题", title: G.title || "" } : undefined,
+          stem: q.stem, options: q.options, user_answer: userText(q),
+          correct_answer: q.type === "essay" ? "（作文，见评分维度和范文）" : correctText(q),
+          words: q.type === "essay" ? countWords(q, state.answers[q.id]) : undefined,
           status: { correct: "正确", partial: "部分正确", wrong: "错误", pending: "待自评" }[g.status],
           score: g.got, full: g.full,
-          self_check: q.type === "short" ? (state.self[q.id] || null) : undefined };
+          self_check: (q.type === "short" || q.type === "essay") ? (state.self[q.id] || null) : undefined };
       })
     };
   }
@@ -1043,14 +1199,14 @@
   document.getElementById("btn-copy").addEventListener("click", function () {
     var r = buildRecord();
     var lines = ["【" + r.quiz_title + "】答题结果：" + r.score + " / " + r.total + " 分（" + r.percent + "%）", ""];
-    r.questions.filter(function (q) { return q.status !== "正确"; }).forEach(function (q) {
-      lines.push(q.no + ". [" + q.type + "｜" + (q.knowledge || "") + "] " + q.stem);
+    r.questions.filter(function (q) { return q.status !== "正确" || q.type === "作文"; }).forEach(function (q) {
+      lines.push(q.no + ". [" + q.type + "｜" + (q.knowledge || "") + "] " + (q.group ? "（" + q.group.section + (q.group.title ? "·" + q.group.title : "") + "）" : "") + q.stem);
       if (q.options) lines.push("   选项：" + q.options.map(function (o, k) { return LETTERS[k] + "." + o; }).join("  "));
       lines.push("   我的答案：" + q.user_answer);
       lines.push("   正确答案：" + q.correct_answer + "（" + q.status + "，" + q.score + "/" + q.full + "）");
       lines.push("");
     });
-    lines.push("请帮我分析错题。");
+    lines.push(r.questions.some(function (q) { return q.type === "作文"; }) ? "请帮我分析错题，并批改作文。" : "请帮我分析错题。");
     var text = lines.join("\n");
     var done = function () { toast("已复制，粘贴给 Claude 即可"); };
     if (navigator.clipboard && navigator.clipboard.writeText) {
