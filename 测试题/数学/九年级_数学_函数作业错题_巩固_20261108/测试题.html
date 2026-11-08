@@ -111,6 +111,12 @@
   .why-box .h { font-weight: 700; color: var(--bad); margin-bottom: 2px; }
   .fix-box { margin-top: 8px; padding: 10px 12px; border-radius: 8px; background: var(--primary-soft); }
   .fix-box .h { font-weight: 700; color: var(--primary); margin-bottom: 2px; }
+  .diag { margin: 2px 0 8px; padding: 8px 10px; border-radius: 6px; background: var(--bad-soft); }
+  .diag .h { color: var(--bad); }
+  .diag ul { margin: 2px 0 0; padding-left: 18px; }
+  ol.steps { margin: 4px 0; padding-left: 22px; }
+  ol.steps li { margin: 3px 0; }
+  .sub-h { font-weight: 600; margin-top: 6px; }
   details.exp { margin-top: 6px; }
   details.exp summary { cursor: pointer; color: var(--muted); font-size: 14px; }
   @media print { .bar, .actions { display: none; } }
@@ -171,7 +177,19 @@
    ],
    "answer": "B",
    "explanation": "直接代入：y_{1} = 2，y_{2} = 4，y_{3} = -\\frac{4}{3}，所以 y_{3} < y_{1} < y_{2}。也可以用性质：k = -4 < 0，C 在第四象限 y_{3} < 0 最小；A、B 同在第二象限，**在每个象限内** y 随 x 增大而增大，-2 < -1，所以 y_{1} < y_{2}。选 C、D 的同学是跨象限直接用了增减性。",
-   "tip": "比较反比例函数值：先看每个点在哪个象限——不同象限直接比正负；同一象限内才用增减性。拿不准时直接代入算出 y 最稳。"
+   "tip": "比较反比例函数值：先看每个点在哪个象限——不同象限直接比正负；同一象限内才用增减性。拿不准时直接代入算出 y 最稳。",
+   "steps": [
+    "已知：y = -\\frac{4}{x}，k = -4 < 0，图象在第二、四象限",
+    "代入求值：y_{1} = -\\frac{4}{-2} = 2，y_{2} = -\\frac{4}{-1} = 4，y_{3} = -\\frac{4}{3}",
+    "比较：-\\frac{4}{3} < 2 < 4",
+    "结论：y_{3} < y_{1} < y_{2}，选 B"
+   ],
+   "why": {
+    "A": "把三个点当成在同一象限，直接用了「y 随 x 增大而增大」，忽略了 C 在第四象限、y_{3} 是负数。",
+    "C": "把增减性记反成「y 随 x 增大而减小」，而且跨象限使用了。",
+    "D": "第二象限内 y 随 x 增大而增大，-2 < -1，所以 y_{1} < y_{2}，你把 A、B 两点比反了。"
+   },
+   "_science": true
   },
   {
    "id": 2,
@@ -188,7 +206,45 @@
     ]
    ],
    "explanation": "先代端点：x = -6 时 y = 2，x = -2 时 y = 6。-6 < x < -2 在第二象限，k < 0，y 随 x 增大而增大，所以 2 < y < 6。口诀：**先代端点，再看单调**。",
-   "tip": "求 y 的范围：先把两个端点代进去算出 y，再看这一段 y 随 x 增大还是减小，小的数写左边。"
+   "tip": "求 y 的范围：先把两个端点代进去算出 y，再看这一段 y 随 x 增大还是减小，小的数写左边。",
+   "steps": [
+    "已知：k = -12 < 0，-6 < x < -2 在第二象限",
+    "代端点：x = -6 时 y = -\\frac{12}{-6} = 2；x = -2 时 y = -\\frac{12}{-2} = 6",
+    "看单调：k < 0，在第二象限内 y 随 x 增大而增大",
+    "结论：2 < y < 6"
+   ],
+   "wrong": [
+    {
+     "blank": 1,
+     "answers": [
+      "-6"
+     ],
+     "why": "把 x 的范围直接当成了 y 的范围，要把端点代入函数算出 y。"
+    },
+    {
+     "blank": 1,
+     "answers": [
+      "-2"
+     ],
+     "why": "代入时漏了负号：y = -\\frac{12}{-6}，负负得正，等于 2。"
+    },
+    {
+     "blank": 1,
+     "answers": [
+      "6"
+     ],
+     "why": "两端写反了：左边填较小的数 2，右边填 6。"
+    },
+    {
+     "blank": 2,
+     "answers": [
+      "-2",
+      "-6"
+     ],
+     "why": "y 的值算错了符号：x 是负数时，y = -\\frac{12}{x} 是正数。"
+    }
+   ],
+   "_science": true
   },
   {
    "id": 3,
@@ -205,7 +261,36 @@
     ]
    ],
    "explanation": "分两种情况：① x > 0 时 y > 0 > -3，一定成立；② x < 0 时，在第三象限 y 随 x 增大而减小，y = -3 时 x = -2，要 y > -3 需 x < -2。合起来：x < -2 或 x > 0。只写 x < -2 或只写 x > -2 都是漏了分类。",
-   "tip": "由 y 的范围反求 x：先画草图，按 x > 0、x < 0 分两种情况讨论，最后把两部分合起来写「或」。"
+   "tip": "由 y 的范围反求 x：先画草图，按 x > 0、x < 0 分两种情况讨论，最后把两部分合起来写「或」。",
+   "steps": [
+    "分类：反比例函数要按 x > 0 和 x < 0 分别讨论",
+    "x > 0 时：y = \\frac{6}{x} > 0 > -3，一定成立",
+    "x < 0 时：令 y = -3 得 x = -2；第三象限内 y 随 x 增大而减小，要 y > -3 需 x < -2",
+    "合并：x < -2 或 x > 0"
+   ],
+   "wrong": [
+    {
+     "answers": [
+      "x<-2",
+      "x＜-2"
+     ],
+     "why": "只讨论了 x < 0 的情况，漏了 x > 0 时 y 恒为正、也满足 y > -3。"
+    },
+    {
+     "answers": [
+      "x>0"
+     ],
+     "why": "只考虑了 x > 0，漏了第三象限里 x < -2 的那一部分。"
+    },
+    {
+     "answers": [
+      "x>-2",
+      "-2<x<0"
+     ],
+     "why": "第三象限的增减性判断反了：x 越接近 0，y 越小（越负），所以要 x < -2。"
+    }
+   ],
+   "_science": true
   },
   {
    "id": 4,
@@ -221,7 +306,19 @@
    ],
    "answer": "C",
    "explanation": "二、四象限 → k < 0，排除 4。x = -2 时 y = -\\frac{k}{2} < 3 → k > -6，排除 -7；x = 1 时 y = k < -2，排除 -1。所以 -6 < k < -2，只有 -4 满足。方法：**先看象限定符号，再把点代进去列不等式**。",
-   "tip": "先由图象所在象限定 k 的正负，再把题目给的点代入，写成关于 k 的不等式，逐个排除选项。"
+   "tip": "先由图象所在象限定 k 的正负，再把题目给的点代入，写成关于 k 的不等式，逐个排除选项。",
+   "steps": [
+    "定符号：图象在第二、四象限 → k < 0",
+    "列不等式：x = -2 时 y = -\\frac{k}{2} < 3 → k > -6",
+    "列不等式：x = 1 时 y = k < -2",
+    "结论：-6 < k < -2，只有 -4 满足"
+   ],
+   "why": {
+    "A": "只用了 k < 0，没检验 x = 1 时 y = k < -2：-1 比 -2 大，不满足。",
+    "B": "图象在第二、四象限说明 k < 0，4 是正数，象限就不对。",
+    "D": "没检验 x = -2 的条件：k = -7 时 y = \\frac{7}{2} = 3.5 > 3，不满足 y < 3。"
+   },
+   "_science": true
   },
   {
    "id": 5,
@@ -237,7 +334,19 @@
    ],
    "answer": "A",
    "explanation": "设 BC 与 y 轴交于 D。BD × OD = 6，CD × OD = 2，所以 BC × OD = 6 + 2 = 8。△ABC 的底是 BC，高是 OD（A 在 x 轴上，高就是 B、C 到 x 轴的距离），S = \\frac{1}{2} × 8 = 4。选 8 是忘了乘 \\frac{1}{2}（把矩形面积当成三角形面积）。",
-   "tip": "k 的几何意义：两条曲线在 y 轴两侧时，两个矩形面积相加得底×高；求三角形面积别忘了再乘 \\frac{1}{2}。"
+   "tip": "k 的几何意义：两条曲线在 y 轴两侧时，两个矩形面积相加得底×高；求三角形面积别忘了再乘 \\frac{1}{2}。",
+   "steps": [
+    "设 BC 与 y 轴交于 D；A 在 x 轴上，所以 △ABC 的高 = OD",
+    "k 的几何意义：BD·OD = 6，CD·OD = |-2| = 2",
+    "相加：BC·OD = BD·OD + CD·OD = 8",
+    "面积：S_{△ABC} = \\frac{1}{2}·BC·OD = 4"
+   ],
+   "why": {
+    "B": "8 是 BC·OD，相当于矩形面积，三角形还要乘 \\frac{1}{2}。",
+    "C": "两条曲线在 y 轴两侧，两块面积要相加（6 + 2），不是相减或只取一边。",
+    "D": "只算了 B 那一侧的矩形面积 6，漏了 C 那一侧，也没乘 \\frac{1}{2}。"
+   },
+   "_science": true
   },
   {
    "id": 6,
@@ -251,7 +360,36 @@
     ]
    ],
    "explanation": "S_{△AOB} = \\frac{1}{2}|k| = 3，所以 |k| = 6。A 在第二象限，图象在二、四象限，k < 0，所以 k = -6。**由面积只能求出 |k|，最后一定要看象限定符号**。",
-   "tip": "由面积只能得到 |k|，最后一步回头看点在哪个象限，再定 k 的正负。"
+   "tip": "由面积只能得到 |k|，最后一步回头看点在哪个象限，再定 k 的正负。",
+   "steps": [
+    "面积：S_{△AOB} = \\frac{1}{2}|k| = 3 → |k| = 6",
+    "定符号：A 在第二象限，图象在第二、四象限 → k < 0",
+    "结论：k = -6"
+   ],
+   "wrong": [
+    {
+     "answers": [
+      "6"
+     ],
+     "why": "由面积只能得到 |k| = 6，A 在第二象限说明 k < 0，要取 -6。"
+    },
+    {
+     "answers": [
+      "3",
+      "-3"
+     ],
+     "why": "三角形面积是 \\frac{1}{2}|k|，不是 |k|，所以 |k| = 2 × 3 = 6。"
+    },
+    {
+     "answers": [
+      "±6",
+      "6或-6",
+      "-6或6"
+     ],
+     "why": "A 在第二象限已经定了符号，只能是 -6。"
+    }
+   ],
+   "_science": true
   },
   {
    "id": 7,
@@ -266,7 +404,34 @@
     ]
    ],
    "explanation": "y_{2} = -3，Q 在第四象限。① 若 m < 0，P 在第二象限，y_{1} > 0 > y_{2}，不满足 y_{1} < y_{2}；② 若 m > 0，P、Q 同在第四象限，k < 0，y 随 x 增大而增大，要 y_{1} < y_{2} 需 m < 2。所以 0 < m < 2。",
-   "tip": "两点比大小但不知道 P 在哪个象限：分「P、Q 同一象限」和「不同象限」两种情况，各自检验是否满足条件。"
+   "tip": "两点比大小但不知道 P 在哪个象限：分「P、Q 同一象限」和「不同象限」两种情况，各自检验是否满足条件。",
+   "steps": [
+    "求 Q：y_{2} = -\\frac{6}{2} = -3，Q 在第四象限",
+    "若 m < 0：P 在第二象限，y_{1} > 0 > y_{2}，不满足 y_{1} < y_{2}",
+    "若 m > 0：P、Q 同在第四象限，k < 0，y 随 x 增大而增大，y_{1} < y_{2} 需 m < 2",
+    "结论：0 < m < 2"
+   ],
+   "wrong": [
+    {
+     "answers": [
+      "m<2"
+     ],
+     "why": "漏了分类：m < 0 时 P 在第二象限，y_{1} 是正数，比 y_{2} 大，不满足。"
+    },
+    {
+     "answers": [
+      "m>2"
+     ],
+     "why": "增减性记反了：k < 0 时，在每个象限内 y 随 x 增大而增大。"
+    },
+    {
+     "answers": [
+      "m<0"
+     ],
+     "why": "m < 0 时 y_{1} > 0 > y_{2}，结果正好相反。"
+    }
+   ],
+   "_science": true
   },
   {
    "id": 8,
@@ -276,7 +441,17 @@
    "stem": "函数 y = \\frac{2}{x} 当 -1 ≤ x ≤ 1（x ≠ 0）时，最大值是 2，最小值是 -2。",
    "answer": false,
    "explanation": "区间跨过了 x = 0。x 从正方向靠近 0 时，y 越来越大，没有最大值；x 从负方向靠近 0 时，y 越来越小，没有最小值。所以这个范围内**既无最大值也无最小值**。这就是作业 75 第 18 题 (2) 答案 a < 0 的原因。",
-   "tip": "求最值前先看区间有没有跨过 x = 0；跨过了就没有最大值和最小值，不能直接代端点。"
+   "tip": "求最值前先看区间有没有跨过 x = 0；跨过了就没有最大值和最小值，不能直接代端点。",
+   "steps": [
+    "看区间：-1 ≤ x ≤ 1 跨过了 x = 0（函数在 x = 0 处没有定义）",
+    "x 从正方向靠近 0：y 越来越大，没有最大值",
+    "x 从负方向靠近 0：y 越来越小，没有最小值",
+    "结论：没有最大值也没有最小值，说法错误"
+   ],
+   "why": {
+    "T": "直接代入端点 x = ±1 求最值，忽略了区间跨过 x = 0，函数在 0 附近会无限变大或变小。"
+   },
+   "_science": true
   },
   {
    "id": 9,
@@ -293,7 +468,19 @@
    ],
    "answer": "D",
    "explanation": "过 B 作 BD ⊥ x 轴于 D。∠OAC + ∠ACO = 90°，∠ACO + ∠BCD = 90°，所以 ∠OAC = ∠BCD，△AOC ∽ △CDB，相似比 AC : CB = 2。CD = \\frac{OA}{2} = 2，BD = \\frac{OC}{2} = 1，B(4, 1)，k = 4 × 1 = 4。**直角顶点在坐标轴上 → 向坐标轴作垂线造相似**。",
-   "tip": "直角顶点在坐标轴上 → 过另一顶点向坐标轴作垂线，构造「一线三垂直」相似三角形，按相似比求坐标，最后代入求 k。"
+   "tip": "直角顶点在坐标轴上 → 过另一顶点向坐标轴作垂线，构造「一线三垂直」相似三角形，按相似比求坐标，最后代入求 k。",
+   "steps": [
+    "作 BD ⊥ x 轴于 D",
+    "证相似：∠OAC + ∠ACO = 90°，∠ACO + ∠BCD = 90° → ∠OAC = ∠BCD，△AOC ∽ △CDB",
+    "相似比 AC : CB = 2：CD = \\frac{OA}{2} = 2，BD = \\frac{OC}{2} = 1",
+    "B(OC + CD, BD) = (4, 1)，k = 4 × 1 = 4"
+   ],
+   "why": {
+    "A": "把 B 的横坐标当成了 CD = 2，忘了加上 OC = 2。",
+    "B": "相似比用错：CD 应是 OA 的一半（2），你用了 OA 本身（4），B 成了 (6, 1)。",
+    "C": "BD 应是 OC 的一半（1），你没有除以相似比 2，B 成了 (4, 2)。"
+   },
+   "_science": true
   },
   {
    "id": 10,
@@ -309,7 +496,19 @@
    ],
    "answer": "A",
    "explanation": "矩形对角线相等且互相平分，所以 OA = OB。设 AF = a，A(3, a)，OB = 2a。OA^{2} = 9 + a^{2} = 4a^{2}，a = \\sqrt{3}。C 与 A 关于原点对称，C(-3, -\\sqrt{3})。",
-   "tip": "矩形对角线相等且互相平分 → OA = OB；设未知量用勾股定理列方程；C 是 A 关于原点的对称点，横、纵坐标都变号。"
+   "tip": "矩形对角线相等且互相平分 → OA = OB；设未知量用勾股定理列方程；C 是 A 关于原点的对称点，横、纵坐标都变号。",
+   "steps": [
+    "矩形对角线相等且互相平分 → OA = OB",
+    "设 AF = a，则 A(3, a)，OB = 2a",
+    "勾股：OA^{2} = 3^{2} + a^{2} = (2a)^{2} → 3a^{2} = 9 → a = \\sqrt{3}",
+    "C 与 A 关于原点对称 → C(-3, -\\sqrt{3})"
+   ],
+   "why": {
+    "B": "解方程出错：3a^{2} = 9 → a^{2} = 3，要开方得 a = \\sqrt{3}，不是 1。",
+    "C": "横、纵坐标写反了：OF = 3 是横坐标，AF 才是纵坐标。",
+    "D": "把 OB = 2\\sqrt{3} 当成了 C 的纵坐标；C 的纵坐标是 -AF = -\\sqrt{3}。"
+   },
+   "_science": true
   },
   {
    "id": 11,
@@ -326,7 +525,25 @@
     ]
    ],
    "explanation": "设 y = k_{1}x + k_{2}/x。代入得 k_{1} + k_{2} = 4，2k_{1} + k_{2}/2 = 5（即 4k_{1} + k_{2} = 10）。相减得 3k_{1} = 6，k_{1} = 2，k_{2} = 2。y = 2x + \\frac{2}{x}。检验：x = 2 时 4 + 1 = 5 ✓。",
-   "tip": "待定系数法：两个比例系数要用不同字母 k_{1}、k_{2}，代两组值解方程组，最后代回另一组数检验。"
+   "tip": "待定系数法：两个比例系数要用不同字母 k_{1}、k_{2}，代两组值解方程组，最后代回另一组数检验。",
+   "steps": [
+    "设：y = k_{1}x + \\frac{k_{2}}{x}（两个系数用不同字母）",
+    "代入：x = 1 时 k_{1} + k_{2} = 4；x = 2 时 2k_{1} + \\frac{k_{2}}{2} = 5，即 4k_{1} + k_{2} = 10",
+    "解方程组：两式相减得 3k_{1} = 6，k_{1} = 2，k_{2} = 2",
+    "结论：y = 2x + \\frac{2}{x}（检验 x = 2：4 + 1 = 5 ✓）"
+   ],
+   "wrong": [
+    {
+     "answers": [
+      "y=4x",
+      "y=4/x",
+      "4x",
+      "4/x"
+     ],
+     "why": "y_{1}、y_{2} 是两个不同的函数，要设成 k_{1}x + \\frac{k_{2}}{x} 两部分，不能只写一个。"
+    }
+   ],
+   "_science": true
   },
   {
    "id": 12,
@@ -340,7 +557,36 @@
     ]
    ],
    "explanation": "以拱顶为原点建坐标系，设 y = ax^{2}。点 (4, -4) 在抛物线上，a = -\\frac{1}{4}。水位下降 5 米后水面离拱顶 9 米，令 y = -9，x^{2} = 36，x = ±6，宽 12 米。",
-   "tip": "抛物线拱桥：以拱顶为原点建系设 y = ax^{2}；水位下降后，水面的纵坐标 = −（原距离 + 下降量）；宽度 = 2|x|。"
+   "tip": "抛物线拱桥：以拱顶为原点建系设 y = ax^{2}；水位下降后，水面的纵坐标 = −（原距离 + 下降量）；宽度 = 2|x|。",
+   "steps": [
+    "建系：拱顶为原点，设 y = ax^{2}",
+    "代点：水面宽 8 米、离拱顶 4 米 → 点 (4, -4)，16a = -4，a = -\\frac{1}{4}",
+    "水位下降 5 米：水面离拱顶 4 + 5 = 9 米，令 y = -9",
+    "x^{2} = 36，x = ±6，水面宽 = 2 × 6 = 12 米"
+   ],
+   "wrong": [
+    {
+     "answers": [
+      "6"
+     ],
+     "why": "x = ±6 是两侧到中线的距离，水面宽度要乘 2。"
+    },
+    {
+     "answers": [
+      "4"
+     ],
+     "why": "令成了 y = -1：水位下降后水面离拱顶是 4 + 5 = 9 米，不是 5 − 4 = 1 米。"
+    },
+    {
+     "answers": [
+      "4√5",
+      "4根号5",
+      "2√5"
+     ],
+     "why": "令成了 y = -5：下降 5 米后水面离拱顶是 9 米，要加上原来的 4 米。"
+    }
+   ],
+   "_science": true
   },
   {
    "id": 13,
@@ -357,7 +603,30 @@
     ]
    ],
    "explanation": "令 t = -x > 0，y = -(t + \\frac{4}{t}) = -[(\\sqrt{t} - 2/\\sqrt{t})^{2} + 4] ≤ -4。当 \\sqrt{t} = 2/\\sqrt{t}，即 t = 2、x = -2 时取最大值 -4。规律：x + \\frac{a}{x}（x > 0）的最小值是 2\\sqrt{a}。",
-   "tip": "x + \\frac{a}{x} 型且 x < 0：先令 t = −x 变成正数再配方，结果整体加负号；取等条件是两项相等。"
+   "tip": "x + \\frac{a}{x} 型且 x < 0：先令 t = −x 变成正数再配方，结果整体加负号；取等条件是两项相等。",
+   "steps": [
+    "x < 0，令 t = -x > 0，则 y = -(t + \\frac{4}{t})",
+    "配方：t + \\frac{4}{t} = (\\sqrt{t} - \\frac{2}{\\sqrt{t}})^{2} + 4 ≥ 4",
+    "所以 y = -(t + \\frac{4}{t}) ≤ -4",
+    "取等：\\sqrt{t} = \\frac{2}{\\sqrt{t}} → t = 2，x = -2；最大值是 -4"
+   ],
+   "wrong": [
+    {
+     "blank": 1,
+     "answers": [
+      "4"
+     ],
+     "why": "x < 0 时 y 是负数，最值也是负的：y = -(t + \\frac{4}{t}) ≤ -4。"
+    },
+    {
+     "blank": 2,
+     "answers": [
+      "2"
+     ],
+     "why": "取等时 t = 2，而 t = -x，所以 x = -2。"
+    }
+   ],
+   "_science": true
   },
   {
    "id": 14,
@@ -374,7 +643,15 @@
     "最适宜时间 7.5 − 1 = 6.5 小时"
    ],
    "explanation": "分段函数：**写出每段式子 → 每段解不等式 → 区间接起来 → 末减初**。第三段的 k 用分界点 (6, 20) 求。",
-   "tip": "分段函数：每段写出式子并标好 x 范围 → 每段分别解不等式 → 与本段范围取交集 → 区间接起来，时长 = 末 − 初。第三段的 k 用分界点求。"
+   "tip": "分段函数：每段写出式子并标好 x 范围 → 每段分别解不等式 → 与本段范围取交集 → 区间接起来，时长 = 末 − 初。第三段的 k 用分界点求。",
+   "steps": [
+    "第一段：过 (0, 12)、(2, 20)，斜率 4，y = 4x + 12（0 ≤ x ≤ 2）",
+    "第二段：y = 20（2 ≤ x ≤ 6）",
+    "第三段：过分界点 (6, 20)，k = 6 × 20 = 120，y = \\frac{120}{x}（6 ≤ x ≤ 24）",
+    "解不等式：第一段 4x + 12 ≥ 16 → x ≥ 1；第二段全部适宜；第三段 \\frac{120}{x} ≥ 16 → x ≤ 7.5",
+    "接区间：1 ≤ x ≤ 7.5，时长 7.5 − 1 = 6.5 小时"
+   ],
+   "_science": true
   },
   {
    "id": 15,
@@ -391,7 +668,14 @@
     "v = 20 m/s 时，最少 10 秒"
    ],
    "explanation": "注意 6 辆车只有 **5 个车距**。t = \\frac{100}{v} + \\frac{v}{4} 是「x + \\frac{a}{x}」型，两项乘积是定值 25，最小值 2\\sqrt{25} = 10。",
-   "tip": "车队问题先画示意图：n 辆车只有 n − 1 个车距。总路程 = 隧道长 + 车身总长 + 车距总长，再化成「x + \\frac{a}{x}」型求最小值。"
+   "tip": "车队问题先画示意图：n 辆车只有 n − 1 个车距。总路程 = 隧道长 + 车身总长 + 车距总长，再化成「x + \\frac{a}{x}」型求最小值。",
+   "steps": [
+    "总路程 = 隧道 76 + 车身 6 × 4 + 5 个车距 5 × \\frac{v^{2}}{20} = 100 + \\frac{v^{2}}{4}",
+    "时间：t = \\frac{100 + v^{2}/4}{v} = \\frac{100}{v} + \\frac{v}{4}",
+    "配方：t = (\\frac{\\sqrt{v}}{2} - \\frac{10}{\\sqrt{v}})^{2} + 10 ≥ 10",
+    "取等：\\frac{v}{4} = \\frac{100}{v} → v = 20 m/s，此时 t 最小为 10 秒"
+   ],
+   "_science": true
   }
  ]
 }</script>
@@ -737,14 +1021,18 @@
       h += '<div class="row"><span class="label">你的答案：</span>' + esc(userText(q)) + "</div>";
       h += '<div class="row"><span class="label">正确答案：</span><b>' + fmt(correctText(q)) + "</b></div>";
       if (g.status === "correct") {
-        if (q.explanation) h += '<details class="exp"><summary>看讲解</summary><div class="row">' + fmt(q.explanation) + "</div></details>";
+        if (q.explanation || q.steps) h += '<details class="exp"><summary>看讲解</summary>' + explainHtml(q) + "</details>";
       } else {
-        h += '<div class="why-box"><div class="h">为什么错</div>' + (q.explanation ? fmt(q.explanation) : "对照正确答案，找出和你的答案不同的地方。") + "</div>";
+        var dg = diagnose(q);
+        h += '<div class="why-box"><div class="h">为什么错</div>' +
+          (dg.length ? '<div class="diag"><b class="h">🔍 你错在哪</b>' + (dg.length === 1 ? "<div>" + dg[0] + "</div>" : "<ul><li>" + dg.join("</li><li>") + "</li></ul>") + "</div>" : "") +
+          (q.explanation || q.steps ? explainHtml(q) : "对照正确答案，找出和你的答案不同的地方。") + "</div>";
         h += fixBox(q);
       }
       return h + "</div>";
     } else {
       h += '<div class="row"><span class="label">参考答案：</span>' + fmt(q.answer) + "</div>" + figure(q.answer_figure);
+      if (q.steps && q.steps.length) h += '<div class="sub-h">解题步骤</div>' + stepsHtml(q);
       var s = state.self[q.id] || {};
       if (q.points && q.points.length) {
         h += '<div class="row points"><span class="label">得分要点（勾选你答到的）：</span>';
@@ -760,10 +1048,43 @@
           }).join("") + "</div>";
       }
     }
-    if (q.explanation) h += '<div class="row"><span class="label">讲解：</span>' + fmt(q.explanation) + "</div>";
+    if (q.explanation) h += '<div class="row"><span class="label">' + (q.steps ? "要点：" : "讲解：") + "</span>" + fmt(q.explanation) + "</div>";
     if (q.type === "short" && (g.status === "wrong" || g.status === "partial")) h += fixBox(q);
     return h + "</div>";
   }
+
+  // 讲解：有 steps 就分步显示「正确解法」，explanation 作为「要点」；没有 steps 就整段显示 explanation
+  function stepsHtml(q) {
+    return '<ol class="steps">' + q.steps.map(function (x) { return "<li>" + fmt(x) + "</li>"; }).join("") + "</ol>";
+  }
+  function explainHtml(q) {
+    if (!q.steps || !q.steps.length) return '<div class="row">' + fmt(q.explanation || "") + "</div>";
+    return '<div class="sub-h">正确解法</div>' + stepsHtml(q) +
+      (q.explanation ? '<div class="row"><span class="label">要点：</span>' + fmt(q.explanation) + "</div>" : "");
+  }
+  // 针对「你的答案」给错因：选择 / 判断看 why[选项]，填空看 wrong 里预设的常见错答
+  function diagnose(q) {
+    var a = state.answers[q.id], out = [], why = q.why || {};
+    if (q.type === "single" && a && why[a]) out.push("你选了 " + a + "：" + fmt(why[a]));
+    if (q.type === "judge" && a != null) { var jk = a ? "T" : "F"; if (why[jk]) out.push("你判断为「" + (a ? "正确" : "错误") + "」：" + fmt(why[jk])); }
+    if (q.type === "multiple") {
+      var pick = a || [], ans = q.answer || [];
+      pick.filter(function (x) { return ans.indexOf(x) < 0; }).forEach(function (x) {
+        out.push("多选了 " + x + "：" + (why[x] ? fmt(why[x]) : "这一项不对，" + fmt(q.options[LETTERS.indexOf(x)]))); });
+      ans.filter(function (x) { return pick.indexOf(x) < 0; }).forEach(function (x) {
+        out.push("漏选了 " + x + "：" + (why[x] ? fmt(why[x]) : fmt(q.options[LETTERS.indexOf(x)]) + " 也是对的")); });
+    }
+    if (q.type === "fill" && q.wrong) {
+      var user = a || [];
+      q.wrong.forEach(function (w) {
+        var k = (w.blank || 1) - 1, u = norm(user[k]);
+        if (u && (w.answers || []).map(norm).indexOf(u) >= 0)
+          out.push((fillBlanks(q) > 1 ? "第 " + (k + 1) + " 空" : "你") + "填了「" + esc(user[k]) + "」：" + fmt(w.why));
+      });
+    }
+    return out;
+  }
+  function fillBlanks(q) { return blankCount(q); }
 
   // 怎么改进：主要给理科（数学、物理、化学）。有 tip 就显示 tip；理科没写 tip 时给通用的解题检查方法；文科没写 tip 就不显示
   var SCIENCE = ["数学", "物理", "化学"];
