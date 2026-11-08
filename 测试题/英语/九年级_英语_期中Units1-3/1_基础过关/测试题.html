@@ -795,10 +795,14 @@
     return h + "</div>";
   }
 
-  // 怎么改进：优先用题目里的 tip（一句话避错要点），没有就给通用做法
+  // 怎么改进：主要给理科（数学、物理、化学）。有 tip 就显示 tip；理科没写 tip 时给通用的解题检查方法；文科没写 tip 就不显示
+  var SCIENCE = ["数学", "物理", "化学"];
   function fixBox(q) {
-    var t = q.tip ? fmt(q.tip)
-      : "这题考「" + esc(q.knowledge || "本知识点") + "」。把上面讲解里最关键的一句读两遍、遮住说一遍；整套做完后点「重做错题」再做一次，连续做对两次才算真正掌握。";
+    var t;
+    if (q.tip) t = fmt(q.tip);
+    else if (SCIENCE.indexOf(QUIZ.subject) >= 0)
+      t = "按「已知量 → 用哪个公式 / 规律 → 代入（带单位）→ 检查结果」把这题重做一遍，对照讲解找出卡在哪一步：概念、公式、计算还是单位。整套做完后点「重做错题」再练一次。";
+    else return "";
     return '<div class="fix-box"><div class="h">💡 怎么改进</div>' + t + "</div>";
   }
 
